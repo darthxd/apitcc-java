@@ -1,7 +1,8 @@
 package com.ds3c.tcc.ApiTcc.service;
 
-import com.ds3c.tcc.ApiTcc.dto.Admin.AdminCreateDTO;
-import com.ds3c.tcc.ApiTcc.dto.User.UserDTO;
+import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
+import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
+import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.exception.UserNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.UserMapper;
 import com.ds3c.tcc.ApiTcc.model.User;
@@ -32,16 +33,22 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    public UserDTO getUserById(Long id) {
-        return userMapper.toDTO(userRepository.findById(id)
-                        .orElseThrow(() -> new UserNotFoundException(id)));
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public User createUserByAdmin(AdminCreateDTO adminCreateDTO) {
-        return userRepository.save(userMapper.fromAdminToModel(adminCreateDTO));
+    public List<User> listUser() {
+        return userRepository.findAll();
     }
 
-    public List<UserDTO> listUser() {
-        return userMapper.toListDTO(userRepository.findAll());
+    public User createUserByEntity(UserRequestDTO userRequestDTO, RolesEnum role) {
+        return userRepository.save(userMapper.fromDTOToModel(userRequestDTO, role));
+    }
+
+    public User updateUser(UserRequestDTO userRequestDTO, Long id) {
+        return userRepository.save(
+                userMapper.updateModelFromDTO(userRequestDTO, id)
+        );
     }
 }

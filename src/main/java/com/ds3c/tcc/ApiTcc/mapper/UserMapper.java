@@ -1,50 +1,55 @@
 package com.ds3c.tcc.ApiTcc.mapper;
 
-import com.ds3c.tcc.ApiTcc.dto.Admin.AdminCreateDTO;
-import com.ds3c.tcc.ApiTcc.dto.User.UserCreateDTO;
-import com.ds3c.tcc.ApiTcc.dto.User.UserDTO;
+import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
+import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.User;
+import com.ds3c.tcc.ApiTcc.service.UserService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserMapper {
-    public User toModel(UserCreateDTO userCreateDTO) {
-        User user = new User();
-        user.setUsername(userCreateDTO.getUsername());
-        user.setPassword(userCreateDTO.getPassword());
-        try {
-            user.setRole(RolesEnum.valueOf(userCreateDTO.getRole()));
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        }
-        return user;
+    private final UserService userService;
+
+    public UserMapper(UserService userService) {
+        this.userService = userService;
     }
 
-    public UserDTO toDTO(User user) {
-        UserDTO userDTO = new UserDTO();
+    public UserResponseDTO toDTO(User user) {
+        UserResponseDTO userDTO = new UserResponseDTO();
         userDTO.setUsername(user.getUsername());
         userDTO.setPassword(user.getPassword());
         userDTO.setRole(user.getRole().name());
         return userDTO;
     }
 
-    public List<UserDTO> toListDTO(List<User> userList) {
-        List<UserDTO> userDTOList = new ArrayList<>();
+    public List<UserResponseDTO> toListDTO(List<User> userList) {
+        List<UserResponseDTO> userDTOList = new ArrayList<>();
         for(User user : userList) {
             userDTOList.add(toDTO(user));
         }
         return userDTOList;
     }
 
-    public User fromAdminToModel(AdminCreateDTO adminCreateDTO) {
+    public User fromDTOToModel(UserRequestDTO userRequestDTO, RolesEnum role) {
         User user = new User();
-        user.setUsername(adminCreateDTO.getUsername());
-        user.setPassword(adminCreateDTO.getPassword());
-        user.setRole(RolesEnum.ROLE_ADMIN);
+        user.setUsername(userRequestDTO.getUsername());
+        user.setPassword(userRequestDTO.getPassword());
+        user.setRole(role);
+        return user;
+    }
+    public User updateModelFromDTO(UserRequestDTO userRequestDTO, Long id) {
+        User user = userService.getUserById(id);
+        if(StringUtils.hasText(userRequestDTO.getUsername())) {
+            user.setUsername(userRequestDTO.getUsername());
+        }
+        if(StringUtils.hasText(userRequestDTO.getPassword())) {
+            user.setPassword(userRequestDTO.getPassword());
+        }
         return user;
     }
 }

@@ -1,13 +1,14 @@
 package com.ds3c.tcc.ApiTcc.service;
 
-import com.ds3c.tcc.ApiTcc.dto.Admin.AdminCreateDTO;
-import com.ds3c.tcc.ApiTcc.dto.Admin.AdminDTO;
+import com.ds3c.tcc.ApiTcc.dto.Admin.AdminRequestDTO;
+import com.ds3c.tcc.ApiTcc.dto.Admin.AdminResponseDTO;
+import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.exception.AdminNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.AdminMapper;
-import com.ds3c.tcc.ApiTcc.mapper.UserMapper;
 import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.AdminRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,32 +16,42 @@ import java.util.List;
 @Service
 public class AdminService {
     private final UserService userService;
-    private final UserMapper userMapper;
     private final AdminMapper adminMapper;
     private final AdminRepository adminRepository;
 
+    @Autowired
     public AdminService(UserService userService,
-                        UserMapper userMapper,
                         AdminMapper adminMapper,
                         AdminRepository adminRepository) {
         this.userService = userService;
-        this.userMapper = userMapper;
         this.adminMapper = adminMapper;
         this.adminRepository = adminRepository;
     }
 
-    public AdminDTO createAdmin(AdminCreateDTO adminCreateDTO) {
-        User user = userService.createUserByAdmin(adminCreateDTO);
-        Admin admin = adminMapper.toModel(adminCreateDTO, user.getId());
-        return adminMapper.toDTO(adminRepository.save(admin));
+    public Admin createAdmin(AdminRequestDTO adminRequestDTO) {
+        User user = userService.createUserByEntity(adminRequestDTO, RolesEnum.ROLE_ADMIN);
+        Admin admin = adminMapper.toModel(adminRequestDTO, user.getId());
+        return adminRepository.save(admin);
     }
 
-    public List<AdminDTO> listAdmin() {
-        return adminMapper.toListDTO(adminRepository.findAll());
+    public Admin getAdminById(Long id) {
+        return adminRepository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException(id));
     }
 
-    public AdminDTO getAdminById(Long id) {
-        return adminMapper.toDTO(adminRepository.findById(id)
-                .orElseThrow(() -> new AdminNotFoundException(id)));
+    public List<Admin> listAdmin() {
+        return adminRepository.findAll();
+    }
+
+    public Admin updateAdmin(AdminRequestDTO dto,
+                             Long id) {
+        return adminRepository.save(
+                adminMapper.updateModelFromDTO(dto, id)
+        );
+    }
+
+    public void deleteAdmin(Long id) {
+        Admin admin = getAdminById(id);
+        adminRepository.delete(admin);
     }
 }
