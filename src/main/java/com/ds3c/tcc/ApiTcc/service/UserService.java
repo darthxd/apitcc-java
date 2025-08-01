@@ -1,7 +1,7 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Admin.AdminCreateDTO;
-import com.ds3c.tcc.ApiTcc.dto.User.UserDTO;
+import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
 import com.ds3c.tcc.ApiTcc.exception.UserNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.UserMapper;
 import com.ds3c.tcc.ApiTcc.model.User;
@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    public UserDTO getUserById(Long id) {
+    public UserResponseDTO getUserById(Long id) {
         return userMapper.toDTO(userRepository.findById(id)
                         .orElseThrow(() -> new UserNotFoundException(id)));
     }
@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(userMapper.fromAdminToModel(adminCreateDTO));
     }
 
-    public List<UserDTO> listUser() {
+    public List<UserResponseDTO> listUser() {
         return userMapper.toListDTO(userRepository.findAll());
     }
 }

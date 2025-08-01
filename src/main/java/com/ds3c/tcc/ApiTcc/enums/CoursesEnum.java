@@ -11,4 +11,5 @@ public enum CoursesEnum {
     LOG,
     MAT,
     MEC,
+    MED,
 }

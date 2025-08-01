@@ -1,6 +1,6 @@
 package com.ds3c.tcc.ApiTcc.controller;
 
-import com.ds3c.tcc.ApiTcc.dto.User.UserDTO;
+import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
 import com.ds3c.tcc.ApiTcc.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +19,12 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDTO> listUser() {
+    public List<UserResponseDTO> listUser() {
         return userService.listUser();
     }
 
     @GetMapping("/{id}")
-    public UserDTO getUserById(@PathVariable("id") Long id) {
+    public UserResponseDTO getUserById(@PathVariable("id") Long id) {
         return userService.getUserById(id);
     }
 }

@@ -2,7 +2,7 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.Admin.AdminCreateDTO;
 import com.ds3c.tcc.ApiTcc.dto.User.UserCreateDTO;
-import com.ds3c.tcc.ApiTcc.dto.User.UserDTO;
+import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.User;
 import org.springframework.stereotype.Component;
@@ -24,16 +24,16 @@ public class UserMapper {
         return user;
     }
 
-    public UserDTO toDTO(User user) {
-        UserDTO userDTO = new UserDTO();
+    public UserResponseDTO toDTO(User user) {
+        UserResponseDTO userDTO = new UserResponseDTO();
         userDTO.setUsername(user.getUsername());
         userDTO.setPassword(user.getPassword());
         userDTO.setRole(user.getRole().name());
         return userDTO;
     }
 
-    public List<UserDTO> toListDTO(List<User> userList) {
-        List<UserDTO> userDTOList = new ArrayList<>();
+    public List<UserResponseDTO> toListDTO(List<User> userList) {
+        List<UserResponseDTO> userDTOList = new ArrayList<>();
         for(User user : userList) {
             userDTOList.add(toDTO(user));
         }

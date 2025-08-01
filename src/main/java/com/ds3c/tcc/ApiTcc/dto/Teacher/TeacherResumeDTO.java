@@ -1,7 +1,5 @@
-package com.ds3c.tcc.ApiTcc.dto.Admin;
+package com.ds3c.tcc.ApiTcc.dto.Teacher;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminDTO {
-    private String username;
-    private String password;
+public class TeacherResumeDTO {
+    private Long id;
     private String name;
-    private String email;
     private String cpf;
+    private String email;
     private String phone;
 }

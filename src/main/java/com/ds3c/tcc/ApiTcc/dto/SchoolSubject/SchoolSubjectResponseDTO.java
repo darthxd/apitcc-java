@@ -1,4 +1,4 @@
-package com.ds3c.tcc.ApiTcc.dto.User;
+package com.ds3c.tcc.ApiTcc.dto.SchoolSubject;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
-    private String username;
-    private String password;
-    private String role;
+public class SchoolSubjectResponseDTO {
+    private Long id;
+    private String name;
 }

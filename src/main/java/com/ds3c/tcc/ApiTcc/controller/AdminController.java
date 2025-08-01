@@ -1,7 +1,7 @@
 package com.ds3c.tcc.ApiTcc.controller;
 
 import com.ds3c.tcc.ApiTcc.dto.Admin.AdminCreateDTO;
-import com.ds3c.tcc.ApiTcc.dto.Admin.AdminDTO;
+import com.ds3c.tcc.ApiTcc.dto.Admin.AdminResponseDTO;
 import com.ds3c.tcc.ApiTcc.service.AdminService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -18,18 +18,18 @@ public class AdminController {
     }
 
     @GetMapping
-    public List<AdminDTO> listAdmin() {
+    public List<AdminResponseDTO> listAdmin() {
         return adminService.listAdmin();
     }
 
     @PostMapping
-    public AdminDTO createAdmin(
+    public AdminResponseDTO createAdmin(
             @RequestBody @Valid AdminCreateDTO adminCreateDTO) {
         return adminService.createAdmin(adminCreateDTO);
     }
 
     @GetMapping("/{id}")
-    public AdminDTO getAdmin(@PathVariable("id") Long id) {
+    public AdminResponseDTO getAdmin(@PathVariable("id") Long id) {
         return adminService.getAdminById(id);
     }
 }

@@ -1,8 +1,8 @@
 package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.Admin.AdminCreateDTO;
-import com.ds3c.tcc.ApiTcc.dto.Admin.AdminDTO;
-import com.ds3c.tcc.ApiTcc.dto.User.UserDTO;
+import com.ds3c.tcc.ApiTcc.dto.Admin.AdminResponseDTO;
+import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.service.UserService;
 import org.springframework.stereotype.Component;
@@ -28,9 +28,9 @@ public class AdminMapper {
         return admin;
     }
 
-    public AdminDTO toDTO(Admin admin) {
-        AdminDTO adminDTO = new AdminDTO();
-        UserDTO userDTO = userService.getUserById(admin.getUserId());
+    public AdminResponseDTO toDTO(Admin admin) {
+        AdminResponseDTO adminDTO = new AdminResponseDTO();
+        UserResponseDTO userDTO = userService.getUserById(admin.getUserId());
         adminDTO.setUsername(userDTO.getUsername());
         adminDTO.setPassword(userDTO.getPassword());
         adminDTO.setCpf(admin.getCpf());
@@ -40,8 +40,8 @@ public class AdminMapper {
         return adminDTO;
     }
 
-    public List<AdminDTO> toListDTO(List<Admin> adminList) {
-        List<AdminDTO> adminDTOList = new ArrayList<>();
+    public List<AdminResponseDTO> toListDTO(List<Admin> adminList) {
+        List<AdminResponseDTO> adminDTOList = new ArrayList<>();
         for(Admin admin : adminList) {
             adminDTOList.add(toDTO(admin));
         }
