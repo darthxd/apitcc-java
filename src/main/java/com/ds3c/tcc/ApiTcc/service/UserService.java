@@ -21,7 +21,8 @@ public class UserService implements UserDetailsService {
     private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository,
+                       UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
