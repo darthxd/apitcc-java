@@ -9,6 +9,7 @@ import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class AdminService {
     private final AdminRepository adminRepository;
 
     @Autowired
+    @Lazy
     public AdminService(UserService userService,
                         AdminMapper adminMapper,
                         AdminRepository adminRepository) {
@@ -52,6 +54,7 @@ public class AdminService {
 
     public void deleteAdmin(Long id) {
         Admin admin = getAdminById(id);
+        userService.deleteUser(admin.getUserId());
         adminRepository.delete(admin);
     }
 }

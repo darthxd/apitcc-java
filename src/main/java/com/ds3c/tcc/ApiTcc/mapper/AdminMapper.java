@@ -7,6 +7,8 @@ import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.service.AdminService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +20,8 @@ public class AdminMapper {
     private final UserService userService;
     private final AdminService adminService;
 
+    @Autowired
+    @Lazy
     public AdminMapper(UserService userService, AdminService adminService) {
         this.userService = userService;
         this.adminService = adminService;
@@ -36,6 +40,7 @@ public class AdminMapper {
     public AdminResponseDTO toDTO(Admin admin) {
         AdminResponseDTO adminDTO = new AdminResponseDTO();
         User user = userService.getUserById(admin.getUserId());
+        adminDTO.setId(admin.getId());
         adminDTO.setUsername(user.getUsername());
         adminDTO.setPassword(user.getPassword());
         adminDTO.setCpf(admin.getCpf());

@@ -10,6 +10,7 @@ import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class SchoolClassMapper {
@@ -24,6 +26,7 @@ public class SchoolClassMapper {
     private final SchoolClassService schoolClassService;
 
     @Autowired
+    @Lazy
     public SchoolClassMapper(
             TeacherService teacherService, SchoolClassService schoolClassService) {
         this.teacherService = teacherService;
@@ -31,12 +34,9 @@ public class SchoolClassMapper {
     }
 
     public SchoolClass toModel(SchoolClassRequestDTO schoolClassRequestDTO) {
-        Set<Teacher> teacherSet = new HashSet<>(
-                teacherService.listTeacherById(schoolClassRequestDTO.getTeacherIds())
-        );
         SchoolClass schoolClass = new SchoolClass();
         schoolClass.setName(schoolClassRequestDTO.getName());
-        schoolClass.setTeachers(teacherSet);
+        schoolClass.setTeacherIds(schoolClassRequestDTO.getTeacherIds());
         try {
             schoolClass.setGrade(GradesEnum.valueOf(schoolClassRequestDTO.getGrade()));
             schoolClass.setCourse(CoursesEnum.valueOf(schoolClassRequestDTO.getCourse()));
@@ -49,16 +49,19 @@ public class SchoolClassMapper {
     }
 
     public SchoolClassResponseDTO toDTO(SchoolClass schoolClass) {
-        List<String> teacherNames = schoolClass.getTeachers().stream()
-                .map(Teacher::getName)
-                .toList();
         SchoolClassResponseDTO schoolClassResponseDTO = new SchoolClassResponseDTO();
         schoolClassResponseDTO.setId(schoolClass.getId());
         schoolClassResponseDTO.setName(schoolClass.getName());
         schoolClassResponseDTO.setGrade(schoolClass.getGrade().name());
         schoolClassResponseDTO.setCourse(schoolClass.getCourse().name());
         schoolClassResponseDTO.setShift(schoolClass.getShift().name());
-        schoolClassResponseDTO.setTeacherNames(teacherNames);
+        if (schoolClass.getTeacherIds() != null) {
+            List<String> teacherNames = teacherService
+                    .listTeacherById(schoolClass.getTeacherIds())
+                    .stream().map(Teacher::getName)
+                    .toList();
+            schoolClassResponseDTO.setTeacherNames(teacherNames);
+        }
         return schoolClassResponseDTO;
     }
 
@@ -100,8 +103,8 @@ public class SchoolClassMapper {
             }
         }
         if (schoolClassRequestDTO.getTeacherIds() != null) {
-            schoolClass.setTeachers(
-                    new HashSet<>(teacherService.listTeacherById(schoolClassRequestDTO.getTeacherIds()))
+            schoolClass.setTeacherIds(
+                    schoolClassRequestDTO.getTeacherIds()
             );
         }
         return schoolClass;

@@ -31,6 +31,5 @@ public class SchoolClass {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ShiftsEnum shift;
-    @ManyToMany(mappedBy = "classes")
-    private Set<Teacher> teachers;
+    private Set<Long> teacherIds;
 }

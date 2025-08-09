@@ -5,6 +5,8 @@ import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -15,6 +17,8 @@ import java.util.List;
 public class UserMapper {
     private final UserService userService;
 
+    @Autowired
+    @Lazy
     public UserMapper(UserService userService) {
         this.userService = userService;
     }

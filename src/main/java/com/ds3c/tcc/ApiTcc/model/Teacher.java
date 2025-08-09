@@ -23,19 +23,5 @@ public class Teacher {
     private String cpf;
     private String email;
     private String phone;
-    @ManyToMany
-    @JoinTable(
-            name = "teacher_classes",
-            joinColumns = @JoinColumn(name = "teacher_id"),
-            inverseJoinColumns = @JoinColumn(name = "class_id")
-    )
-    private Set<SchoolClass> classes;
-    @ManyToMany
-    @JoinTable(
-            name = "teacher_subjects",
-            joinColumns = @JoinColumn(name = "teacher_id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id")
-    )
-    private Set<SchoolSubject> subjects;
     private Long userId;
 }

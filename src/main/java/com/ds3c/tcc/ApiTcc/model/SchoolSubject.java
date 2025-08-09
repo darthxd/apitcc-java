@@ -18,6 +18,5 @@ public class SchoolSubject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "subjects")
-    private Set<Teacher> teachers;
+    private Set<Long> teacherIds;
 }

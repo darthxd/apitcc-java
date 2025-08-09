@@ -19,6 +19,4 @@ public class TeacherResponseDTO {
     private String cpf;
     private String email;
     private String phone;
-    private List<String> classNames;
-    private List<String> subjectNames;
 }

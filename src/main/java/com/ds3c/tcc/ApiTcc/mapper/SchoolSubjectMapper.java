@@ -7,6 +7,8 @@ import com.ds3c.tcc.ApiTcc.model.SchoolSubject;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -21,29 +23,31 @@ public class SchoolSubjectMapper {
     private final TeacherService teacherService;
     private final SchoolSubjectService schoolSubjectService;
 
+    @Autowired
+    @Lazy
     public SchoolSubjectMapper(TeacherService teacherService, SchoolSubjectService schoolSubjectService) {
         this.teacherService = teacherService;
         this.schoolSubjectService = schoolSubjectService;
     }
 
     public SchoolSubject toModel(SchoolSubjectRequestDTO schoolSubjectRequestDTO) {
-        Set<Teacher> teacherSet = new HashSet<>(
-                teacherService.listTeacherById(schoolSubjectRequestDTO.getTeacherIds())
-        );
         SchoolSubject schoolSubject = new SchoolSubject();
         schoolSubject.setName(schoolSubjectRequestDTO.getName());
-        schoolSubject.setTeachers(teacherSet);
+        schoolSubject.setTeacherIds(schoolSubjectRequestDTO.getTeacherIds());
         return schoolSubject;
     }
 
     public SchoolSubjectResponseDTO toDTO(SchoolSubject schoolSubject) {
-        List<String> teacherNames = schoolSubject.getTeachers().stream()
-                .map(Teacher::getName)
-                .toList();
         SchoolSubjectResponseDTO schoolSubjectResponseDTO = new SchoolSubjectResponseDTO();
         schoolSubjectResponseDTO.setId(schoolSubject.getId());
         schoolSubjectResponseDTO.setName(schoolSubject.getName());
-        schoolSubjectResponseDTO.setTeacherNames(teacherNames);
+        if (schoolSubject.getTeacherIds() != null) {
+            List<String> teacherNames = teacherService
+                    .listTeacherById(schoolSubject.getTeacherIds())
+                    .stream().map(Teacher::getName)
+                    .toList();
+            schoolSubjectResponseDTO.setTeacherNames(teacherNames);
+        }
         return schoolSubjectResponseDTO;
     }
 
@@ -61,8 +65,8 @@ public class SchoolSubjectMapper {
             schoolSubject.setName(schoolSubjectRequestDTO.getName());
         }
         if (schoolSubjectRequestDTO.getTeacherIds() != null) {
-            schoolSubject.setTeachers(
-                    new HashSet<>(teacherService.listTeacherById(schoolSubjectRequestDTO.getTeacherIds()))
+            schoolSubject.setTeacherIds(
+                    schoolSubjectRequestDTO.getTeacherIds()
             );
         }
         return schoolSubject;

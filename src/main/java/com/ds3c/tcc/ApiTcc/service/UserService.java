@@ -8,6 +8,7 @@ import com.ds3c.tcc.ApiTcc.mapper.UserMapper;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +22,7 @@ public class UserService implements UserDetailsService {
     private final UserMapper userMapper;
 
     @Autowired
+    @Lazy
     public UserService(UserRepository userRepository,
                        UserMapper userMapper) {
         this.userRepository = userRepository;
@@ -52,4 +54,8 @@ public class UserService implements UserDetailsService {
                 userMapper.updateModelFromDTO(userRequestDTO, id)
         );
     }
+     public void deleteUser(Long id) {
+        User user = getUserById(id);
+        userRepository.delete(user);
+     }
 }

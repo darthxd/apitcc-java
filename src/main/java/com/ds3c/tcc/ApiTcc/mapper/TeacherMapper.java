@@ -10,6 +10,8 @@ import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -17,22 +19,19 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class TeacherMapper {
     private final UserService userService;
-    private final SchoolClassService schoolClassService;
-    private final SchoolSubjectService schoolSubjectService;
     private final TeacherService teacherService;
 
+    @Autowired
+    @Lazy
     public TeacherMapper(
             UserService userService,
-            SchoolClassService schoolClassService,
-            SchoolSubjectService schoolSubjectService,
             TeacherService teacherService) {
         this.userService = userService;
-        this.schoolClassService = schoolClassService;
-        this.schoolSubjectService = schoolSubjectService;
         this.teacherService = teacherService;
     }
 
@@ -43,24 +42,10 @@ public class TeacherMapper {
         teacher.setEmail(teacherRequestDTO.getEmail());
         teacher.setPhone(teacherRequestDTO.getPhone());
         teacher.setUserId(userId);
-        Set<SchoolClass> schoolClassSet = new HashSet<>(
-                schoolClassService.listSchoolClassById(teacherRequestDTO.getClassIds())
-        );
-        teacher.setClasses(schoolClassSet);
-        Set<SchoolSubject> schoolSubjectSet = new HashSet<>(
-                schoolSubjectService.listSchoolSubjectById(teacherRequestDTO.getSubjectIds())
-        );
-        teacher.setSubjects(schoolSubjectSet);
         return teacher;
     }
 
     public TeacherResponseDTO toDTO(Teacher teacher) {
-        List<String> classNames = teacher.getClasses().stream()
-                .map(SchoolClass::getName)
-                .toList();
-        List<String> subjectNames = teacher.getSubjects().stream()
-                .map(SchoolSubject::getName)
-                .toList();
         User user = userService.getUserById(teacher.getUserId());
         TeacherResponseDTO teacherResponseDTO = new TeacherResponseDTO();
         teacherResponseDTO.setId(teacher.getId());
@@ -70,8 +55,6 @@ public class TeacherMapper {
         teacherResponseDTO.setName(teacher.getName());
         teacherResponseDTO.setPhone(teacher.getPhone());
         teacherResponseDTO.setEmail(teacher.getEmail());
-        teacherResponseDTO.setClassNames(classNames);
-        teacherResponseDTO.setSubjectNames(subjectNames);
         return teacherResponseDTO;
     }
 
@@ -100,20 +83,6 @@ public class TeacherMapper {
         }
         if (StringUtils.hasText(teacherRequestDTO.getPhone())) {
             teacher.setPhone(teacherRequestDTO.getPhone());
-        }
-        if (teacherRequestDTO.getClassIds() != null) {
-            teacher.setClasses(
-                    new HashSet<>(schoolClassService.listSchoolClassById(
-                            teacherRequestDTO.getClassIds()
-                    ))
-            );
-        }
-        if (teacherRequestDTO.getSubjectIds() != null) {
-            teacher.setSubjects(
-                    new HashSet<>(schoolSubjectService.listSchoolSubjectById(
-                            teacherRequestDTO.getSubjectIds()
-                    ))
-            );
         }
         return teacher;
     }

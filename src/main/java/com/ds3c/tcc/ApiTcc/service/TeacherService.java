@@ -9,6 +9,7 @@ import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class TeacherService {
     private final UserService userService;
 
     @Autowired
+    @Lazy
     public TeacherService(TeacherRepository teacherRepository,
                           TeacherMapper teacherMapper,
                           UserService userService) {
@@ -53,7 +55,9 @@ public class TeacherService {
 
     public void deleteTeacher(Long id) {
         Teacher teacher = getTeacherById(id);
+        userService.deleteUser(teacher.getUserId());
         teacherRepository.delete(teacher);
+
     }
 
     public List<Teacher> listTeacherById(Set<Long> idSet) {

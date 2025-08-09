@@ -39,7 +39,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
-    public TeacherResponseDTO getTeacherById(Long id) {
+    public TeacherResponseDTO getTeacherById(@PathVariable("id") Long id) {
         return teacherMapper.toDTO(teacherService.getTeacherById(id));
     }
 

@@ -8,6 +8,7 @@ import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.SchoolSubject;
 import com.ds3c.tcc.ApiTcc.repository.SchoolClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class SchoolClassService {
     private final SchoolClassMapper schoolClassMapper;
 
     @Autowired
+    @Lazy
     public SchoolClassService(SchoolClassRepository schoolClassRepository,
                               SchoolClassMapper schoolClassMapper) {
         this.schoolClassRepository = schoolClassRepository;
