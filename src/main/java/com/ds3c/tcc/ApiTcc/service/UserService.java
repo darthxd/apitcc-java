@@ -1,7 +1,6 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
-import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.exception.UserNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.UserMapper;
@@ -12,6 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,13 +20,16 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     @Lazy
     public UserService(UserRepository userRepository,
-                       UserMapper userMapper) {
+                       UserMapper userMapper,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -45,8 +48,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public User createUserByEntity(UserRequestDTO userRequestDTO, RolesEnum role) {
-        return userRepository.save(userMapper.fromDTOToModel(userRequestDTO, role));
+    public User createUser(UserRequestDTO userRequestDTO, RolesEnum role) {
+        User user = userMapper.fromDTOToModel(userRequestDTO, role);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     public User updateUser(UserRequestDTO userRequestDTO, Long id) {

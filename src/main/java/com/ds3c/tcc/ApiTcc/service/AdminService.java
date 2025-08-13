@@ -1,7 +1,6 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Admin.AdminRequestDTO;
-import com.ds3c.tcc.ApiTcc.dto.Admin.AdminResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.exception.AdminNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.AdminMapper;
@@ -31,7 +30,7 @@ public class AdminService {
     }
 
     public Admin createAdmin(AdminRequestDTO adminRequestDTO) {
-        User user = userService.createUserByEntity(adminRequestDTO, RolesEnum.ROLE_ADMIN);
+        User user = userService.createUser(adminRequestDTO, RolesEnum.ROLE_ADMIN);
         Admin admin = adminMapper.toModel(adminRequestDTO, user.getId());
         return adminRepository.save(admin);
     }

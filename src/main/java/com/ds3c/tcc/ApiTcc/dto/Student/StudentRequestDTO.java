@@ -1,27 +1,30 @@
-package com.ds3c.tcc.ApiTcc.dto.Admin;
+package com.ds3c.tcc.ApiTcc.dto.Student;
 
 import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminRequestDTO implements UserRequestDTO {
-    private Long id;
+public class StudentRequestDTO implements UserRequestDTO {
     private String username;
     private String password;
-    @NotBlank
     private String name;
-    @Email
-    private String email;
+    private String ra;
+    private String rm;
     private String cpf;
     private String phone;
+    private String email;
+    private Long schoolClassId;
+    private LocalDate birthdate;
+    private Long biometry;
+    private String photo;
 
     @Override
     public String getUsername() {

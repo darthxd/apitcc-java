@@ -33,4 +33,14 @@ public class TeacherRequestDTO implements UserRequestDTO {
     public String getPassword() {
         return this.password;
     }
+
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

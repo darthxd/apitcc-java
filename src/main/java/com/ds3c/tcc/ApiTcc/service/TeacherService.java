@@ -1,7 +1,6 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Teacher.TeacherRequestDTO;
-import com.ds3c.tcc.ApiTcc.dto.Teacher.TeacherResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.exception.TeacherNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.TeacherMapper;
@@ -32,7 +31,7 @@ public class TeacherService {
     }
 
     public Teacher createTeacher(TeacherRequestDTO teacherRequestDTO) {
-        User user = userService.createUserByEntity(teacherRequestDTO, RolesEnum.ROLE_TEACHER);
+        User user = userService.createUser(teacherRequestDTO, RolesEnum.ROLE_TEACHER);
         Teacher teacher = teacherMapper.toModel(teacherRequestDTO, user.getId());
         return teacherRepository.save(teacher);
     }

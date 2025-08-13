@@ -25,7 +25,7 @@ public class JwtService {
         try {
             return JWT.create()
                     .withIssuer(issuer)
-                    .withSubject(user.getId().toString())
+                    .withSubject(user.getUsername())
                     .withExpiresAt(expirationTime)
                     .sign(Algorithm.HMAC256(secretKey));
         } catch (IllegalArgumentException e) {
