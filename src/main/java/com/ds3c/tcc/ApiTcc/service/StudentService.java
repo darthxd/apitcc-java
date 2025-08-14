@@ -1,12 +1,15 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
+import com.ds3c.tcc.ApiTcc.dto.Student.StudentResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.exception.StudentNotFoundException;
+import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
 import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.User;
+import com.ds3c.tcc.ApiTcc.repository.SchoolClassRepository;
 import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -24,7 +27,10 @@ public class StudentService {
 
     @Autowired
     @Lazy
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper, UserService userService, SchoolClassService schoolClassService) {
+    public StudentService(StudentRepository studentRepository,
+                          StudentMapper studentMapper,
+                          UserService userService,
+                          SchoolClassService schoolClassService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.userService = userService;
@@ -58,5 +64,11 @@ public class StudentService {
         Student student = getStudentById(id);
         userService.deleteUser(student.getUserId());
         studentRepository.delete(student);
+    }
+
+    public List<StudentResponseDTO> listStudentFromSchoolClass(Long id) {
+        return studentMapper.toListDTO(
+                studentRepository.findAllBySchoolClassId(id)
+        );
     }
 }

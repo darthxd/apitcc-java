@@ -2,10 +2,12 @@ package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResponseDTO;
+import com.ds3c.tcc.ApiTcc.dto.Student.StudentResponseDTO;
 import com.ds3c.tcc.ApiTcc.exception.SchoolClassNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.SchoolSubject;
+import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.repository.SchoolClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -18,13 +20,16 @@ import java.util.Set;
 public class SchoolClassService {
     private final SchoolClassRepository schoolClassRepository;
     private final SchoolClassMapper schoolClassMapper;
+    private final StudentService studentService;
 
     @Autowired
     @Lazy
     public SchoolClassService(SchoolClassRepository schoolClassRepository,
-                              SchoolClassMapper schoolClassMapper) {
+                              SchoolClassMapper schoolClassMapper,
+                              StudentService studentService) {
         this.schoolClassRepository = schoolClassRepository;
         this.schoolClassMapper = schoolClassMapper;
+        this.studentService = studentService;
     }
 
     public SchoolClass createSchoolClass(SchoolClassRequestDTO dto) {

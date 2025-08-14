@@ -2,8 +2,10 @@ package com.ds3c.tcc.ApiTcc.controller;
 
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResponseDTO;
+import com.ds3c.tcc.ApiTcc.dto.Student.StudentResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
+import com.ds3c.tcc.ApiTcc.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -17,14 +19,17 @@ public class SchoolClassController {
 
     private final SchoolClassMapper schoolClassMapper;
     private final SchoolClassService schoolClassService;
+    private final StudentService studentService;
 
     @Autowired
     @Lazy
     public SchoolClassController(
             SchoolClassMapper schoolClassMapper,
-            SchoolClassService schoolClassService) {
+            SchoolClassService schoolClassService,
+            StudentService studentService) {
         this.schoolClassMapper = schoolClassMapper;
         this.schoolClassService = schoolClassService;
+        this.studentService = studentService;
     }
 
     @GetMapping
@@ -61,5 +66,10 @@ public class SchoolClassController {
     @DeleteMapping("/{id}")
     public void deleteSchoolClass(@PathVariable("id") Long id) {
         schoolClassService.deleteSchoolClass(id);
+    }
+
+    @GetMapping("/{id}/students")
+    public List<StudentResponseDTO> listStudentsFromSchoolClass(@PathVariable("id") Long id) {
+        return studentService.listStudentFromSchoolClass(id);
     }
 }
