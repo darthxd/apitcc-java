@@ -2,10 +2,8 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.Teacher.TeacherRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Teacher.TeacherResponseDTO;
-import com.ds3c.tcc.ApiTcc.model.SchoolSubject;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.model.User;
-import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +18,14 @@ import java.util.List;
 public class TeacherMapper {
     private final UserService userService;
     private final TeacherService teacherService;
-    private final SchoolSubjectService schoolSubjectService;
 
     @Autowired
     @Lazy
     public TeacherMapper(
             UserService userService,
-            TeacherService teacherService, SchoolSubjectService schoolSubjectService) {
+            TeacherService teacherService) {
         this.userService = userService;
         this.teacherService = teacherService;
-        this.schoolSubjectService = schoolSubjectService;
     }
 
     public Teacher toModel(TeacherRequestDTO dto, Long userId) {
@@ -39,6 +35,7 @@ public class TeacherMapper {
         teacher.setEmail(dto.getEmail());
         teacher.setPhone(dto.getPhone());
         teacher.setSubjectIds(dto.getSubjectIds());
+        teacher.setSchoolClassIds(dto.getSchoolClassIds());
         teacher.setUserId(userId);
         return teacher;
     }
@@ -54,6 +51,7 @@ public class TeacherMapper {
         dto.setPhone(teacher.getPhone());
         dto.setEmail(teacher.getEmail());
         dto.setSubjectIds(teacher.getSubjectIds());
+        dto.setSchoolClassIds(teacher.getSchoolClassIds());
         return dto;
     }
 
@@ -85,6 +83,9 @@ public class TeacherMapper {
         }
         if (dto.getSubjectIds() != null) {
             teacher.setSubjectIds(dto.getSubjectIds());
+        }
+        if (dto.getSchoolClassIds() != null) {
+            teacher.setSchoolClassIds(dto.getSchoolClassIds());
         }
         return teacher;
     }

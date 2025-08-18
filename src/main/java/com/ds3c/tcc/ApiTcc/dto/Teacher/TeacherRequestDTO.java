@@ -24,6 +24,7 @@ public class TeacherRequestDTO implements UserRequestDTO {
     private String email;
     private String phone;
     private Set<Long> subjectIds;
+    private Set<Long> schoolClassIds;
 
     @Override
     public String getUsername() {
