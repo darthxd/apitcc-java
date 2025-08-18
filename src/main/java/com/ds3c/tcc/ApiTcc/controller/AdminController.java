@@ -37,6 +37,11 @@ public class AdminController {
         return adminMapper.toDTO(adminService.getAdminById(id));
     }
 
+    @GetMapping("/username/{username}")
+    public AdminResponseDTO getAdminByUsername(@PathVariable("username") String username) {
+        return adminMapper.toDTO(adminService.getAdminByUsername(username));
+    }
+
     @PutMapping("/{id}")
     public AdminResponseDTO updateAdmin(@RequestBody @Valid AdminRequestDTO dto,
                                         @PathVariable("id") Long id) {

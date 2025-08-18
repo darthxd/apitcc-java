@@ -46,6 +46,13 @@ public class StudentController {
         );
     }
 
+    @GetMapping("/username/{username}")
+    public StudentResponseDTO getStudentByUsername(@PathVariable("username") String username) {
+        return studentMapper.toDTO(
+                studentService.getStudentByUsername(username)
+        );
+    }
+
     @PutMapping("/{id}")
     public StudentResponseDTO updateStudent(@RequestBody @Valid StudentRequestDTO dto,
                                             @PathVariable("id") Long id) {

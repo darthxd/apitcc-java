@@ -40,6 +40,12 @@ public class AdminService {
                 .orElseThrow(() -> new AdminNotFoundException(id));
     }
 
+    public Admin getAdminByUsername(String username) {
+        return adminRepository.findByUserId(
+                userService.getUserByUsername(username).getId())
+                .orElseThrow(() -> new AdminNotFoundException(username));
+    }
+
     public List<Admin> listAdmin() {
         return adminRepository.findAll();
     }

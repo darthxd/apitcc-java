@@ -41,6 +41,12 @@ public class TeacherService {
                 .orElseThrow(() -> new TeacherNotFoundException(id));
     }
 
+    public Teacher getTeacherByUsername(String username) {
+        return teacherRepository.findByUserId(
+                userService.getUserByUsername(username).getId())
+                .orElseThrow(() -> new TeacherNotFoundException(username));
+    }
+
     public List<Teacher> listTeacher() {
         return teacherRepository.findAll();
     }

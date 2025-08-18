@@ -43,6 +43,11 @@ public class TeacherController {
         return teacherMapper.toDTO(teacherService.getTeacherById(id));
     }
 
+    @GetMapping("/username/{username}")
+    public TeacherResponseDTO getTeacherByUsername(@PathVariable("username") String username) {
+        return teacherMapper.toDTO(teacherService.getTeacherByUsername(username));
+    }
+
     @PutMapping("/{id}")
     public TeacherResponseDTO updateTeacher(@RequestBody @Valid TeacherRequestDTO dto,
                                             @PathVariable("id") Long id) {

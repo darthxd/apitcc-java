@@ -43,6 +43,12 @@ public class StudentService {
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
+    public Student getStudentByUsername(String username) {
+        return studentRepository.findByUserId(
+                userService.getUserByUsername(username).getId())
+                .orElseThrow(() -> new StudentNotFoundException(username));
+    }
+
     public String generateStudentUsername(StudentRequestDTO dto) {
         return dto.getName().split(" ")[0].toLowerCase()+"."
                 +dto.getName().split(" ")[
