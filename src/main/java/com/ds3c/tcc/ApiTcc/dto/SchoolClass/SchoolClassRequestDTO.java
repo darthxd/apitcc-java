@@ -16,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SchoolClassRequestDTO {
-    private String name;
     private String grade;
     private String course;
     private String shift;
