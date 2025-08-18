@@ -14,6 +14,7 @@ import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
@@ -42,12 +43,25 @@ public class StudentService {
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
+    public String generateStudentUsername(StudentRequestDTO dto) {
+        return dto.getName().split(" ")[0].toLowerCase()+"."
+                +dto.getName().split(" ")[
+                        dto.getName().split(" ").length-1
+                ].toLowerCase();
+    }
+
+    public String generateStudentPassword(StudentRequestDTO dto) {
+        return dto.getName().split(" ")[0].toLowerCase()+dto.getRm();
+    }
+
     public List<Student> listStudent() {
         return studentRepository.findAll();
     }
 
     public Student createStudent(StudentRequestDTO dto) {
         schoolClassService.getSchoolClassById(dto.getSchoolClassId());
+        dto.setUsername(generateStudentUsername(dto));
+        dto.setPassword(generateStudentPassword(dto));
         User user = userService.createUser(dto, RolesEnum.ROLE_STUDENT);
         Student student = studentMapper.toModel(dto, user.getId());
         return studentRepository.save(student);
