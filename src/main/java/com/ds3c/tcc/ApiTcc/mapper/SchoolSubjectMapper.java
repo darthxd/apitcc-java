@@ -33,7 +33,7 @@ public class SchoolSubjectMapper {
     public SchoolSubject toModel(SchoolSubjectRequestDTO schoolSubjectRequestDTO) {
         SchoolSubject schoolSubject = new SchoolSubject();
         schoolSubject.setName(schoolSubjectRequestDTO.getName());
-        schoolSubject.setTeacherIds(schoolSubjectRequestDTO.getTeacherIds());
+        schoolSubject.setWorkload(schoolSubjectRequestDTO.getWorkload());
         return schoolSubject;
     }
 
@@ -41,13 +41,7 @@ public class SchoolSubjectMapper {
         SchoolSubjectResponseDTO schoolSubjectResponseDTO = new SchoolSubjectResponseDTO();
         schoolSubjectResponseDTO.setId(schoolSubject.getId());
         schoolSubjectResponseDTO.setName(schoolSubject.getName());
-        if (schoolSubject.getTeacherIds() != null) {
-            List<String> teacherNames = teacherService
-                    .listTeacherById(schoolSubject.getTeacherIds())
-                    .stream().map(Teacher::getName)
-                    .toList();
-            schoolSubjectResponseDTO.setTeacherNames(teacherNames);
-        }
+        schoolSubjectResponseDTO.setWorkload(schoolSubject.getWorkload());
         return schoolSubjectResponseDTO;
     }
 
@@ -64,9 +58,9 @@ public class SchoolSubjectMapper {
         if (StringUtils.hasText(schoolSubjectRequestDTO.getName())) {
             schoolSubject.setName(schoolSubjectRequestDTO.getName());
         }
-        if (schoolSubjectRequestDTO.getTeacherIds() != null) {
-            schoolSubject.setTeacherIds(
-                    schoolSubjectRequestDTO.getTeacherIds()
+        if (schoolSubjectRequestDTO.getWorkload() != null) {
+            schoolSubject.setWorkload(
+                    schoolSubjectRequestDTO.getWorkload()
             );
         }
         return schoolSubject;

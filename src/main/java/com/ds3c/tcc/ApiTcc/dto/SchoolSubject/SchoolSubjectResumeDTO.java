@@ -12,4 +12,5 @@ import lombok.Setter;
 public class SchoolSubjectResumeDTO {
     private Long id;
     private String name;
+    private Integer workload;
 }

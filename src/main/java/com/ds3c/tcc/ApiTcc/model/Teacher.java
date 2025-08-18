@@ -23,5 +23,6 @@ public class Teacher {
     private String cpf;
     private String email;
     private String phone;
+    private Set<Long> subjectIds;
     private Long userId;
 }

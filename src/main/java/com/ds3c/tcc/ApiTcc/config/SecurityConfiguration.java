@@ -60,7 +60,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("http://localhost:5500");
+        configuration.addAllowedOriginPattern("http://localhost:5173");
         configuration.addAllowedMethod(CorsConfiguration.ALL);
         configuration.addAllowedHeader(CorsConfiguration.ALL);
         configuration.setAllowCredentials(true);

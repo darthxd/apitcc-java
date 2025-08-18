@@ -23,6 +23,7 @@ public class TeacherRequestDTO implements UserRequestDTO {
     @Email
     private String email;
     private String phone;
+    private Set<Long> subjectIds;
 
     @Override
     public String getUsername() {

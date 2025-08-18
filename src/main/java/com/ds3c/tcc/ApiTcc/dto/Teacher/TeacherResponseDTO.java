@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,4 +20,5 @@ public class TeacherResponseDTO {
     private String cpf;
     private String email;
     private String phone;
+    private Set<Long> subjectIds;
 }

@@ -14,5 +14,5 @@ import java.util.List;
 public class SchoolSubjectResponseDTO {
     private Long id;
     private String name;
-    private List<String> teacherNames;
+    private Integer workload;
 }

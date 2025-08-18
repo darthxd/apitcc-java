@@ -2,6 +2,7 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResponseDTO;
+import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResumeDTO;
 import com.ds3c.tcc.ApiTcc.enums.CoursesEnum;
 import com.ds3c.tcc.ApiTcc.enums.GradesEnum;
 import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
@@ -63,6 +64,16 @@ public class SchoolClassMapper {
             schoolClassResponseDTO.setTeacherNames(teacherNames);
         }
         return schoolClassResponseDTO;
+    }
+
+    public SchoolClassResumeDTO toResumeDTO(SchoolClass schoolClass) {
+        SchoolClassResumeDTO dto = new SchoolClassResumeDTO();
+        dto.setId(schoolClass.getId());
+        dto.setName(schoolClass.getName());
+        dto.setGrade(schoolClass.getGrade().name());
+        dto.setCourse(schoolClass.getCourse().name());
+        dto.setShift(schoolClass.getShift().name());
+        return dto;
     }
 
     public List<SchoolClassResponseDTO> toListDTO(List<SchoolClass> schoolClassList) {

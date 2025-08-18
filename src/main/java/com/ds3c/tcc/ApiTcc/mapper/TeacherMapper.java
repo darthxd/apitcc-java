@@ -2,11 +2,9 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.Teacher.TeacherRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Teacher.TeacherResponseDTO;
-import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.SchoolSubject;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.model.User;
-import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
@@ -16,73 +14,77 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class TeacherMapper {
     private final UserService userService;
     private final TeacherService teacherService;
+    private final SchoolSubjectService schoolSubjectService;
 
     @Autowired
     @Lazy
     public TeacherMapper(
             UserService userService,
-            TeacherService teacherService) {
+            TeacherService teacherService, SchoolSubjectService schoolSubjectService) {
         this.userService = userService;
         this.teacherService = teacherService;
+        this.schoolSubjectService = schoolSubjectService;
     }
 
-    public Teacher toModel(TeacherRequestDTO teacherRequestDTO, Long userId) {
+    public Teacher toModel(TeacherRequestDTO dto, Long userId) {
         Teacher teacher = new Teacher();
-        teacher.setName(teacherRequestDTO.getName());
-        teacher.setCpf(teacherRequestDTO.getCpf());
-        teacher.setEmail(teacherRequestDTO.getEmail());
-        teacher.setPhone(teacherRequestDTO.getPhone());
+        teacher.setName(dto.getName());
+        teacher.setCpf(dto.getCpf());
+        teacher.setEmail(dto.getEmail());
+        teacher.setPhone(dto.getPhone());
+        teacher.setSubjectIds(dto.getSubjectIds());
         teacher.setUserId(userId);
         return teacher;
     }
 
     public TeacherResponseDTO toDTO(Teacher teacher) {
         User user = userService.getUserById(teacher.getUserId());
-        TeacherResponseDTO teacherResponseDTO = new TeacherResponseDTO();
-        teacherResponseDTO.setId(teacher.getId());
-        teacherResponseDTO.setUsername(user.getUsername());
-        teacherResponseDTO.setPassword(user.getPassword());
-        teacherResponseDTO.setCpf(teacher.getCpf());
-        teacherResponseDTO.setName(teacher.getName());
-        teacherResponseDTO.setPhone(teacher.getPhone());
-        teacherResponseDTO.setEmail(teacher.getEmail());
-        return teacherResponseDTO;
+        TeacherResponseDTO dto = new TeacherResponseDTO();
+        dto.setId(teacher.getId());
+        dto.setUsername(user.getUsername());
+        dto.setPassword(user.getPassword());
+        dto.setCpf(teacher.getCpf());
+        dto.setName(teacher.getName());
+        dto.setPhone(teacher.getPhone());
+        dto.setEmail(teacher.getEmail());
+        dto.setSubjectIds(teacher.getSubjectIds());
+        return dto;
     }
 
     public List<TeacherResponseDTO> toListDTO(List<Teacher> teacherList) {
-        List<TeacherResponseDTO> teacherResponseDTOList = new ArrayList<>();
+        List<TeacherResponseDTO> dtoList = new ArrayList<>();
         for(Teacher teacher : teacherList) {
-            teacherResponseDTOList.add(toDTO(teacher));
+            dtoList.add(toDTO(teacher));
         }
-        return teacherResponseDTOList;
+        return dtoList;
     }
 
-    public Teacher updateModelFromDTO(TeacherRequestDTO teacherRequestDTO, Long id) {
+    public Teacher updateModelFromDTO(TeacherRequestDTO dto, Long id) {
         Teacher teacher = teacherService.getTeacherById(id);
-        if (StringUtils.hasText(teacherRequestDTO.getUsername())
-                || StringUtils.hasText(teacherRequestDTO.getPassword())) {
-            userService.updateUser(teacherRequestDTO, teacher.getUserId());
+        if (StringUtils.hasText(dto.getUsername())
+                || StringUtils.hasText(dto.getPassword())) {
+            userService.updateUser(dto, teacher.getUserId());
         }
-        if (StringUtils.hasText(teacherRequestDTO.getName())) {
-            teacher.setName(teacherRequestDTO.getName());
+        if (StringUtils.hasText(dto.getName())) {
+            teacher.setName(dto.getName());
         }
-        if (StringUtils.hasText(teacherRequestDTO.getCpf())) {
-            teacher.setCpf(teacherRequestDTO.getCpf());
+        if (StringUtils.hasText(dto.getCpf())) {
+            teacher.setCpf(dto.getCpf());
         }
-        if (StringUtils.hasText(teacherRequestDTO.getEmail())) {
-            teacher.setEmail(teacherRequestDTO.getEmail());
+        if (StringUtils.hasText(dto.getEmail())) {
+            teacher.setEmail(dto.getEmail());
         }
-        if (StringUtils.hasText(teacherRequestDTO.getPhone())) {
-            teacher.setPhone(teacherRequestDTO.getPhone());
+        if (StringUtils.hasText(dto.getPhone())) {
+            teacher.setPhone(dto.getPhone());
+        }
+        if (dto.getSubjectIds() != null) {
+            teacher.setSubjectIds(dto.getSubjectIds());
         }
         return teacher;
     }

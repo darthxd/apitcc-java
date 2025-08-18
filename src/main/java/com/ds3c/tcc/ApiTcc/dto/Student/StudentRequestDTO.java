@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,7 +20,7 @@ public class StudentRequestDTO implements UserRequestDTO {
     private String phone;
     private String email;
     private Long schoolClassId;
-    private LocalDate birthdate;
+    private String birthdate;
     private Long biometry;
     private String photo;
 

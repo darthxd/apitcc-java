@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,15 +23,17 @@ public class StudentMapper {
     private final SchoolClassService schoolClassService;
     private final UserService userService;
     private final StudentService studentService;
+    private final SchoolClassMapper schoolClassMapper;
 
     @Autowired
     @Lazy
     public StudentMapper(SchoolClassService schoolClassService,
                          UserService userService,
-                         StudentService studentService) {
+                         StudentService studentService, SchoolClassMapper schoolClassMapper) {
         this.schoolClassService = schoolClassService;
         this.userService = userService;
         this.studentService = studentService;
+        this.schoolClassMapper = schoolClassMapper;
     }
 
     public Student toModel(StudentRequestDTO studentRequestDTO, Long userId) {
@@ -44,7 +47,7 @@ public class StudentMapper {
         student.setPhone(studentRequestDTO.getPhone());
         student.setEmail(studentRequestDTO.getEmail());
         student.setSchoolClass(schoolClass);
-        student.setBirthdate(studentRequestDTO.getBirthdate());
+        student.setBirthdate(LocalDate.parse(studentRequestDTO.getBirthdate()));
         student.setBiometry(studentRequestDTO.getBiometry());
         student.setPhoto(studentRequestDTO.getPhoto());
         student.setUserId(userId);
@@ -63,8 +66,8 @@ public class StudentMapper {
         dto.setCpf(student.getCpf());
         dto.setPhone(student.getPhone());
         dto.setEmail(student.getEmail());
-        dto.setSchoolClassId(student.getSchoolClass().getId());
-        dto.setBirthdate(student.getBirthdate());
+        dto.setSchoolClass(schoolClassMapper.toResumeDTO(student.getSchoolClass()));
+        dto.setBirthdate(student.getBirthdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         dto.setBiometry(student.getBiometry());
         dto.setPhoto(student.getPhoto());
         dto.setInschool(student.getInschool());
@@ -108,9 +111,9 @@ public class StudentMapper {
                     schoolClassService.getSchoolClassById(dto.getSchoolClassId())
             );
         }
-        if (dto.getBirthdate().isBefore(LocalDate.now())
+        if (LocalDate.parse(dto.getBirthdate()).isBefore(LocalDate.now())
                 && dto.getBirthdate() != null) {
-            student.setBirthdate(dto.getBirthdate());
+            student.setBirthdate(LocalDate.parse(dto.getBirthdate()));
         }
         if (dto.getBiometry() != null) {
             student.setBiometry(dto.getBiometry());

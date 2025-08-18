@@ -1,11 +1,10 @@
 package com.ds3c.tcc.ApiTcc.dto.Student;
 
+import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResumeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -21,8 +20,8 @@ public class StudentResponseDTO {
     private String cpf;
     private String phone;
     private String email;
-    private Long schoolClassId;
-    private LocalDate birthdate;
+    private SchoolClassResumeDTO schoolClass;
+    private String birthdate;
     private Long biometry;
     private String photo;
     private Boolean inschool;

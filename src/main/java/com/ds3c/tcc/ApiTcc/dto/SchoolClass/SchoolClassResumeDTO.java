@@ -15,7 +15,7 @@ import lombok.Setter;
 public class SchoolClassResumeDTO {
     private Long id;
     private String name;
-    private GradesEnum grade;
-    private CoursesEnum course;
-    private ShiftsEnum shift;
+    private String grade;
+    private String course;
+    private String shift;
 }

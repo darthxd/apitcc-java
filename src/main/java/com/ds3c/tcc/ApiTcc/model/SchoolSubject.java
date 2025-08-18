@@ -18,5 +18,5 @@ public class SchoolSubject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Set<Long> teacherIds;
+    private Integer workload;
 }

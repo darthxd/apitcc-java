@@ -14,5 +14,5 @@ import java.util.Set;
 @AllArgsConstructor
 public class SchoolSubjectRequestDTO {
     private String name;
-    private Set<Long> teacherIds;
+    private Integer workload;
 }
