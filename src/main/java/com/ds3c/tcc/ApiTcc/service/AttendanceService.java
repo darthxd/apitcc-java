@@ -30,11 +30,11 @@ public class AttendanceService {
                 .orElseThrow(() -> new AttendanceNotFoundException(id));
     }
 
-    public List<Attendance> listAttendances() {
+    public List<Attendance> listAttendance() {
         return attendanceRepository.findAll();
     }
 
-    public List<Attendance> listAttendancesByDateAndClassId(String date, Long classId) {
+    public List<Attendance> listAttendanceByDateAndClassId(String date, Long classId) {
         return attendanceRepository.findAllByDateAndSchoolClassId(
                 LocalDate.parse(date), classId
         );
