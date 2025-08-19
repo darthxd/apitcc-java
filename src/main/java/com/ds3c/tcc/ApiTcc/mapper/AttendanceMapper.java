@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class AttendanceMapper {
         Teacher teacher = teacherService
                 .getTeacherById(dto.getTeacherId());
         Attendance attendance = new Attendance();
-        attendance.setDate(LocalDate.parse(dto.getDate()));
+        attendance.setDate(LocalDate.parse(dto.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         attendance.setStudent(student);
         attendance.setSchoolClass(schoolClass);
         attendance.setTeacher(teacher);
@@ -57,7 +58,7 @@ public class AttendanceMapper {
     public AttendanceResponseDTO toDTO(Attendance attendance) {
         AttendanceResponseDTO dto = new AttendanceResponseDTO();
         dto.setId(attendance.getId());
-        dto.setDate(attendance.toString());
+        dto.setDate(attendance.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         dto.setStudentId(attendance.getStudent().getId());
         dto.setSchoolClassId(attendance.getSchoolClass().getId());
         dto.setTeacherId(attendance.getTeacher().getId());

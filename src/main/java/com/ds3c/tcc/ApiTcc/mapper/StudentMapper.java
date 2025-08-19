@@ -47,7 +47,8 @@ public class StudentMapper {
         student.setPhone(studentRequestDTO.getPhone());
         student.setEmail(studentRequestDTO.getEmail());
         student.setSchoolClass(schoolClass);
-        student.setBirthdate(LocalDate.parse(studentRequestDTO.getBirthdate()));
+        student.setBirthdate(LocalDate.parse(
+                studentRequestDTO.getBirthdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         student.setBiometry(studentRequestDTO.getBiometry());
         student.setPhoto(studentRequestDTO.getPhoto());
         student.setUserId(userId);

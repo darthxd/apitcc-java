@@ -1,10 +1,9 @@
 package com.ds3c.tcc.ApiTcc.controller;
 
+import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceBulkRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.AttendanceMapper;
-import com.ds3c.tcc.ApiTcc.model.Attendance;
-import com.ds3c.tcc.ApiTcc.repository.AttendanceRepository;
 import com.ds3c.tcc.ApiTcc.service.AttendanceService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +28,10 @@ public class AttendanceController {
     }
 
     @PostMapping
-    public AttendanceResponseDTO createAttendance(@RequestBody @Valid AttendanceRequestDTO dto) {
-        return attendanceMapper.toDTO(
-                attendanceService.createAttendance(dto)
+    public List<AttendanceResponseDTO> createAttendanceBulk(
+            @RequestBody @Valid AttendanceBulkRequestDTO dto) {
+        return attendanceMapper.toListDTO(
+                attendanceService.createAttendanceBulk(dto)
         );
     }
 
