@@ -42,6 +42,20 @@ public class AttendanceController {
         );
     }
 
+    @GetMapping("/class/{classId}")
+    public List<AttendanceResponseDTO> listAttendanceBySchoolClassId(@PathVariable("classId") Long classId) {
+        return attendanceMapper.toListDTO(
+                attendanceService.listAttendanceBySchoolClassId(classId)
+        );
+    }
+
+    @GetMapping("/student/{id}")
+    public List<AttendanceResponseDTO> listAttendancesByStudentId(@PathVariable("id") Long studentId) {
+        return attendanceMapper.toListDTO(
+                attendanceService.listAttendanceByStudentId(studentId)
+        );
+    }
+
     @GetMapping("/{classId}/{date}")
     public List<AttendanceResponseDTO> listAttendanceByDateAndClassId(
             @PathVariable("classId") Long classId,

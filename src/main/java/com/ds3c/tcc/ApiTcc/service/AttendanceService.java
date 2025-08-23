@@ -2,6 +2,7 @@ package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceBulkRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceRequestDTO;
+import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceBulkUpdateDTO;
 import com.ds3c.tcc.ApiTcc.exception.AttendanceNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.AttendanceMapper;
 import com.ds3c.tcc.ApiTcc.model.Attendance;
@@ -15,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AttendanceService {
@@ -43,6 +42,10 @@ public class AttendanceService {
                 .orElseThrow(() -> new AttendanceNotFoundException(id));
     }
 
+    public List<Attendance> listAttendanceBySchoolClassId(Long schoolClassId) {
+        return attendanceRepository.findAllBySchoolClassId(schoolClassId);
+    }
+
     public List<Attendance> listAttendance() {
         return attendanceRepository.findAll();
     }
@@ -51,6 +54,10 @@ public class AttendanceService {
         return attendanceRepository.findAllByDateAndSchoolClassId(
                 LocalDate.parse(date), classId
         );
+    }
+
+    public List<Attendance> listAttendanceByStudentId(Long studentId) {
+        return attendanceRepository.findAllByStudentId(studentId);
     }
 
     public Attendance createAttendance(AttendanceRequestDTO dto) {
@@ -78,6 +85,18 @@ public class AttendanceService {
             attendance.setSchoolClass(schoolClass);
             attendance.setTeacher(teacher);
             attendance.setPresent(p.getPresent());
+            return attendance;
+        }).toList();
+
+        return attendanceRepository.saveAll(attendanceList);
+    }
+
+    public List<Attendance> updateAttendanceBulk(AttendanceBulkUpdateDTO dto) {
+        List<Attendance> attendanceList = dto.getUpdates().stream().map(update -> {
+            Attendance attendance = getAttendanceById(update.getAttendanceId());
+            if (update.getPresent() != null) {
+                attendance.setPresent(update.getPresent());
+            }
             return attendance;
         }).toList();
 
