@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class ActivityMapper {
@@ -24,7 +26,9 @@ public class ActivityMapper {
     private final ActivityService activityService;
 
     @Lazy
-    public ActivityMapper(TeacherService teacherService, SchoolClassService schoolClassService, ActivityService activityService) {
+    public ActivityMapper(TeacherService teacherService,
+                          SchoolClassService schoolClassService,
+                          ActivityService activityService) {
         this.teacherService = teacherService;
         this.schoolClassService = schoolClassService;
         this.activityService = activityService;
@@ -38,6 +42,7 @@ public class ActivityMapper {
         activity.setDescription(dto.getDescription());
         activity.setDeadline(LocalDate.parse(
                 dto.getDeadline(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        activity.setCreationDate(LocalDate.now(ZoneId.of("America/Sao_Paulo")));
         activity.setMaxScore(dto.getMaxScore());
         activity.setTeacher(teacher);
         activity.setSchoolClass(schoolClass);
@@ -49,7 +54,10 @@ public class ActivityMapper {
         dto.setId(activity.getId());
         dto.setTitle(activity.getTitle());
         dto.setDescription(activity.getDescription());
-        dto.setDeadline(activity.getDeadline().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        dto.setDeadline(activity.getDeadline()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        dto.setCreationDate(activity.getCreationDate()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         dto.setMaxScore(activity.getMaxScore());
         dto.setTeacherId(activity.getTeacher().getId());
         dto.setSchoolClassId(activity.getSchoolClass().getId());

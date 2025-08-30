@@ -20,6 +20,7 @@ public class Activity {
     private String title;
     private String description;
     private LocalDate deadline;
+    private LocalDate creationDate;
     private Double maxScore;
     @ManyToOne
     private Teacher teacher;

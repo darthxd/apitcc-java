@@ -14,6 +14,7 @@ public class ActivityResponseDTO {
     private String title;
     private String description;
     private String deadline;
+    private String creationDate;
     private Double maxScore;
     private Long teacherId;
     private Long schoolClassId;

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class ActivitySubmissionMapper {
                 studentService.getStudentById(dto.getStudentId())
         );
         activitySubmission.setSubmissionDate(
-                LocalDate.now()
+                LocalDate.now(ZoneId.of("America/Sao_Paulo"))
         );
         activitySubmission.setAnswerText(dto.getAnswerText());
         activitySubmission.setFileUrl(dto.getFileUrl());
