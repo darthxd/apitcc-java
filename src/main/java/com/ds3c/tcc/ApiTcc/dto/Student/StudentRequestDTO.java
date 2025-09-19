@@ -21,7 +21,6 @@ public class StudentRequestDTO implements UserRequestDTO {
     private String email;
     private Long schoolClassId;
     private String birthdate;
-    private Long biometry;
     private String photo;
 
     @Override

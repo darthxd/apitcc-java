@@ -1,21 +1,16 @@
 package com.ds3c.tcc.ApiTcc.service;
 
+import com.ds3c.tcc.ApiTcc.dto.Student.BiometryRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
-import com.ds3c.tcc.ApiTcc.dto.Student.StudentResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.exception.StudentNotFoundException;
-import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
 import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
-import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.User;
-import com.ds3c.tcc.ApiTcc.repository.SchoolClassRepository;
 import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
@@ -86,9 +81,25 @@ public class StudentService {
         studentRepository.delete(student);
     }
 
-    public List<StudentResponseDTO> listStudentFromSchoolClass(Long id) {
-        return studentMapper.toListDTO(
-                studentRepository.findAllBySchoolClassId(id)
-        );
+    public List<Student> listStudentFromSchoolClass(Long id) {
+        return studentRepository.findAllBySchoolClassId(id);
+    }
+
+    public String registerBiometry(BiometryRequestDTO dto) {
+        Student student = getStudentById(dto.getStudentId());
+        student.setBiometry(true);
+        studentRepository.save(student);
+        return "Biometria para o aluno de ID: "+student.getId()+" cadastrada.";
+    }
+
+    public Student readPresence(BiometryRequestDTO dto) {
+        Student student = getStudentById(dto.getStudentId());
+        if (!student.getInschool()) {
+            student.setInschool(true);
+        } else {
+            student.setInschool(false);
+        }
+        studentRepository.save(student);
+        return student;
     }
 }

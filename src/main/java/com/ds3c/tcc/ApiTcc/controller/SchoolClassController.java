@@ -4,6 +4,7 @@ import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResponseDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
+import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import jakarta.validation.Valid;
@@ -20,16 +21,18 @@ public class SchoolClassController {
     private final SchoolClassMapper schoolClassMapper;
     private final SchoolClassService schoolClassService;
     private final StudentService studentService;
+    private final StudentMapper studentMapper;
 
     @Autowired
     @Lazy
     public SchoolClassController(
             SchoolClassMapper schoolClassMapper,
             SchoolClassService schoolClassService,
-            StudentService studentService) {
+            StudentService studentService, StudentMapper studentMapper) {
         this.schoolClassMapper = schoolClassMapper;
         this.schoolClassService = schoolClassService;
         this.studentService = studentService;
+        this.studentMapper = studentMapper;
     }
 
     @GetMapping
@@ -70,6 +73,6 @@ public class SchoolClassController {
 
     @GetMapping("/{id}/students")
     public List<StudentResponseDTO> listStudentsFromSchoolClass(@PathVariable("id") Long id) {
-        return studentService.listStudentFromSchoolClass(id);
+        return studentMapper.toListDTO(studentService.listStudentFromSchoolClass(id));
     }
 }

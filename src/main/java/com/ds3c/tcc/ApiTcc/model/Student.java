@@ -27,8 +27,8 @@ public class Student {
     @JoinColumn(name = "class_id", nullable = false)
     private SchoolClass schoolClass;
     private LocalDate birthdate;
-    private Long biometry;
+    private Boolean biometry;
     private String photo;
-    private Boolean inschool;
+    private Boolean inschool = false;
     private Long userId;
 }

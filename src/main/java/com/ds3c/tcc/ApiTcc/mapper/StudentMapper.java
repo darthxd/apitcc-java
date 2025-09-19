@@ -29,7 +29,8 @@ public class StudentMapper {
     @Lazy
     public StudentMapper(SchoolClassService schoolClassService,
                          UserService userService,
-                         StudentService studentService, SchoolClassMapper schoolClassMapper) {
+                         StudentService studentService,
+                         SchoolClassMapper schoolClassMapper) {
         this.schoolClassService = schoolClassService;
         this.userService = userService;
         this.studentService = studentService;
@@ -49,7 +50,6 @@ public class StudentMapper {
         student.setSchoolClass(schoolClass);
         student.setBirthdate(LocalDate.parse(
                 studentRequestDTO.getBirthdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        student.setBiometry(studentRequestDTO.getBiometry());
         student.setPhoto(studentRequestDTO.getPhoto());
         student.setUserId(userId);
         return student;
@@ -69,8 +69,8 @@ public class StudentMapper {
         dto.setEmail(student.getEmail());
         dto.setSchoolClass(schoolClassMapper.toResumeDTO(student.getSchoolClass()));
         dto.setBirthdate(student.getBirthdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        dto.setBiometry(student.getBiometry());
         dto.setPhoto(student.getPhoto());
+        dto.setBiometry(student.getBiometry());
         dto.setInschool(student.getInschool());
         return dto;
     }
@@ -115,9 +115,6 @@ public class StudentMapper {
         if (LocalDate.parse(dto.getBirthdate()).isBefore(LocalDate.now())
                 && dto.getBirthdate() != null) {
             student.setBirthdate(LocalDate.parse(dto.getBirthdate()));
-        }
-        if (dto.getBiometry() != null) {
-            student.setBiometry(dto.getBiometry());
         }
         if (StringUtils.hasText(dto.getPhoto())) {
             student.setPhoto(dto.getPhoto());

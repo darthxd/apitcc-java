@@ -1,8 +1,10 @@
 package com.ds3c.tcc.ApiTcc.controller;
 
+import com.ds3c.tcc.ApiTcc.dto.Student.BiometryRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
+import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,8 @@ public class StudentController {
 
     @Autowired
     @Lazy
-    public StudentController(StudentMapper studentMapper, StudentService studentService) {
+    public StudentController(StudentMapper studentMapper,
+                             StudentService studentService) {
         this.studentMapper = studentMapper;
         this.studentService = studentService;
     }
@@ -64,5 +67,16 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable("id") Long id) {
         studentService.deleteStudent(id);
+    }
+
+    @PostMapping("/biometry/create")
+    public String registerBiometry(@RequestBody @Valid BiometryRequestDTO dto) {
+        return studentService.registerBiometry(dto);
+    }
+
+    @PostMapping("/biometry/present")
+    public StudentResponseDTO readPresence(@RequestBody @Valid BiometryRequestDTO dto) {
+        Student student = studentService.readPresence(dto);
+        return studentMapper.toDTO(student);
     }
 }
