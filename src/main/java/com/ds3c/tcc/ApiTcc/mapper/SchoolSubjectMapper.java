@@ -4,7 +4,6 @@ import com.ds3c.tcc.ApiTcc.dto.SchoolSubject.SchoolSubjectRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolSubject.SchoolSubjectResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.SchoolSubject;
 import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
-import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -15,15 +14,12 @@ import java.util.List;
 
 @Component
 public class SchoolSubjectMapper {
-    private final TeacherService teacherService;
     private final SchoolSubjectService schoolSubjectService;
 
     @Autowired
     @Lazy
     public SchoolSubjectMapper(
-            TeacherService teacherService,
             SchoolSubjectService schoolSubjectService) {
-        this.teacherService = teacherService;
         this.schoolSubjectService = schoolSubjectService;
     }
 

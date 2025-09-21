@@ -8,7 +8,6 @@ import com.ds3c.tcc.ApiTcc.enums.GradesEnum;
 import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
-import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
