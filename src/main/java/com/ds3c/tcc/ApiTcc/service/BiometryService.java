@@ -27,27 +27,23 @@ public class BiometryService {
     }
 
     public boolean enrollFingerPrint(Long studentId) {
-        ResponseEntity response = restClient.post()
+        ResponseEntity<Void> response = restClient.post()
                 .uri("/api/fingerprint/enroll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("{\"studentId\":" + studentId + "}")
                 .retrieve()
                 .toBodilessEntity();
 
-        if (response.getStatusCode() != HttpStatus.OK) {
-            return false;
-        }
+        if (response.getStatusCode() != HttpStatus.OK) return false;
         return true;
     }
 
     public boolean resetSensor() {
-        ResponseEntity response = restClient.post()
+        ResponseEntity<Void> response = restClient.post()
                 .uri("/api/fingerprint/reset")
                 .retrieve()
                 .toBodilessEntity();
-        if (response.getStatusCode() != HttpStatus.OK) {
-            return false;
-        }
+        if (response.getStatusCode() != HttpStatus.OK) return false;
         return true;
     }
 
@@ -59,7 +55,8 @@ public class BiometryService {
          if (response.getStatusCode() != HttpStatus.OK) {
              return Optional.empty();
          }
-         Student student = studentService.getStudentById(
+        assert response.getBody() != null;
+        Student student = studentService.getStudentById(
                  response.getBody().getStudentId());
          return Optional.of(student);
     }

@@ -22,9 +22,10 @@ public class TeacherService {
 
     @Autowired
     @Lazy
-    public TeacherService(TeacherRepository teacherRepository,
-                          TeacherMapper teacherMapper,
-                          UserService userService) {
+    public TeacherService(
+            TeacherRepository teacherRepository,
+            TeacherMapper teacherMapper,
+            UserService userService) {
         this.teacherRepository = teacherRepository;
         this.teacherMapper = teacherMapper;
         this.userService = userService;

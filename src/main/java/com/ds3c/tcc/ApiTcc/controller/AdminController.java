@@ -15,8 +15,9 @@ public class AdminController {
     private final AdminService adminService;
     private final AdminMapper adminMapper;
 
-    public AdminController(AdminService adminService,
-                           AdminMapper adminMapper) {
+    public AdminController(
+            AdminService adminService,
+            AdminMapper adminMapper) {
         this.adminService = adminService;
         this.adminMapper = adminMapper;
     }

@@ -21,9 +21,10 @@ public class AdminService {
 
     @Autowired
     @Lazy
-    public AdminService(UserService userService,
-                        AdminMapper adminMapper,
-                        AdminRepository adminRepository) {
+    public AdminService(
+            UserService userService,
+            AdminMapper adminMapper,
+            AdminRepository adminRepository) {
         this.userService = userService;
         this.adminMapper = adminMapper;
         this.adminRepository = adminRepository;

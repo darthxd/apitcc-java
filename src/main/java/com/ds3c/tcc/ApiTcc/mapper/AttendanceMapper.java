@@ -29,10 +29,11 @@ public class AttendanceMapper {
 
     @Autowired
     @Lazy
-    public AttendanceMapper(StudentService studentService,
-                            SchoolClassService schoolClassService,
-                            TeacherService teacherService,
-                            AttendanceService attendanceService) {
+    public AttendanceMapper(
+            StudentService studentService,
+            SchoolClassService schoolClassService,
+            TeacherService teacherService,
+            AttendanceService attendanceService) {
         this.studentService = studentService;
         this.schoolClassService = schoolClassService;
         this.teacherService = teacherService;

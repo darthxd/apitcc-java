@@ -23,8 +23,9 @@ public class StudentController {
 
     @Autowired
     @Lazy
-    public StudentController(StudentMapper studentMapper,
-                             StudentService studentService) {
+    public StudentController(
+            StudentMapper studentMapper,
+            StudentService studentService) {
         this.studentMapper = studentMapper;
         this.studentService = studentService;
     }

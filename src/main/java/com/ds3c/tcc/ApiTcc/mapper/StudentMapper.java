@@ -27,10 +27,11 @@ public class StudentMapper {
 
     @Autowired
     @Lazy
-    public StudentMapper(SchoolClassService schoolClassService,
-                         UserService userService,
-                         StudentService studentService,
-                         SchoolClassMapper schoolClassMapper) {
+    public StudentMapper(
+            SchoolClassService schoolClassService,
+            UserService userService,
+            StudentService studentService,
+            SchoolClassMapper schoolClassMapper) {
         this.schoolClassService = schoolClassService;
         this.userService = userService;
         this.studentService = studentService;
@@ -49,7 +50,8 @@ public class StudentMapper {
         student.setEmail(studentRequestDTO.getEmail());
         student.setSchoolClass(schoolClass);
         student.setBirthdate(LocalDate.parse(
-                studentRequestDTO.getBirthdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                studentRequestDTO.getBirthdate(),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         student.setPhoto(studentRequestDTO.getPhoto());
         student.setUserId(userId);
         return student;
@@ -67,8 +69,10 @@ public class StudentMapper {
         dto.setCpf(student.getCpf());
         dto.setPhone(student.getPhone());
         dto.setEmail(student.getEmail());
-        dto.setSchoolClass(schoolClassMapper.toResumeDTO(student.getSchoolClass()));
-        dto.setBirthdate(student.getBirthdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        dto.setSchoolClass(schoolClassMapper.toResumeDTO(
+                student.getSchoolClass()));
+        dto.setBirthdate(student.getBirthdate().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         dto.setPhoto(student.getPhoto());
         dto.setBiometry(student.getBiometry());
         dto.setInschool(student.getInschool());

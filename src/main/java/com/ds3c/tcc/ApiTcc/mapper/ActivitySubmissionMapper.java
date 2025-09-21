@@ -21,8 +21,9 @@ public class ActivitySubmissionMapper {
     private final StudentService studentService;
 
     @Lazy
-    public ActivitySubmissionMapper(ActivityService activityService,
-                                    StudentService studentService) {
+    public ActivitySubmissionMapper(
+            ActivityService activityService,
+            StudentService studentService) {
         this.activityService = activityService;
         this.studentService = studentService;
     }

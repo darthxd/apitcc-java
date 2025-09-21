@@ -22,7 +22,9 @@ public class AdminMapper {
 
     @Autowired
     @Lazy
-    public AdminMapper(UserService userService, AdminService adminService) {
+    public AdminMapper(
+            UserService userService,
+            AdminService adminService) {
         this.userService = userService;
         this.adminService = adminService;
     }

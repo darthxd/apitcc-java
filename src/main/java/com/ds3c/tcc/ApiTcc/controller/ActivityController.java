@@ -20,9 +20,10 @@ public class ActivityController {
     private final ActivityMapper activityMapper;
     private final ActivitySubmissionMapper activitySubmissionMapper;
 
-    public ActivityController(ActivityService activityService,
-                              ActivityMapper activityMapper,
-                              ActivitySubmissionMapper activitySubmissionMapper) {
+    public ActivityController(
+            ActivityService activityService,
+            ActivityMapper activityMapper,
+            ActivitySubmissionMapper activitySubmissionMapper) {
         this.activityService = activityService;
         this.activityMapper = activityMapper;
         this.activitySubmissionMapper = activitySubmissionMapper;

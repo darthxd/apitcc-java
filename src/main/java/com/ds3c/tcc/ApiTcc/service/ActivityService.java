@@ -26,10 +26,11 @@ public class ActivityService {
     private final ActivitySubmissionMapper activitySubmissionMapper;
 
     @Lazy
-    public ActivityService(ActivityRepository activityRepository,
-                           ActivitySubmissionRepository activitySubmissionRepository,
-                           ActivityMapper activityMapper,
-                           ActivitySubmissionMapper activitySubmissionMapper) {
+    public ActivityService(
+            ActivityRepository activityRepository,
+            ActivitySubmissionRepository activitySubmissionRepository,
+            ActivityMapper activityMapper,
+            ActivitySubmissionMapper activitySubmissionMapper) {
         this.activityRepository = activityRepository;
         this.activitySubmissionRepository = activitySubmissionRepository;
         this.activityMapper = activityMapper;
@@ -75,7 +76,8 @@ public class ActivityService {
         activityRepository.delete(activity);
     }
 
-    public ActivitySubmission submitActivity(ActivitySubmissionRequestDTO dto, Long activityId) {
+    public ActivitySubmission submitActivity(
+            ActivitySubmissionRequestDTO dto, Long activityId) {
         Activity activity = getActivityById(activityId);
         try {
             activitySubmissionRepository.findByActivityIdAndStudentId(
@@ -91,10 +93,12 @@ public class ActivityService {
                 activitySubmissionMapper.toModel(dto, activityId)
         );
     }
-    public ActivitySubmission submitGrade(GradeSubmissionRequestDTO dto, Long submissionId) {
+    public ActivitySubmission submitGrade(
+            GradeSubmissionRequestDTO dto, Long submissionId) {
         ActivitySubmission activitySubmission = getActivitySubmissionById(submissionId);
         if (dto.getGrade() > activitySubmission.getActivity().getMaxScore()) {
-            throw new RuntimeException("The grade submited was bigger than the max grade for this activity.");
+            throw new RuntimeException(
+                    "The grade submited was bigger than the max grade for this activity.");
         }
         activitySubmission.setGrade(dto.getGrade());
         return activitySubmissionRepository.save(activitySubmission);

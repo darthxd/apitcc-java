@@ -25,9 +25,10 @@ public class ActivityMapper {
     private final ActivityService activityService;
 
     @Lazy
-    public ActivityMapper(TeacherService teacherService,
-                          SchoolClassService schoolClassService,
-                          ActivityService activityService) {
+    public ActivityMapper(
+            TeacherService teacherService,
+            SchoolClassService schoolClassService,
+            ActivityService activityService) {
         this.teacherService = teacherService;
         this.schoolClassService = schoolClassService;
         this.activityService = activityService;

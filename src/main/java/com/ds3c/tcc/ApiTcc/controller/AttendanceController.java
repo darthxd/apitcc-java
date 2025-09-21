@@ -17,8 +17,9 @@ public class AttendanceController {
     private final AttendanceMapper attendanceMapper;
     private final AttendanceService attendanceService;
 
-    public AttendanceController(AttendanceMapper attendanceMapper,
-                                AttendanceService attendanceService) {
+    public AttendanceController(
+            AttendanceMapper attendanceMapper,
+            AttendanceService attendanceService) {
         this.attendanceMapper = attendanceMapper;
         this.attendanceService = attendanceService;
     }

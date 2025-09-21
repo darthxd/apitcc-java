@@ -109,7 +109,7 @@ public class StudentService {
 
     public Student readPresence() {
         Student student = biometryService.readFingerprint()
-                .orElseThrow(() -> (new BiometryRegisterException()));
+                .orElseThrow(BiometryRegisterException::new);
         student.setInschool(!student.getInschool());
         studentRepository.save(student);
         return student;

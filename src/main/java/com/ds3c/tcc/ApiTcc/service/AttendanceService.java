@@ -28,8 +28,12 @@ public class AttendanceService {
 
     @Autowired
     @Lazy
-    public AttendanceService(AttendanceRepository attendanceRepository,
-                             AttendanceMapper attendanceMapper, SchoolClassService schoolClassService, TeacherService teacherService, StudentService studentService) {
+    public AttendanceService(
+            AttendanceRepository attendanceRepository,
+            AttendanceMapper attendanceMapper,
+            SchoolClassService schoolClassService,
+            TeacherService teacherService,
+            StudentService studentService) {
         this.attendanceRepository = attendanceRepository;
         this.attendanceMapper = attendanceMapper;
         this.schoolClassService = schoolClassService;

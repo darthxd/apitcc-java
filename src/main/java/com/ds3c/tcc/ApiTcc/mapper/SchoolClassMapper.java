@@ -25,7 +25,8 @@ public class SchoolClassMapper {
     @Autowired
     @Lazy
     public SchoolClassMapper(
-            TeacherService teacherService, SchoolClassService schoolClassService) {
+            TeacherService teacherService,
+            SchoolClassService schoolClassService) {
         this.teacherService = teacherService;
         this.schoolClassService = schoolClassService;
     }

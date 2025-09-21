@@ -16,7 +16,8 @@ public class SchoolSubjectController {
     private final SchoolSubjectService schoolSubjectService;
 
     public SchoolSubjectController(
-            SchoolSubjectMapper schoolSubjectMapper, SchoolSubjectService schoolSubjectService) {
+            SchoolSubjectMapper schoolSubjectMapper,
+            SchoolSubjectService schoolSubjectService) {
         this.schoolSubjectMapper = schoolSubjectMapper;
         this.schoolSubjectService = schoolSubjectService;
     }
