@@ -4,7 +4,6 @@ import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.exception.UserNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.UserMapper;
-import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

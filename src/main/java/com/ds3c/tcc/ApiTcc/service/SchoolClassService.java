@@ -18,24 +18,21 @@ import java.util.Set;
 public class SchoolClassService {
     private final SchoolClassRepository schoolClassRepository;
     private final SchoolClassMapper schoolClassMapper;
-    private final StudentService studentService;
 
     @Autowired
     @Lazy
     public SchoolClassService(
             SchoolClassRepository schoolClassRepository,
-            SchoolClassMapper schoolClassMapper,
-            StudentService studentService) {
+            SchoolClassMapper schoolClassMapper) {
         this.schoolClassRepository = schoolClassRepository;
         this.schoolClassMapper = schoolClassMapper;
-        this.studentService = studentService;
     }
 
     public String generateSchoolClassName(SchoolClass schoolClass) {
         final String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String shiftName = "";
         String gradeName = "";
-        String classIdentifier = "";
+        String classIdentifier;
 
         List<SchoolClass> schoolClasses = schoolClassRepository
                 .findByCourseAndGradeAndShift(

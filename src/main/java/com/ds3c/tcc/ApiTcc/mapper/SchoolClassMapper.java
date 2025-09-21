@@ -19,15 +19,12 @@ import java.util.List;
 
 @Component
 public class SchoolClassMapper {
-    private final TeacherService teacherService;
     private final SchoolClassService schoolClassService;
 
     @Autowired
     @Lazy
     public SchoolClassMapper(
-            TeacherService teacherService,
             SchoolClassService schoolClassService) {
-        this.teacherService = teacherService;
         this.schoolClassService = schoolClassService;
     }
 

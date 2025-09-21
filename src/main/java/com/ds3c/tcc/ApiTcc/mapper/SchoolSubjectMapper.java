@@ -1,10 +1,8 @@
 package com.ds3c.tcc.ApiTcc.mapper;
 
-import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResponseDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolSubject.SchoolSubjectRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolSubject.SchoolSubjectResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.SchoolSubject;
-import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class SchoolSubjectMapper {

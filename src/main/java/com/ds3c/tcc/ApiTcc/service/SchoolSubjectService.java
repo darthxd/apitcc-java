@@ -2,7 +2,6 @@ package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.SchoolSubject.SchoolSubjectRequestDTO;
 import com.ds3c.tcc.ApiTcc.exception.SchoolSubjectNotFoundException;
-import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
 import com.ds3c.tcc.ApiTcc.mapper.SchoolSubjectMapper;
 import com.ds3c.tcc.ApiTcc.model.SchoolSubject;
 import com.ds3c.tcc.ApiTcc.repository.SchoolSubjectRepository;

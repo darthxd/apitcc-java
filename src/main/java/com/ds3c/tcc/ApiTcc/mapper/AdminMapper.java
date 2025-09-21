@@ -2,7 +2,6 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.Admin.AdminRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Admin.AdminResponseDTO;
-import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.service.AdminService;
