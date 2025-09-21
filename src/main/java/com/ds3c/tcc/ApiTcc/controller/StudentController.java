@@ -9,6 +9,7 @@ import com.ds3c.tcc.ApiTcc.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,14 +70,14 @@ public class StudentController {
         studentService.deleteStudent(id);
     }
 
-    @PostMapping("/biometry/create")
-    public String registerBiometry(@RequestBody @Valid BiometryRequestDTO dto) {
-        return studentService.registerBiometry(dto);
+    @PostMapping("/biometry/register")
+    public ResponseEntity<String> registerBiometry(@RequestBody @Valid BiometryRequestDTO dto) {
+        return studentService.enrollBiometry(dto);
     }
 
-    @PostMapping("/biometry/present")
-    public StudentResponseDTO readPresence(@RequestBody @Valid BiometryRequestDTO dto) {
-        Student student = studentService.readPresence(dto);
+    @PostMapping("/biometry/read")
+    public StudentResponseDTO readPresence() {
+        Student student = studentService.readPresence();
         return studentMapper.toDTO(student);
     }
 }

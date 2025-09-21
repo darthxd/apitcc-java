@@ -3,6 +3,7 @@ package com.ds3c.tcc.ApiTcc.service;
 import com.ds3c.tcc.ApiTcc.dto.Student.BiometryRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
+import com.ds3c.tcc.ApiTcc.exception.BiometryRegisterException;
 import com.ds3c.tcc.ApiTcc.exception.StudentNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
 import com.ds3c.tcc.ApiTcc.model.Student;
@@ -10,6 +11,8 @@ import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,17 +23,20 @@ public class StudentService {
     private final StudentMapper studentMapper;
     private final UserService userService;
     private final SchoolClassService schoolClassService;
+    private final BiometryService biometryService;
 
     @Autowired
     @Lazy
-    public StudentService(StudentRepository studentRepository,
-                          StudentMapper studentMapper,
-                          UserService userService,
-                          SchoolClassService schoolClassService) {
+    public StudentService(
+            StudentRepository studentRepository,
+            StudentMapper studentMapper,
+            UserService userService,
+            SchoolClassService schoolClassService, BiometryService biometryService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.userService = userService;
         this.schoolClassService = schoolClassService;
+        this.biometryService = biometryService;
     }
 
     public Student getStudentById(Long id) {
@@ -85,20 +91,26 @@ public class StudentService {
         return studentRepository.findAllBySchoolClassId(id);
     }
 
-    public String registerBiometry(BiometryRequestDTO dto) {
+    public ResponseEntity<String> enrollBiometry(BiometryRequestDTO dto) {
         Student student = getStudentById(dto.getStudentId());
-        student.setBiometry(true);
-        studentRepository.save(student);
-        return "Biometria para o aluno de ID: "+student.getId()+" cadastrada.";
+        if(biometryService.enrollFingerPrint(dto.getStudentId())) {
+            student.setBiometry(true);
+            studentRepository.save(student);
+            return new ResponseEntity<>(
+                    "The biometry for the student with ID: "+student.getId()+" was registered.",
+                    HttpStatus.OK
+            );
+        }
+        return new ResponseEntity<>(
+                "Error while registering the biometry.",
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 
-    public Student readPresence(BiometryRequestDTO dto) {
-        Student student = getStudentById(dto.getStudentId());
-        if (!student.getInschool()) {
-            student.setInschool(true);
-        } else {
-            student.setInschool(false);
-        }
+    public Student readPresence() {
+        Student student = biometryService.readFingerprint()
+                .orElseThrow(() -> (new BiometryRegisterException()));
+        student.setInschool(!student.getInschool());
         studentRepository.save(student);
         return student;
     }
