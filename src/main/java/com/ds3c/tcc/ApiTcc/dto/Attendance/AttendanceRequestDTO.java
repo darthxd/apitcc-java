@@ -14,5 +14,6 @@ public class AttendanceRequestDTO {
     private Long studentId;
     private Long schoolClassId;
     private Long teacherId;
+    private Boolean isInSchool;
     private Boolean present;
 }

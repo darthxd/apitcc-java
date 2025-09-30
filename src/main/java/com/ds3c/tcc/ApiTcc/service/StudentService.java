@@ -3,7 +3,6 @@ package com.ds3c.tcc.ApiTcc.service;
 import com.ds3c.tcc.ApiTcc.dto.Student.BiometryRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
-import com.ds3c.tcc.ApiTcc.exception.BiometryRegisterException;
 import com.ds3c.tcc.ApiTcc.exception.StudentNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
 import com.ds3c.tcc.ApiTcc.model.Student;
@@ -24,6 +23,7 @@ public class StudentService {
     private final UserService userService;
     private final SchoolClassService schoolClassService;
     private final BiometryService biometryService;
+    private final PresenceLogService presenceLogService;
 
     @Autowired
     @Lazy
@@ -31,12 +31,13 @@ public class StudentService {
             StudentRepository studentRepository,
             StudentMapper studentMapper,
             UserService userService,
-            SchoolClassService schoolClassService, BiometryService biometryService) {
+            SchoolClassService schoolClassService, BiometryService biometryService, PresenceLogService presenceLogService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.userService = userService;
         this.schoolClassService = schoolClassService;
         this.biometryService = biometryService;
+        this.presenceLogService = presenceLogService;
     }
 
     public Student getStudentById(Long id) {
@@ -85,6 +86,7 @@ public class StudentService {
         Student student = getStudentById(id);
         userService.deleteUser(student.getUserId());
         studentRepository.delete(student);
+        biometryService.deleteFingerprint(id);
     }
 
     public List<Student> listStudentFromSchoolClass(Long id) {
@@ -109,9 +111,30 @@ public class StudentService {
 
     public Student readPresence() {
         Student student = biometryService.readFingerprint()
-                .orElseThrow(BiometryRegisterException::new);
-        student.setInschool(!student.getInschool());
-        studentRepository.save(student);
+                .orElseThrow(() -> (new RuntimeException("No corresponding biometry was found.")));
+        presenceLogService.togglePresence(student.getId());
         return student;
+    }
+
+    public ResponseEntity<String> deleteBiometry(BiometryRequestDTO dto) {
+        if (!biometryService.deleteFingerprint(dto.getStudentId())) {
+            return new ResponseEntity<>(
+                    "Error while trying to delete the biometry.",
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+        Student student = getStudentById(dto.getStudentId());
+        student.setBiometry(false);
+        student.setInschool(false);
+        studentRepository.save(student);
+        return new ResponseEntity<>(
+                "The biometry for the student with ID: "+dto.getStudentId()+" was deleted.",
+                HttpStatus.OK
+        );
+    }
+
+    public Student setInSchool(Student student, Boolean inschool) {
+        student.setInschool(inschool);
+        return studentRepository.save(student);
     }
 }

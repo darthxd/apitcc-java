@@ -11,5 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AttendanceUpdateDTO {
     private Long attendanceId;
+    private Boolean isInSchool;
     private Boolean present;
 }

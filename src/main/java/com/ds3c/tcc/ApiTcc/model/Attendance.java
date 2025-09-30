@@ -24,5 +24,6 @@ public class Attendance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
+    private Boolean isInSchool;
     private Boolean present;
 }

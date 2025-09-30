@@ -30,7 +30,7 @@ public class BiometryService {
         ResponseEntity<Void> response = restClient.post()
                 .uri("/api/fingerprint/enroll")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body("{\"studentId\":" + studentId + "}")
+                .body("{\"studentId\":"+studentId+"}")
                 .retrieve()
                 .toBodilessEntity();
 
@@ -55,9 +55,23 @@ public class BiometryService {
          if (response.getStatusCode() != HttpStatus.OK) {
              return Optional.empty();
          }
-        assert response.getBody() != null;
-        Student student = studentService.getStudentById(
-                 response.getBody().getStudentId());
-         return Optional.of(student);
+         assert response.getBody() != null;
+         if (response.getBody().getStudentId() != null) {
+             Student student = studentService.getStudentById(
+                     response.getBody().getStudentId());
+             return Optional.of(student);
+         }
+         return Optional.empty();
+    }
+
+    public boolean deleteFingerprint(Long studentId) {
+        ResponseEntity<Void> response = restClient.post()
+                .uri("/api/fingerprint/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("{\"studentId\":"+studentId+"}")
+                .retrieve()
+                .toBodilessEntity();
+        if (response.getStatusCode() != HttpStatus.OK) return false;
+        return true;
     }
 }

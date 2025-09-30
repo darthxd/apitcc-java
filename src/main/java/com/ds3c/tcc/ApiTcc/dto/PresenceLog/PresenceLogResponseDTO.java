@@ -1,4 +1,4 @@
-package com.ds3c.tcc.ApiTcc.dto.Attendance;
+package com.ds3c.tcc.ApiTcc.dto.PresenceLog;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentPresenceDTO {
+public class PresenceLogResponseDTO {
+    private Long id;
     private Long studentId;
-    private Boolean isInSchool;
-    private Boolean present;
+    private String date;
+    private String entryTime;
+    private String exitTime;
 }

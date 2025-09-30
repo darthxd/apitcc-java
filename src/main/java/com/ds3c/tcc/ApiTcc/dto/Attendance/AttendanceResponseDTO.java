@@ -15,5 +15,6 @@ public class AttendanceResponseDTO {
     private Long studentId;
     private Long schoolClassId;
     private Long teacherId;
+    private Boolean isInSchool;
     private Boolean present;
 }

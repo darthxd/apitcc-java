@@ -52,6 +52,7 @@ public class AttendanceMapper {
         attendance.setStudent(student);
         attendance.setSchoolClass(schoolClass);
         attendance.setTeacher(teacher);
+        attendance.setIsInSchool(dto.getIsInSchool());
         attendance.setPresent(dto.getPresent());
         return attendance;
     }
@@ -63,6 +64,7 @@ public class AttendanceMapper {
         dto.setStudentId(attendance.getStudent().getId());
         dto.setSchoolClassId(attendance.getSchoolClass().getId());
         dto.setTeacherId(attendance.getTeacher().getId());
+        dto.setIsInSchool(attendance.getIsInSchool());
         dto.setPresent(attendance.getPresent());
         return dto;
     }
@@ -94,6 +96,9 @@ public class AttendanceMapper {
             attendance.setTeacher(
                     teacherService.getTeacherById(dto.getTeacherId())
             );
+        }
+        if (dto.getIsInSchool() != null) {
+            attendance.setIsInSchool(dto.getIsInSchool());
         }
         if (dto.getPresent() != null) {
             attendance.setPresent(dto.getPresent());

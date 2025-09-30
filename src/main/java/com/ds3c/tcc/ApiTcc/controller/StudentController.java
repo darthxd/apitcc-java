@@ -71,7 +71,7 @@ public class StudentController {
         studentService.deleteStudent(id);
     }
 
-    @PostMapping("/biometry/register")
+    @PostMapping("/biometry/enroll")
     public ResponseEntity<String> registerBiometry(@RequestBody @Valid BiometryRequestDTO dto) {
         return studentService.enrollBiometry(dto);
     }
@@ -80,5 +80,10 @@ public class StudentController {
     public StudentResponseDTO readPresence() {
         Student student = studentService.readPresence();
         return studentMapper.toDTO(student);
+    }
+
+    @PostMapping("/biometry/delete")
+    public ResponseEntity<String> deleteBiometry(@RequestBody @Valid BiometryRequestDTO dto) {
+        return studentService.deleteBiometry(dto);
     }
 }
