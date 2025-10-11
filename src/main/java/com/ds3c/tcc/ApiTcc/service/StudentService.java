@@ -24,6 +24,7 @@ public class StudentService {
     private final SchoolClassService schoolClassService;
     private final BiometryService biometryService;
     private final PresenceLogService presenceLogService;
+    private final WhatsappService whatsappService;
 
     @Autowired
     @Lazy
@@ -31,13 +32,14 @@ public class StudentService {
             StudentRepository studentRepository,
             StudentMapper studentMapper,
             UserService userService,
-            SchoolClassService schoolClassService, BiometryService biometryService, PresenceLogService presenceLogService) {
+            SchoolClassService schoolClassService, BiometryService biometryService, PresenceLogService presenceLogService, WhatsappService whatsappService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.userService = userService;
         this.schoolClassService = schoolClassService;
         this.biometryService = biometryService;
         this.presenceLogService = presenceLogService;
+        this.whatsappService = whatsappService;
     }
 
     public Student getStudentById(Long id) {
@@ -113,6 +115,9 @@ public class StudentService {
         Student student = biometryService.readFingerprint()
                 .orElseThrow(() -> (new RuntimeException("No corresponding biometry was found.")));
         presenceLogService.togglePresence(student.getId());
+        if (student.getSendNotification()) {
+            whatsappService.sendMessage(student.getPhone(), "teste teste xd xd");
+        }
         return student;
     }
 

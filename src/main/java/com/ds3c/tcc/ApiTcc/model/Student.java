@@ -31,4 +31,5 @@ public class Student {
     private String photo;
     private Boolean inschool = false;
     private Long userId;
+    private Boolean sendNotification = false;
 }

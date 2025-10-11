@@ -25,4 +25,5 @@ public class StudentResponseDTO {
     private String photo;
     private Boolean biometry;
     private Boolean inschool;
+    private Boolean sendNotification;
 }

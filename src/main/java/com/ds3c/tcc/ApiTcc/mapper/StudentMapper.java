@@ -54,6 +54,7 @@ public class StudentMapper {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         student.setPhoto(studentRequestDTO.getPhoto());
         student.setUserId(userId);
+        student.setSendNotification(studentRequestDTO.getSendNotification());
         return student;
     }
 
@@ -76,6 +77,7 @@ public class StudentMapper {
         dto.setPhoto(student.getPhoto());
         dto.setBiometry(student.getBiometry());
         dto.setInschool(student.getInschool());
+        dto.setSendNotification(student.getSendNotification());
         return dto;
     }
 
@@ -106,7 +108,7 @@ public class StudentMapper {
             student.setCpf(dto.getCpf());
         }
         if (StringUtils.hasText(dto.getPhone())) {
-            student.setPhoto(dto.getPhone());
+            student.setPhone(dto.getPhone());
         }
         if (StringUtils.hasText(dto.getEmail())) {
             student.setEmail(dto.getEmail());
@@ -116,12 +118,16 @@ public class StudentMapper {
                     schoolClassService.getSchoolClassById(dto.getSchoolClassId())
             );
         }
-        if (LocalDate.parse(dto.getBirthdate()).isBefore(LocalDate.now())
-                && dto.getBirthdate() != null) {
-            student.setBirthdate(LocalDate.parse(dto.getBirthdate()));
+        if (dto.getBirthdate() != null) {
+            if (LocalDate.parse(dto.getBirthdate()).isBefore(LocalDate.now())) {
+                student.setBirthdate(LocalDate.parse(dto.getBirthdate()));
+            }
         }
         if (StringUtils.hasText(dto.getPhoto())) {
             student.setPhoto(dto.getPhoto());
+        }
+        if (dto.getSendNotification() != null) {
+            student.setSendNotification(dto.getSendNotification());
         }
         return student;
     }

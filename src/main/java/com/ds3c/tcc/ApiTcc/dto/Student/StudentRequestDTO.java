@@ -22,6 +22,7 @@ public class StudentRequestDTO implements UserRequestDTO {
     private Long schoolClassId;
     private String birthdate;
     private String photo;
+    private Boolean sendNotification;
 
     @Override
     public String getUsername() {
