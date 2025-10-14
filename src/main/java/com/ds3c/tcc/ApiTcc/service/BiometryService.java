@@ -1,77 +1,122 @@
 package com.ds3c.tcc.ApiTcc.service;
 
-import com.ds3c.tcc.ApiTcc.dto.Student.BiometryResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.Student;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class BiometryService {
-    private final RestClient restClient;
+    private final MqttService mqttService;
     private final StudentService studentService;
 
+    private final ConcurrentHashMap<String, CompletableFuture<String>> pendingResponses = new ConcurrentHashMap<>();
+
     public BiometryService(
-            RestClient.Builder builder,
-            StudentService studentService,
-            @Value("${arduino.base-url}") String arduinoBaseUrl) {
-        this.restClient = builder
-                .baseUrl(arduinoBaseUrl)
-                .build();
+            MqttService mqttService,
+            StudentService studentService) {
+        this.mqttService = mqttService;
         this.studentService = studentService;
+        mqttService.setResponseHandler(this::handleMqttResponse);
     }
 
-    public boolean enrollFingerPrint(Long studentId) {
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/api/fingerprint/enroll")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("{\"studentId\":"+studentId+"}")
-                .retrieve()
-                .toBodilessEntity();
+    // Enroll fingerprint
+    public Boolean enrollFingerprint(Long studentId) {
+        try {
+            JSONObject payload = new JSONObject();
+            payload.put("studentId", studentId);
 
-        if (response.getStatusCode() != HttpStatus.OK) return false;
-        return true;
+            CompletableFuture<String> future = new CompletableFuture<>();
+            pendingResponses.put("api/response/enroll", future);
+
+            mqttService.publish("esp32/command/enroll", payload.toString());
+
+            String response = future.get(15, TimeUnit.SECONDS);
+            JSONObject json = new JSONObject(response);
+            return "ok".equalsIgnoreCase(json.optString("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            pendingResponses.remove("api/response/enroll");
+        }
     }
 
-    public boolean resetSensor() {
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/api/fingerprint/reset")
-                .retrieve()
-                .toBodilessEntity();
-        if (response.getStatusCode() != HttpStatus.OK) return false;
-        return true;
-    }
-
+    // Read fingerprint
     public Optional<Student> readFingerprint() {
-         ResponseEntity<BiometryResponseDTO> response = restClient.post()
-                .uri("/api/fingerprint/read")
-                .retrieve()
-                .toEntity(BiometryResponseDTO.class);
-         if (response.getStatusCode() != HttpStatus.OK) {
-             return Optional.empty();
-         }
-         assert response.getBody() != null;
-         if (response.getBody().getStudentId() != null) {
-             Student student = studentService.getStudentById(
-                     response.getBody().getStudentId());
-             return Optional.of(student);
-         }
-         return Optional.empty();
+        try {
+            CompletableFuture<String> future = new CompletableFuture<>();
+            pendingResponses.put("api/response/read", future);
+
+            mqttService.publish("esp32/command/read", "{}");
+
+            String response = future.get(15, TimeUnit.SECONDS);
+
+            JSONObject json = new JSONObject(response);
+
+            if (json.has("studentId")) {
+                Long id = json.getLong("studentId");
+                Student student = studentService.getStudentById(id);
+                return Optional.of(student);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pendingResponses.remove("api/response/read");
+        }
+        return Optional.empty();
     }
 
-    public boolean deleteFingerprint(Long studentId) {
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/api/fingerprint/delete")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("{\"studentId\":"+studentId+"}")
-                .retrieve()
-                .toBodilessEntity();
-        if (response.getStatusCode() != HttpStatus.OK) return false;
-        return true;
+    // Reset sensor
+    public Boolean resetSensor() {
+        try {
+            CompletableFuture<String> future = new CompletableFuture<>();
+            pendingResponses.put("api/response/reset", future);
+
+            mqttService.publish("esp32/command/reset", "{}");
+
+            String response = future.get(15, TimeUnit.SECONDS);
+
+            JSONObject json = new JSONObject(response);
+            return "ok".equalsIgnoreCase(json.optString("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            pendingResponses.remove("api/response/reset");
+        }
+    }
+
+    // Delete fingerprint
+    public Boolean deleteFingerprint(Long studentId) {
+        try {
+            JSONObject payload = new JSONObject();
+            payload.put("studentId", studentId);
+
+            CompletableFuture<String> future = new CompletableFuture<>();
+            pendingResponses.put("api/response/delete", future);
+
+            mqttService.publish("esp32/command/delete", payload.toString());
+
+            String response = future.get(15, TimeUnit.SECONDS);
+            JSONObject json = new JSONObject(response);
+            return "deleted".equalsIgnoreCase(json.optString("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            pendingResponses.remove("api/response/delete");
+        }
+    }
+
+    private void handleMqttResponse(String topic, String message) {
+        CompletableFuture<String> future = pendingResponses.get(topic);
+        if (future != null) {
+            future.complete(message);
+        }
     }
 }

@@ -6,7 +6,7 @@ import com.ds3c.tcc.ApiTcc.mapper.AdminMapper;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
 import com.ds3c.tcc.ApiTcc.service.AdminService;
-import com.ds3c.tcc.ApiTcc.service.BiometryService;
+import com.ds3c.tcc.ApiTcc.service._BiometryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +19,13 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
     private final AdminMapper adminMapper;
-    private final BiometryService biometryService;
+    private final _BiometryService biometryService;
     private final StudentRepository studentRepository;
 
     public AdminController(
             AdminService adminService,
             AdminMapper adminMapper,
-            BiometryService biometryService,
+            _BiometryService biometryService,
             StudentRepository studentRepository) {
         this.adminService = adminService;
         this.adminMapper = adminMapper;

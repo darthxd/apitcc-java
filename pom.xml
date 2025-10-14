@@ -100,6 +100,30 @@
 			<artifactId>jakarta.validation-api</artifactId>
 			<version>3.1.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/tools.jackson.core/jackson-core -->
+		<dependency>
+			<groupId>tools.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/tools.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>tools.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3 -->
+		<dependency>
+			<groupId>org.eclipse.paho</groupId>
+			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+			<version>1.2.5</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20250517</version>
+		</dependency>
 	</dependencies>
 
 	<build>
