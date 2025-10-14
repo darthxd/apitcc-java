@@ -18,10 +18,11 @@ public class _BiometryService {
 
     public _BiometryService(
             RestClient.Builder builder,
-            StudentService studentService,
-            @Value("${arduino.base-url}") String arduinoBaseUrl) {
+            StudentService studentService
+            //@Value("${arduino.base-url}") String arduinoBaseUrl
+    ) {
         this.restClient = builder
-                .baseUrl(arduinoBaseUrl)
+                .baseUrl("")
                 .build();
         this.studentService = studentService;
     }
