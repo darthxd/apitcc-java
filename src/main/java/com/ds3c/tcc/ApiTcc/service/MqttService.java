@@ -17,7 +17,7 @@ public class MqttService implements MqttCallback {
             @Value("${mqtt.broker.password}") String password,
             @Value("${mqtt.broker.uri}") String uri
             ) throws MqttException {
-        client = new MqttClient(uri, MqttClient.generateClientId());
+        client = new MqttClient(uri, MqttClient.generateClientId(), null);
         MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(username);
         options.setPassword(password.toCharArray());
