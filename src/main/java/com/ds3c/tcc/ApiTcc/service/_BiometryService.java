@@ -2,7 +2,6 @@ package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Student.BiometryResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.Student;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +57,7 @@ public class _BiometryService {
          }
          assert response.getBody() != null;
          if (response.getBody().getStudentId() != null) {
-             Student student = studentService.getStudentById(
+             Student student = studentService.getById(
                      response.getBody().getStudentId());
              return Optional.of(student);
          }

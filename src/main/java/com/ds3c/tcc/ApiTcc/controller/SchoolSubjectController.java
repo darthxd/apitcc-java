@@ -24,14 +24,14 @@ public class SchoolSubjectController {
 
     @GetMapping
     public List<SchoolSubjectResponseDTO> listSchoolSubjects() {
-        return schoolSubjectService.listSchoolSubject().stream().map(schoolSubjectMapper::toDTO).toList();
+        return schoolSubjectService.list().stream().map(schoolSubjectMapper::toDTO).toList();
     }
 
     @PostMapping
     public SchoolSubjectResponseDTO createSchoolSubject(
             @RequestBody @Valid SchoolSubjectRequestDTO dto) {
         return schoolSubjectMapper.toDTO(
-                schoolSubjectService.createSchoolSubject(dto)
+                schoolSubjectService.create(dto)
         );
     }
 
@@ -39,7 +39,7 @@ public class SchoolSubjectController {
     public SchoolSubjectResponseDTO getSchoolSubject(
             @PathVariable("id") Long id) {
         return schoolSubjectMapper.toDTO(
-                schoolSubjectService.getSchoolSubjectById(id)
+                schoolSubjectService.getById(id)
         );
     }
 
@@ -48,12 +48,12 @@ public class SchoolSubjectController {
             @RequestBody @Valid SchoolSubjectRequestDTO dto,
             @PathVariable("id") Long id) {
         return schoolSubjectMapper.toDTO(
-                schoolSubjectService.updateSchoolSubject(dto, id)
+                schoolSubjectService.update(dto, id)
         );
     }
 
     @DeleteMapping("/{id}")
     public void deleteSchoolSubject(@PathVariable("id") Long id) {
-        schoolSubjectService.deleteSchoolSubject(id);
+        schoolSubjectService.delete(id);
     }
 }

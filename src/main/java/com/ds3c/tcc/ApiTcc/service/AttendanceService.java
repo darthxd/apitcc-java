@@ -41,40 +41,46 @@ public class AttendanceService {
         this.studentService = studentService;
     }
 
-    public Attendance getAttendanceById(Long id) {
+    public Attendance getById(Long id) {
         return attendanceRepository.findById(id)
                 .orElseThrow(() -> new AttendanceNotFoundException(id));
     }
 
-    public List<Attendance> listAttendanceBySchoolClassId(Long schoolClassId) {
+    public List<Attendance> listBySchoolClass(Long schoolClassId) {
         return attendanceRepository.findAllBySchoolClassId(schoolClassId);
     }
 
-    public List<Attendance> listAttendance() {
+    public List<Attendance> list() {
         return attendanceRepository.findAll();
     }
 
-    public List<Attendance> listAttendanceByDateAndClassId(String date, Long classId) {
+    public List<Attendance> listByDateAndSchoolClass(String date, Long classId) {
         return attendanceRepository.findAllByDateAndSchoolClassId(
                 LocalDate.parse(date), classId
         );
     }
 
-    public List<Attendance> listAttendanceByStudentId(Long studentId) {
+    public List<Attendance> listByStudent(Long studentId) {
         return attendanceRepository.findAllByStudentId(studentId);
     }
 
-    public Attendance createAttendance(AttendanceRequestDTO dto) {
+    public Attendance create(AttendanceRequestDTO dto) {
         return attendanceRepository.save(
                 attendanceMapper.toEntity(dto)
         );
     }
 
-    public List<Attendance> createAttendanceBulk(AttendanceBulkRequestDTO dto) {
+    public Attendance update(AttendanceRequestDTO dto, Long id) {
+        return attendanceRepository.save(
+                attendanceMapper.updateEntityFromDTO(dto, id)
+        );
+    }
+
+    public List<Attendance> createBulk(AttendanceBulkRequestDTO dto) {
         LocalDate date = LocalDate.parse(dto.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        SchoolClass schoolClass = schoolClassService.getSchoolClassById(dto.getSchoolClassId());
-        Teacher teacher = teacherService.getTeacherById(dto.getTeacherId());
+        SchoolClass schoolClass = schoolClassService.getById(dto.getSchoolClassId());
+        Teacher teacher = teacherService.getById(dto.getTeacherId());
 
         if (attendanceRepository.existsByDateAndSchoolClassIdAndTeacherId(
                 date, dto.getSchoolClassId(), dto.getTeacherId())) {
@@ -82,7 +88,7 @@ public class AttendanceService {
         }
 
         List<Attendance> attendanceList = dto.getPresences().stream().map(p -> {
-            Student student = studentService.getStudentById(p.getStudentId());
+            Student student = studentService.getById(p.getStudentId());
             Attendance attendance = new Attendance();
             attendance.setDate(date);
             attendance.setStudent(student);
@@ -95,9 +101,9 @@ public class AttendanceService {
         return attendanceRepository.saveAll(attendanceList);
     }
 
-    public List<Attendance> updateAttendanceBulk(AttendanceBulkUpdateDTO dto) {
+    public List<Attendance> updateBulk(AttendanceBulkUpdateDTO dto) {
         List<Attendance> attendanceList = dto.getUpdates().stream().map(update -> {
-            Attendance attendance = getAttendanceById(update.getAttendanceId());
+            Attendance attendance = getById(update.getAttendanceId());
             if (update.getPresent() != null) {
                 attendance.setPresent(update.getPresent());
             }
@@ -107,14 +113,8 @@ public class AttendanceService {
         return attendanceRepository.saveAll(attendanceList);
     }
 
-    public Attendance updateAttendance(AttendanceRequestDTO dto, Long id) {
-        return attendanceRepository.save(
-                attendanceMapper.updateEntityFromDTO(dto, id)
-        );
-    }
-
-    public void deleteAttendance(Long id) {
-        Attendance attendance = getAttendanceById(id);
+    public void delete(Long id) {
+        Attendance attendance = getById(id);
         attendanceRepository.delete(attendance);
     }
 }

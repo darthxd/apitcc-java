@@ -4,6 +4,7 @@ import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.exception.UserNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.UserMapper;
+import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +22,18 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final SchoolUnitService schoolUnitService;
 
     @Autowired
     @Lazy
     public UserService(
             UserRepository userRepository,
             UserMapper userMapper,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, SchoolUnitService schoolUnitService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.schoolUnitService = schoolUnitService;
     }
 
     @Override
@@ -40,33 +43,34 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    public User getUserById(Long id) {
+    public User getById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public User getUserByUsername(String username) {
+    public User getByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    public List<User> listUser() {
+    public List<User> list() {
         return userRepository.findAll();
     }
 
-    public User createUser(UserRequestDTO userRequestDTO, RolesEnum role) {
+    public User create(UserRequestDTO userRequestDTO, RolesEnum role, Long unitId) {
         User user = userMapper.toEntity(userRequestDTO, role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setSchoolUnit(schoolUnitService.getById(unitId));
         return userRepository.save(user);
     }
 
-    public User updateUser(UserRequestDTO userRequestDTO, Long id) {
+    public User update(UserRequestDTO userRequestDTO, Long id) {
         return userRepository.save(
                 userMapper.updateEntityFromDTO(userRequestDTO, id)
         );
     }
-     public void deleteUser(Long id) {
-        User user = getUserById(id);
+     public void delete(Long id) {
+        User user = getById(id);
         userRepository.delete(user);
      }
 }

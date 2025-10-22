@@ -37,48 +37,48 @@ public class ActivityService {
         this.activitySubmissionMapper = activitySubmissionMapper;
     }
 
-    public Activity getActivityById(Long id) {
+    public Activity getById(Long id) {
         return activityRepository.findById(id)
                 .orElseThrow(() -> new ActivityNotFoundException(id));
     }
 
-    public ActivitySubmission getActivitySubmissionById(Long id) {
+    public ActivitySubmission getSubmissionById(Long id) {
         return activitySubmissionRepository.findById(id)
                 .orElseThrow(() -> new ActivitySubmissionNotFoundException(id));
     }
 
-    public List<Activity> listActivityBySchoolClassId(Long schoolClassId) {
+    public List<Activity> listBySchoolClass(Long schoolClassId) {
         return activityRepository.findAllBySchoolClassId(schoolClassId);
     }
 
-    public List<ActivitySubmission> listActivitySubmissionByStudentId(Long studentId) {
+    public List<ActivitySubmission> listSubmissionByStudent(Long studentId) {
         return activitySubmissionRepository.findAllByStudentId(studentId);
     }
 
-    public List<ActivitySubmission> listActivitySubmissionByActivityId(Long activityId) {
+    public List<ActivitySubmission> listSubmissionByActivity(Long activityId) {
         return activitySubmissionRepository.findAllByActivityId(activityId);
     }
 
-    public Activity createActivity(ActivityRequestDTO dto) {
+    public Activity create(ActivityRequestDTO dto) {
         return activityRepository.save(
                 activityMapper.toEntity(dto)
         );
     }
 
-    public Activity updateActivity(ActivityRequestDTO dto, Long id) {
+    public Activity update(ActivityRequestDTO dto, Long id) {
         return activityRepository.save(
                 activityMapper.updateEntityFromDTO(dto, id)
         );
     }
 
-    public void deleteActivity(Long id) {
-        Activity activity = getActivityById(id);
+    public void delete(Long id) {
+        Activity activity = getById(id);
         activityRepository.delete(activity);
     }
 
     public ActivitySubmission submitActivity(
             ActivitySubmissionRequestDTO dto, Long activityId) {
-        Activity activity = getActivityById(activityId);
+        Activity activity = getById(activityId);
         try {
             activitySubmissionRepository.findByActivityIdAndStudentId(
                     activityId, dto.getStudentId()
@@ -95,7 +95,7 @@ public class ActivityService {
     }
     public ActivitySubmission submitCorrection(
             ActivityCorrectionRequestDTO dto, Long submissionId) {
-        ActivitySubmission activitySubmission = getActivitySubmissionById(submissionId);
+        ActivitySubmission activitySubmission = getSubmissionById(submissionId);
         if (dto.getGrade() > activitySubmission.getActivity().getMaxScore()) {
             throw new RuntimeException(
                     "The grade submited was bigger than the max grade for this activity.");

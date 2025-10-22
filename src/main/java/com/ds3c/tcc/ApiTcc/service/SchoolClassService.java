@@ -28,7 +28,7 @@ public class SchoolClassService {
         this.schoolClassMapper = schoolClassMapper;
     }
 
-    public String generateSchoolClassName(SchoolClass schoolClass) {
+    public String generateName(SchoolClass schoolClass) {
         final String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String shiftName = "";
         String gradeName = "";
@@ -59,33 +59,33 @@ public class SchoolClassService {
                 + shiftName + gradeName + classIdentifier;
     }
 
-    public SchoolClass createSchoolClass(SchoolClassRequestDTO dto) {
+    public SchoolClass create(SchoolClassRequestDTO dto) {
         return schoolClassRepository.save(
                 schoolClassMapper.toEntity(dto)
         );
     }
 
-    public SchoolClass getSchoolClassById(Long id) {
+    public SchoolClass getById(Long id) {
         return schoolClassRepository.findById(id)
                 .orElseThrow(() -> new SchoolClassNotFoundException(id));
     }
 
-    public List<SchoolClass> listSchoolClass() {
+    public List<SchoolClass> list() {
         return schoolClassRepository.findAll();
     }
 
-    public SchoolClass updateSchoolClass(SchoolClassRequestDTO dto,
-                                         Long id) {
+    public SchoolClass update(SchoolClassRequestDTO dto,
+                              Long id) {
         return schoolClassRepository.save(
                 schoolClassMapper.updateEntityFromDTO(dto, id));
     }
 
-    public void deleteSchoolClass(Long id) {
-        SchoolClass schoolClass = getSchoolClassById(id);
+    public void delete(Long id) {
+        SchoolClass schoolClass = getById(id);
         schoolClassRepository.delete(schoolClass);
     }
 
-    public List<SchoolClass> listSchoolClassById(Set<Long> idSet) {
+    public List<SchoolClass> listById(Set<Long> idSet) {
         return schoolClassRepository.findAllById(idSet);
     }
 }

@@ -37,19 +37,6 @@ public class JwtService {
         }
     }
 
-    public Long getUnitId(String token) {
-        try {
-            return JWT.require(Algorithm.HMAC256(secretKey))
-                    .withIssuer(issuer)
-                    .build()
-                    .verify(token)
-                    .getClaim("unitId")
-                    .asLong();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public String validateToken(String token) {
         try {
             return JWT.require(Algorithm.HMAC256(secretKey))

@@ -19,29 +19,29 @@ public class GradeService {
         this.gradeMapper = gradeMapper;
     }
 
-    public Grade getGradeById(Long id) {
+    public Grade getById(Long id) {
         return gradeRepository.findById(id)
                 .orElseThrow(GradeNotFoundException::new);
     }
 
-    public Grade createGrade(GradeRequestDTO dto) {
+    public Grade create(GradeRequestDTO dto) {
         return gradeRepository.save(gradeMapper.toEntity(dto));
     }
 
-    public Grade updateGrade(GradeRequestDTO dto, Long id) {
+    public Grade update(GradeRequestDTO dto, Long id) {
         return gradeRepository.save(gradeMapper.updateEntityFromDTO(dto, id));
     }
 
-    public void deleteGrade(Long id) {
-        Grade grade = getGradeById(id);
+    public void delete(Long id) {
+        Grade grade = getById(id);
         gradeRepository.delete(grade);
     }
 
-    public List<Grade> getGradesByStudent(Long studentId) {
+    public List<Grade> getByStudent(Long studentId) {
         return gradeRepository.findAllByStudentId(studentId);
     }
 
-    public List<Grade> getGradesByStudentAndSubject(Long studentId, Long subjectId) {
+    public List<Grade> getByStudentAndSubject(Long studentId, Long subjectId) {
         return gradeRepository.findAllByStudentIdAndSubjectId(studentId, subjectId);
     }
 }

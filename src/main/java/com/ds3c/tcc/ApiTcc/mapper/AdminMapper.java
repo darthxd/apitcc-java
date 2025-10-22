@@ -37,7 +37,7 @@ public class AdminMapper {
 
     public AdminResponseDTO toDTO(Admin admin) {
         AdminResponseDTO adminDTO = new AdminResponseDTO();
-        User user = userService.getUserById(admin.getUserId());
+        User user = userService.getById(admin.getUserId());
 
         return new AdminResponseDTO(
                 admin.getId(),
@@ -52,10 +52,10 @@ public class AdminMapper {
     }
 
     public Admin updateEntityFromDTO(AdminRequestDTO adminRequestDTO, Long id) {
-        Admin admin = adminService.getAdminById(id);
+        Admin admin = adminService.getById(id);
         if (StringUtils.hasText(adminRequestDTO.getUsername())
                 || StringUtils.hasText(adminRequestDTO.getPassword())) {
-            userService.updateUser(adminRequestDTO, admin.getUserId());
+            userService.update(adminRequestDTO, admin.getUserId());
         }
         if (StringUtils.hasText(adminRequestDTO.getName())) {
             admin.setName(adminRequestDTO.getName());

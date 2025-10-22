@@ -27,35 +27,35 @@ public class TeacherController {
     @PostMapping
     public TeacherResponseDTO createTeacher(@RequestBody @Valid TeacherRequestDTO dto) {
         return teacherMapper.toDTO(
-                teacherService.createTeacher(dto)
+                teacherService.create(dto)
         );
     }
 
     @GetMapping
     public List<TeacherResponseDTO> listTeachers() {
-        return teacherService.listTeacher().stream().map(teacherMapper::toDTO).toList();
+        return teacherService.list().stream().map(teacherMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
     public TeacherResponseDTO getTeacherById(@PathVariable("id") Long id) {
-        return teacherMapper.toDTO(teacherService.getTeacherById(id));
+        return teacherMapper.toDTO(teacherService.getById(id));
     }
 
     @GetMapping("/username/{username}")
     public TeacherResponseDTO getTeacherByUsername(@PathVariable("username") String username) {
-        return teacherMapper.toDTO(teacherService.getTeacherByUsername(username));
+        return teacherMapper.toDTO(teacherService.getByUsername(username));
     }
 
     @PutMapping("/{id}")
     public TeacherResponseDTO updateTeacher(@RequestBody @Valid TeacherRequestDTO dto,
                                             @PathVariable("id") Long id) {
         return teacherMapper.toDTO(
-                teacherService.updateTeacher(dto, id)
+                teacherService.update(dto, id)
         );
     }
 
     @DeleteMapping("/{id}")
     public void deleteTeacher(@PathVariable("id") Long id) {
-        teacherService.deleteTeacher(id);
+        teacherService.delete(id);
     }
 }

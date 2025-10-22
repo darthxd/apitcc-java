@@ -38,7 +38,7 @@ public class TeacherMapper {
     }
 
     public TeacherResponseDTO toDTO(Teacher teacher) {
-        User user = userService.getUserById(teacher.getUserId());
+        User user = userService.getById(teacher.getUserId());
 
         return new TeacherResponseDTO(
                 teacher.getId(),
@@ -55,10 +55,10 @@ public class TeacherMapper {
     }
 
     public Teacher updateModelFromDTO(TeacherRequestDTO dto, Long id) {
-        Teacher teacher = teacherService.getTeacherById(id);
+        Teacher teacher = teacherService.getById(id);
         if (StringUtils.hasText(dto.getUsername())
                 || StringUtils.hasText(dto.getPassword())) {
-            userService.updateUser(dto, teacher.getUserId());
+            userService.update(dto, teacher.getUserId());
         }
         if (StringUtils.hasText(dto.getName())) {
             teacher.setName(dto.getName());

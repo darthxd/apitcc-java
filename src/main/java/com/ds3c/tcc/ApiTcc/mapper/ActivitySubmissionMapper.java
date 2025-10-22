@@ -30,10 +30,10 @@ public class ActivitySubmissionMapper {
         ActivitySubmission activitySubmission = new ActivitySubmission();
 
         activitySubmission.setActivity(
-                activityService.getActivityById(activityId)
+                activityService.getById(activityId)
         );
         activitySubmission.setStudent(
-                studentService.getStudentById(dto.getStudentId())
+                studentService.getById(dto.getStudentId())
         );
         activitySubmission.setSubmissionDate(
                 LocalDate.now(ZoneId.of("America/Sao_Paulo"))
@@ -59,10 +59,10 @@ public class ActivitySubmissionMapper {
 
     public ActivitySubmission updateEntityFromDTO(
             ActivitySubmissionRequestDTO dto, Long id) {
-        ActivitySubmission activitySubmission = activityService.getActivitySubmissionById(id);
+        ActivitySubmission activitySubmission = activityService.getSubmissionById(id);
         if (dto.getStudentId() != null) {
             activitySubmission.setStudent(
-                    studentService.getStudentById(dto.getStudentId())
+                    studentService.getById(dto.getStudentId())
             );
         }
         if (StringUtils.hasText(dto.getAnswerText())) {

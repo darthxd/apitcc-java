@@ -32,27 +32,27 @@ public class StudentController {
 
     @GetMapping
     public List<StudentResponseDTO> listStudent() {
-        return studentService.listStudent().stream().map(studentMapper::toDTO).toList();
+        return studentService.list().stream().map(studentMapper::toDTO).toList();
     }
 
     @PostMapping
     public StudentResponseDTO createStudent(@RequestBody @Valid StudentRequestDTO dto) {
         return studentMapper.toDTO(
-                studentService.createStudent(dto)
+                studentService.create(dto)
         );
     }
 
     @GetMapping("/{id}")
     public StudentResponseDTO getStudentById(@PathVariable("id") Long id) {
         return studentMapper.toDTO(
-                studentService.getStudentById(id)
+                studentService.getById(id)
         );
     }
 
     @GetMapping("/username/{username}")
     public StudentResponseDTO getStudentByUsername(@PathVariable("username") String username) {
         return studentMapper.toDTO(
-                studentService.getStudentByUsername(username)
+                studentService.getByUsername(username)
         );
     }
 
@@ -60,13 +60,13 @@ public class StudentController {
     public StudentResponseDTO updateStudent(@RequestBody @Valid StudentRequestDTO dto,
                                             @PathVariable("id") Long id) {
         return studentMapper.toDTO(
-                studentService.updateStudent(dto, id)
+                studentService.update(dto, id)
         );
     }
 
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable("id") Long id) {
-        studentService.deleteStudent(id);
+        studentService.delete(id);
     }
 
     @PostMapping("/biometry/enroll")

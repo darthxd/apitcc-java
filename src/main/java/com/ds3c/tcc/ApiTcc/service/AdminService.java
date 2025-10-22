@@ -30,37 +30,37 @@ public class AdminService {
         this.adminRepository = adminRepository;
     }
 
-    public Admin createAdmin(AdminRequestDTO adminRequestDTO) {
-        User user = userService.createUser(adminRequestDTO, RolesEnum.ROLE_ADMIN);
-        Admin admin = adminMapper.toEntity(adminRequestDTO, user.getId());
+    public Admin create(AdminRequestDTO dto) {
+        User user = userService.create(dto, RolesEnum.ROLE_ADMIN, dto.getUnitId());
+        Admin admin = adminMapper.toEntity(dto, user.getId());
         return adminRepository.save(admin);
     }
 
-    public Admin getAdminById(Long id) {
+    public Admin getById(Long id) {
         return adminRepository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException(id));
     }
 
-    public Admin getAdminByUsername(String username) {
+    public Admin getByUsername(String username) {
         return adminRepository.findByUserId(
-                userService.getUserByUsername(username).getId())
+                userService.getByUsername(username).getId())
                 .orElseThrow(() -> new AdminNotFoundException(username));
     }
 
-    public List<Admin> listAdmin() {
+    public List<Admin> list() {
         return adminRepository.findAll();
     }
 
-    public Admin updateAdmin(AdminRequestDTO dto,
-                             Long id) {
+    public Admin update(AdminRequestDTO dto,
+                        Long id) {
         return adminRepository.save(
                 adminMapper.updateEntityFromDTO(dto, id)
         );
     }
 
-    public void deleteAdmin(Long id) {
-        Admin admin = getAdminById(id);
-        userService.deleteUser(admin.getUserId());
+    public void delete(Long id) {
+        Admin admin = getById(id);
+        userService.delete(admin.getUserId());
         adminRepository.delete(admin);
     }
 }

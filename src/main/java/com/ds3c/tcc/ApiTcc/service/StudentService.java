@@ -42,61 +42,55 @@ public class StudentService {
         this.presenceLogService = presenceLogService;
     }
 
-    public Student getStudentById(Long id) {
+    public Student getById(Long id) {
         return studentRepository.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
-    public Student getStudentByUsername(String username) {
+    public Student getByUsername(String username) {
         return studentRepository.findByUserId(
-                userService.getUserByUsername(username).getId())
+                userService.getByUsername(username).getId())
                 .orElseThrow(() -> new StudentNotFoundException(username));
     }
 
-    public String generateStudentUsername(StudentRequestDTO dto) {
-        return dto.getName().split(" ")[0].toLowerCase()+"."
-                +dto.getName().split(" ")[
-                        dto.getName().split(" ").length-1
-                ].toLowerCase();
-    }
-
-    public String generateStudentPassword(StudentRequestDTO dto) {
+    public String generatePassword(StudentRequestDTO dto) {
         return dto.getName().split(" ")[0].toLowerCase()+dto.getRm();
     }
 
-    public List<Student> listStudent() {
+    public List<Student> list() {
         return studentRepository.findAll();
     }
 
-    public Student createStudent(StudentRequestDTO dto) {
-        schoolClassService.getSchoolClassById(dto.getSchoolClassId());
-        dto.setUsername(generateStudentUsername(dto));
-        dto.setPassword(generateStudentPassword(dto));
-        User user = userService.createUser(dto, RolesEnum.ROLE_STUDENT);
+    public Student create(StudentRequestDTO dto) {
+        schoolClassService.getById(dto.getSchoolClassId());
+        dto.setUsername(dto.getRm());
+        dto.setPassword(generatePassword(dto));
+        User user = userService.create(dto, RolesEnum.ROLE_STUDENT, dto.getUnitId());
         Student student = studentMapper.toEntity(dto, user.getId());
         return studentRepository.save(student);
     }
 
-    public Student updateStudent(StudentRequestDTO dto,
-                                 Long id) {
+    public Student update(
+            StudentRequestDTO dto,
+            Long id) {
         return studentRepository.save(
                 studentMapper.updateEntityFromDTO(dto, id)
         );
     }
 
-    public void deleteStudent(Long id) {
-        Student student = getStudentById(id);
-        userService.deleteUser(student.getUserId());
+    public void delete(Long id) {
+        Student student = getById(id);
+        userService.delete(student.getUserId());
         studentRepository.delete(student);
         biometryService.deleteFingerprint(id);
     }
 
-    public List<Student> listStudentFromSchoolClass(Long id) {
+    public List<Student> listBySchoolClass(Long id) {
         return studentRepository.findAllBySchoolClassId(id);
     }
 
     public ResponseEntity<String> enrollBiometry(BiometryRequestDTO dto) {
-        Student student = getStudentById(dto.getStudentId());
+        Student student = getById(dto.getStudentId());
         if(biometryService.enrollFingerprint(dto.getStudentId())) {
             student.setBiometry(true);
             studentRepository.save(student);
@@ -125,7 +119,7 @@ public class StudentService {
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
-        Student student = getStudentById(dto.getStudentId());
+        Student student = getById(dto.getStudentId());
         student.setBiometry(false);
         student.setInschool(false);
         studentRepository.save(student);

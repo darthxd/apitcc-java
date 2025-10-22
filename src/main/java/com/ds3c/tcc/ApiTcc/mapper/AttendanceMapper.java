@@ -40,11 +40,11 @@ public class AttendanceMapper {
 
     public Attendance toEntity(AttendanceRequestDTO dto) {
         Student student = studentService
-                .getStudentById(dto.getStudentId());
+                .getById(dto.getStudentId());
         SchoolClass schoolClass = schoolClassService
-                .getSchoolClassById(dto.getSchoolClassId());
+                .getById(dto.getSchoolClassId());
         Teacher teacher = teacherService
-                .getTeacherById(dto.getTeacherId());
+                .getById(dto.getTeacherId());
         Attendance attendance = new Attendance();
         attendance.setDate(LocalDate.parse(dto.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         attendance.setStudent(student);
@@ -69,23 +69,23 @@ public class AttendanceMapper {
     }
 
     public Attendance updateEntityFromDTO(AttendanceRequestDTO dto, Long id) {
-        Attendance attendance = attendanceService.getAttendanceById(id);
+        Attendance attendance = attendanceService.getById(id);
         if (StringUtils.hasText(dto.getDate())) {
             attendance.setDate(LocalDate.parse(dto.getDate()));
         }
         if (dto.getStudentId() != null) {
             attendance.setStudent(
-                    studentService.getStudentById(dto.getStudentId())
+                    studentService.getById(dto.getStudentId())
             );
         }
         if (dto.getSchoolClassId() != null) {
             attendance.setSchoolClass(
-                    schoolClassService.getSchoolClassById(dto.getSchoolClassId())
+                    schoolClassService.getById(dto.getSchoolClassId())
             );
         }
         if (dto.getTeacherId() != null) {
             attendance.setTeacher(
-                    teacherService.getTeacherById(dto.getTeacherId())
+                    teacherService.getById(dto.getTeacherId())
             );
         }
         if (dto.getIsInSchool() != null) {

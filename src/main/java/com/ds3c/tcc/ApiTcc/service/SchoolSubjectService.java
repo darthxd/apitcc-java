@@ -26,33 +26,33 @@ public class SchoolSubjectService {
         this.schoolSubjectMapper = schoolSubjectMapper;
     }
 
-    public SchoolSubject createSchoolSubject(SchoolSubjectRequestDTO dto) {
+    public SchoolSubject create(SchoolSubjectRequestDTO dto) {
         return schoolSubjectRepository.save(
                 schoolSubjectMapper.toEntity(dto)
         );
     }
 
-    public SchoolSubject getSchoolSubjectById(Long id) {
+    public SchoolSubject getById(Long id) {
         return schoolSubjectRepository.findById(id)
                 .orElseThrow(() -> new SchoolSubjectNotFoundException(id));
     }
 
-    public List<SchoolSubject> listSchoolSubject() {
+    public List<SchoolSubject> list() {
         return schoolSubjectRepository.findAll();
     }
 
-    public SchoolSubject updateSchoolSubject(SchoolSubjectRequestDTO dto,
-                                             Long id) {
+    public SchoolSubject update(SchoolSubjectRequestDTO dto,
+                                Long id) {
         return schoolSubjectRepository.save(
                 schoolSubjectMapper.updateEntityFromDTO(dto, id));
     }
 
-    public void deleteSchoolSubject(Long id) {
-        SchoolSubject schoolSubject = getSchoolSubjectById(id);
+    public void delete(Long id) {
+        SchoolSubject schoolSubject = getById(id);
         schoolSubjectRepository.delete(schoolSubject);
     }
 
-    public List<SchoolSubject> listSchoolSubjectById(Set<Long> idSet) {
+    public List<SchoolSubject> listById(Set<Long> idSet) {
         return schoolSubjectRepository.findAllById(idSet);
     }
 }

@@ -31,42 +31,43 @@ public class TeacherService {
         this.userService = userService;
     }
 
-    public Teacher createTeacher(TeacherRequestDTO teacherRequestDTO) {
-        User user = userService.createUser(teacherRequestDTO, RolesEnum.ROLE_TEACHER);
-        Teacher teacher = teacherMapper.toEntity(teacherRequestDTO, user.getId());
+    public Teacher create(TeacherRequestDTO dto) {
+        User user = userService.create(dto, RolesEnum.ROLE_TEACHER, dto.getUnitId());
+        Teacher teacher = teacherMapper.toEntity(dto, user.getId());
         return teacherRepository.save(teacher);
     }
 
-    public Teacher getTeacherById(Long id) {
+    public Teacher getById(Long id) {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new TeacherNotFoundException(id));
     }
 
-    public Teacher getTeacherByUsername(String username) {
+    public Teacher getByUsername(String username) {
         return teacherRepository.findByUserId(
-                userService.getUserByUsername(username).getId())
+                userService.getByUsername(username).getId())
                 .orElseThrow(() -> new TeacherNotFoundException(username));
     }
 
-    public List<Teacher> listTeacher() {
+    public List<Teacher> list() {
         return teacherRepository.findAll();
     }
 
-    public Teacher updateTeacher(TeacherRequestDTO dto,
-                                 Long id) {
+    public Teacher update(
+            TeacherRequestDTO dto,
+            Long id) {
         return teacherRepository.save(
                 teacherMapper.updateModelFromDTO(dto, id)
         );
     }
 
-    public void deleteTeacher(Long id) {
-        Teacher teacher = getTeacherById(id);
-        userService.deleteUser(teacher.getUserId());
+    public void delete(Long id) {
+        Teacher teacher = getById(id);
+        userService.delete(teacher.getUserId());
         teacherRepository.delete(teacher);
 
     }
 
-    public List<Teacher> listTeacherById(Set<Long> idSet) {
+    public List<Teacher> listById(Set<Long> idSet) {
         return teacherRepository.findAllById(idSet);
     }
 }

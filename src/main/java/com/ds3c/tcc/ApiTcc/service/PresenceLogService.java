@@ -24,7 +24,7 @@ public class PresenceLogService {
     }
 
     public void togglePresence(Long studentId) {
-        Student student = studentService.getStudentById(studentId);
+        Student student = studentService.getById(studentId);
         LocalDate today = LocalDate.now();
         LocalDateTime now = LocalDateTime.now();
 
@@ -54,22 +54,22 @@ public class PresenceLogService {
         }
     }
 
-    public StudentPresenceLog getPresenceLogByStudentIdAndDate(
+    public StudentPresenceLog getByStudentAndDate(
             Long studentId, String date) {
         return presenceLogRepository.findByStudentIdAndDate(
                 studentId, LocalDate.parse(date)
         ).orElseThrow(() -> (new PresenceLogNotFoundException(studentId, LocalDate.parse(date))));
     }
 
-    public List<StudentPresenceLog> listPresenceLogByStudentId(Long studentId) {
+    public List<StudentPresenceLog> listByStudent(Long studentId) {
         return presenceLogRepository.findAllByStudentId(studentId);
     }
 
-    public List<StudentPresenceLog> listPresenceLog() {
+    public List<StudentPresenceLog> list() {
         return presenceLogRepository.findAll();
     }
 
-    public List<StudentPresenceLog> listPresenceLogByDate(String date) {
+    public List<StudentPresenceLog> listByDate(String date) {
         return presenceLogRepository.findAllByDateEquals(
                 LocalDate.parse(date)
         );

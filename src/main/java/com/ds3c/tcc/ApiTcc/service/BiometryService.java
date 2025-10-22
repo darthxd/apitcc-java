@@ -60,7 +60,7 @@ public class BiometryService {
 
             if (json.has("studentId")) {
                 Long id = json.getLong("studentId");
-                Student student = studentService.getStudentById(id);
+                Student student = studentService.getById(id);
                 return Optional.of(student);
             }
         } catch (Exception e) {

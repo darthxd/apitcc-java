@@ -13,7 +13,7 @@ public class SchoolUnitService {
         this.schoolUnitRepository = schoolUnitRepository;
     }
 
-    public SchoolUnit getSchoolUnitById(Long id) {
+    public SchoolUnit getById(Long id) {
         return schoolUnitRepository.findById(id)
                 .orElseThrow(() -> new SchoolUnitNotFoundException(id));
     }

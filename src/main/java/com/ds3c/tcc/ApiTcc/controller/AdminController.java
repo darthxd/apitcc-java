@@ -35,34 +35,34 @@ public class AdminController {
 
     @GetMapping
     public List<AdminResponseDTO> listAdmin() {
-        return adminService.listAdmin().stream().map(adminMapper::toDTO).toList();
+        return adminService.list().stream().map(adminMapper::toDTO).toList();
     }
 
     @PostMapping
     public AdminResponseDTO createAdmin(
             @RequestBody @Valid AdminRequestDTO adminRequestDTO) {
-        return adminMapper.toDTO(adminService.createAdmin(adminRequestDTO));
+        return adminMapper.toDTO(adminService.create(adminRequestDTO));
     }
 
     @GetMapping("/{id}")
     public AdminResponseDTO getAdmin(@PathVariable("id") Long id) {
-        return adminMapper.toDTO(adminService.getAdminById(id));
+        return adminMapper.toDTO(adminService.getById(id));
     }
 
     @GetMapping("/username/{username}")
     public AdminResponseDTO getAdminByUsername(@PathVariable("username") String username) {
-        return adminMapper.toDTO(adminService.getAdminByUsername(username));
+        return adminMapper.toDTO(adminService.getByUsername(username));
     }
 
     @PutMapping("/{id}")
     public AdminResponseDTO updateAdmin(@RequestBody @Valid AdminRequestDTO dto,
                                         @PathVariable("id") Long id) {
-        return adminMapper.toDTO(adminService.updateAdmin(dto, id));
+        return adminMapper.toDTO(adminService.update(dto, id));
     }
 
     @DeleteMapping("/{id}")
     public void deleteAdmin(@PathVariable Long id) {
-        adminService.deleteAdmin(id);
+        adminService.delete(id);
     }
 
     @PostMapping("/biometry/reset")

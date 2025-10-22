@@ -39,7 +39,7 @@ public class StudentMapper {
 
     public Student toEntity(StudentRequestDTO studentRequestDTO, Long userId) {
         SchoolClass schoolClass = schoolClassService
-                .getSchoolClassById(studentRequestDTO.getSchoolClassId());
+                .getById(studentRequestDTO.getSchoolClassId());
         Student student = new Student();
 
         student.setName(studentRequestDTO.getName());
@@ -61,7 +61,7 @@ public class StudentMapper {
 
     public StudentResponseDTO toDTO(Student student) {
         SchoolClassResumeDTO schoolClass = schoolClassMapper.toResumeDTO(student.getSchoolClass());
-        User user = userService.getUserById(student.getUserId());
+        User user = userService.getById(student.getUserId());
 
         return new StudentResponseDTO(
                 student.getId(),
@@ -85,10 +85,10 @@ public class StudentMapper {
     }
 
     public Student updateEntityFromDTO(StudentRequestDTO dto, Long id) {
-        Student student = studentService.getStudentById(id);
+        Student student = studentService.getById(id);
         if (StringUtils.hasText(dto.getUsername())
                 || StringUtils.hasText(dto.getPassword())) {
-            userService.updateUser(dto, student.getUserId());
+            userService.update(dto, student.getUserId());
         }
         if (StringUtils.hasText(dto.getName())) {
             student.setName(dto.getName());
@@ -110,7 +110,7 @@ public class StudentMapper {
         }
         if (dto.getSchoolClassId() != null) {
             student.setSchoolClass(
-                    schoolClassService.getSchoolClassById(dto.getSchoolClassId())
+                    schoolClassService.getById(dto.getSchoolClassId())
             );
         }
         if (dto.getBirthdate() != null) {
