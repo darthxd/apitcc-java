@@ -1,5 +1,6 @@
 package com.ds3c.tcc.ApiTcc.mapper;
 
+import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResumeDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
@@ -15,8 +16,6 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class StudentMapper {
@@ -38,10 +37,11 @@ public class StudentMapper {
         this.schoolClassMapper = schoolClassMapper;
     }
 
-    public Student toModel(StudentRequestDTO studentRequestDTO, Long userId) {
+    public Student toEntity(StudentRequestDTO studentRequestDTO, Long userId) {
         SchoolClass schoolClass = schoolClassService
                 .getSchoolClassById(studentRequestDTO.getSchoolClassId());
         Student student = new Student();
+
         student.setName(studentRequestDTO.getName());
         student.setRa(studentRequestDTO.getRa());
         student.setRm(studentRequestDTO.getRm());
@@ -55,41 +55,36 @@ public class StudentMapper {
         student.setPhoto(studentRequestDTO.getPhoto());
         student.setUserId(userId);
         student.setSendNotification(studentRequestDTO.getSendNotification());
+
         return student;
     }
 
     public StudentResponseDTO toDTO(Student student) {
-        StudentResponseDTO dto = new StudentResponseDTO();
+        SchoolClassResumeDTO schoolClass = schoolClassMapper.toResumeDTO(student.getSchoolClass());
         User user = userService.getUserById(student.getUserId());
-        dto.setId(student.getId());
-        dto.setUsername(user.getUsername());
-        dto.setPassword(user.getPassword());
-        dto.setName(student.getName());
-        dto.setRa(student.getRa());
-        dto.setRm(student.getRm());
-        dto.setCpf(student.getCpf());
-        dto.setPhone(student.getPhone());
-        dto.setEmail(student.getEmail());
-        dto.setSchoolClass(schoolClassMapper.toResumeDTO(
-                student.getSchoolClass()));
-        dto.setBirthdate(student.getBirthdate().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        dto.setPhoto(student.getPhoto());
-        dto.setBiometry(student.getBiometry());
-        dto.setInschool(student.getInschool());
-        dto.setSendNotification(student.getSendNotification());
-        return dto;
+
+        return new StudentResponseDTO(
+                student.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                student.getName(),
+                student.getRa(),
+                student.getRm(),
+                student.getCpf(),
+                student.getPhone(),
+                student.getEmail(),
+                schoolClass,
+                student.getBirthdate()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                student.getPhoto(),
+                student.getSendNotification(),
+                student.getBiometry(),
+                student.getInschool(),
+                user.getSchoolUnit().getId()
+        );
     }
 
-    public List<StudentResponseDTO> toListDTO(List<Student> studentList) {
-        List<StudentResponseDTO> dtoList = new ArrayList<>();
-        for (Student student : studentList) {
-            dtoList.add(toDTO(student));
-        }
-        return dtoList;
-    }
-
-    public Student updateModelFromDTO(StudentRequestDTO dto, Long id) {
+    public Student updateEntityFromDTO(StudentRequestDTO dto, Long id) {
         Student student = studentService.getStudentById(id);
         if (StringUtils.hasText(dto.getUsername())
                 || StringUtils.hasText(dto.getPassword())) {

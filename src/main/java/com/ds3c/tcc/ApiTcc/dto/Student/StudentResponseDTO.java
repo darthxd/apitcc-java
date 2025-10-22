@@ -23,7 +23,8 @@ public class StudentResponseDTO {
     private SchoolClassResumeDTO schoolClass;
     private String birthdate;
     private String photo;
+    private Boolean sendNotification;
     private Boolean biometry;
     private Boolean inschool;
-    private Boolean sendNotification;
+    private Long unitId;
 }

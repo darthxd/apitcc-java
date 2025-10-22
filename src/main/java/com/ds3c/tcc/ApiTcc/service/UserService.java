@@ -55,14 +55,14 @@ public class UserService implements UserDetailsService {
     }
 
     public User createUser(UserRequestDTO userRequestDTO, RolesEnum role) {
-        User user = userMapper.fromDTOToModel(userRequestDTO, role);
+        User user = userMapper.toEntity(userRequestDTO, role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     public User updateUser(UserRequestDTO userRequestDTO, Long id) {
         return userRepository.save(
-                userMapper.updateModelFromDTO(userRequestDTO, id)
+                userMapper.updateEntityFromDTO(userRequestDTO, id)
         );
     }
      public void deleteUser(Long id) {

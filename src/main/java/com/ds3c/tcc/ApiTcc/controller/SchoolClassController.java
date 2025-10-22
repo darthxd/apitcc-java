@@ -37,9 +37,7 @@ public class SchoolClassController {
 
     @GetMapping
     public List<SchoolClassResponseDTO> listSchoolClasses() {
-        return schoolClassMapper.toListDTO(
-                schoolClassService.listSchoolClass()
-        );
+        return schoolClassService.listSchoolClass().stream().map(schoolClassMapper::toDTO).toList();
     }
 
     @PostMapping
@@ -73,6 +71,6 @@ public class SchoolClassController {
 
     @GetMapping("/{id}/students")
     public List<StudentResponseDTO> listStudentsFromSchoolClass(@PathVariable("id") Long id) {
-        return studentMapper.toListDTO(studentService.listStudentFromSchoolClass(id));
+        return studentService.listStudentFromSchoolClass(id).stream().map(studentMapper::toDTO).toList();
     }
 }

@@ -3,56 +3,60 @@ package com.ds3c.tcc.ApiTcc.mapper;
 import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.User.UserResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
+import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.model.User;
+import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class UserMapper {
     private final UserService userService;
+    private final SchoolUnitService schoolUnitService;
 
     @Autowired
     @Lazy
-    public UserMapper(UserService userService) {
+    public UserMapper(UserService userService, SchoolUnitService schoolUnitService) {
         this.userService = userService;
+        this.schoolUnitService = schoolUnitService;
     }
 
-    public UserResponseDTO toDTO(User user) {
-        UserResponseDTO userDTO = new UserResponseDTO();
-        userDTO.setUsername(user.getUsername());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setRole(user.getRole().name());
-        return userDTO;
-    }
-
-    public List<UserResponseDTO> toListDTO(List<User> userList) {
-        List<UserResponseDTO> userDTOList = new ArrayList<>();
-        for(User user : userList) {
-            userDTOList.add(toDTO(user));
-        }
-        return userDTOList;
-    }
-
-    public User fromDTOToModel(UserRequestDTO userRequestDTO, RolesEnum role) {
+    public User toEntity(UserRequestDTO userRequestDTO, RolesEnum role) {
         User user = new User();
+        SchoolUnit schoolUnit = schoolUnitService.getSchoolUnitById(userRequestDTO.getUnitId());
+
         user.setUsername(userRequestDTO.getUsername());
         user.setPassword(userRequestDTO.getPassword());
         user.setRole(role);
+        user.setSchoolUnit(schoolUnit);
+
         return user;
     }
-    public User updateModelFromDTO(UserRequestDTO userRequestDTO, Long id) {
+
+    public UserResponseDTO toDTO(User user) {
+        return new UserResponseDTO(
+                user.getUsername(),
+                user.getPassword(),
+                user.getRole().name(),
+                user.getSchoolUnit().getId()
+        );
+    }
+
+    public User updateEntityFromDTO(UserRequestDTO userRequestDTO, Long id) {
         User user = userService.getUserById(id);
         if(StringUtils.hasText(userRequestDTO.getUsername())) {
             user.setUsername(userRequestDTO.getUsername());
         }
         if(StringUtils.hasText(userRequestDTO.getPassword())) {
             user.setPassword(userRequestDTO.getPassword());
+        }
+        if(userRequestDTO.getUnitId() != null) {
+            user.setSchoolUnit(
+                    schoolUnitService.getSchoolUnitById(userRequestDTO.getUnitId())
+            );
         }
         return user;
     }

@@ -23,6 +23,7 @@ public class StudentRequestDTO implements UserRequestDTO {
     private String birthdate;
     private String photo;
     private Boolean sendNotification;
+    private Long unitId;
 
     @Override
     public String getUsername() {
@@ -35,6 +36,11 @@ public class StudentRequestDTO implements UserRequestDTO {
     }
 
     @Override
+    public Long getUnitId() {
+        return this.unitId;
+    }
+
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
@@ -42,5 +48,10 @@ public class StudentRequestDTO implements UserRequestDTO {
     @Override
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public void setUnitId(Long unitId) {
+        this.unitId = unitId;
     }
 }

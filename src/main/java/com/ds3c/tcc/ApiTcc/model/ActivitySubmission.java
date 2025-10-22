@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,4 +23,8 @@ public class ActivitySubmission {
     private String fileUrl;
     private LocalDate submissionDate;
     private Double grade;
+
+    private String comment;
+    private Long teacherId;
+    private LocalDateTime correctedAt;
 }

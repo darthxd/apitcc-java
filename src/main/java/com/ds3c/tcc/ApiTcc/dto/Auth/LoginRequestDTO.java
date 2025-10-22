@@ -1,4 +1,4 @@
-package com.ds3c.tcc.ApiTcc.dto.ActivitySubmission;
+package com.ds3c.tcc.ApiTcc.dto.Auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GradeSubmissionRequestDTO {
-    private Double grade;
+public class LoginRequestDTO {
+    private String username;
+    private String password;
+    private Long unitId;
 }

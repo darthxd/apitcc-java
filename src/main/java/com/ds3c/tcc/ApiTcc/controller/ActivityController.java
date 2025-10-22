@@ -4,7 +4,7 @@ import com.ds3c.tcc.ApiTcc.dto.Activity.ActivityRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Activity.ActivityResponseDTO;
 import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivitySubmissionRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivitySubmissionResponseDTO;
-import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.GradeSubmissionRequestDTO;
+import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivityCorrectionRequestDTO;
 import com.ds3c.tcc.ApiTcc.mapper.ActivityMapper;
 import com.ds3c.tcc.ApiTcc.mapper.ActivitySubmissionMapper;
 import com.ds3c.tcc.ApiTcc.service.ActivityService;
@@ -39,9 +39,8 @@ public class ActivityController {
     @GetMapping("/schoolclass/{id}")
     public List<ActivityResponseDTO> listActivityBySchoolClassId(
             @PathVariable("id") Long id) {
-        return activityMapper.toListDTO(
-                activityService.listActivityBySchoolClassId(id)
-        );
+        return activityService.listActivityBySchoolClassId(id)
+                .stream().map(activityMapper::toDTO).toList();
     }
 
     @PostMapping
@@ -76,9 +75,8 @@ public class ActivityController {
     @GetMapping("/submission/student/{id}")
     public List<ActivitySubmissionResponseDTO> listActivitySubmissionByStudentId(
             @PathVariable("id") Long studentId) {
-        return activitySubmissionMapper.toListDTO(
-                activityService.listActivitySubmissionByStudentId(studentId)
-        );
+        return activityService.listActivitySubmissionByStudentId(studentId)
+                .stream().map(activitySubmissionMapper::toDTO).toList();
     }
 
     @PostMapping("/submission/{id}")
@@ -92,18 +90,17 @@ public class ActivityController {
 
     @PostMapping("/submission/{id}/grade")
     public ActivitySubmissionResponseDTO submitGrade(
-            @RequestBody @Valid GradeSubmissionRequestDTO dto,
+            @RequestBody @Valid ActivityCorrectionRequestDTO dto,
             @PathVariable("id") Long submissionId) {
         return activitySubmissionMapper.toDTO(
-                activityService.submitGrade(dto, submissionId)
+                activityService.submitCorrection(dto, submissionId)
         );
     }
 
     @GetMapping("/{id}/submission")
     public List<ActivitySubmissionResponseDTO> listActivitySubmissionByActivityId(
             @PathVariable("id") Long activityId) {
-        return activitySubmissionMapper.toListDTO(
-                activityService.listActivitySubmissionByActivityId(activityId)
-        );
+        return activityService.listActivitySubmissionByActivityId(activityId)
+                .stream().map(activitySubmissionMapper::toDTO).toList();
     }
 }

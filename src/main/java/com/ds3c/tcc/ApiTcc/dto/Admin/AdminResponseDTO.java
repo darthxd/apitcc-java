@@ -17,4 +17,5 @@ public class AdminResponseDTO {
     private String email;
     private String cpf;
     private String phone;
+    private Long unitId;
 }

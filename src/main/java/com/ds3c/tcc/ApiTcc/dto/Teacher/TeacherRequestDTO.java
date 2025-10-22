@@ -25,6 +25,7 @@ public class TeacherRequestDTO implements UserRequestDTO {
     private String phone;
     private Set<Long> subjectIds;
     private Set<Long> schoolClassIds;
+    private Long unitId;
 
     @Override
     public String getUsername() {
@@ -37,6 +38,11 @@ public class TeacherRequestDTO implements UserRequestDTO {
     }
 
     @Override
+    public Long getUnitId() {
+        return this.unitId;
+    }
+
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
@@ -44,5 +50,10 @@ public class TeacherRequestDTO implements UserRequestDTO {
     @Override
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public void setUnitId(Long unitId) {
+        this.unitId = unitId;
     }
 }

@@ -12,8 +12,6 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class ActivitySubmissionMapper {
@@ -28,8 +26,9 @@ public class ActivitySubmissionMapper {
         this.studentService = studentService;
     }
 
-    public ActivitySubmission toModel(ActivitySubmissionRequestDTO dto, Long activityId) {
+    public ActivitySubmission toEntity(ActivitySubmissionRequestDTO dto, Long activityId) {
         ActivitySubmission activitySubmission = new ActivitySubmission();
+
         activitySubmission.setActivity(
                 activityService.getActivityById(activityId)
         );
@@ -41,33 +40,24 @@ public class ActivitySubmissionMapper {
         );
         activitySubmission.setAnswerText(dto.getAnswerText());
         activitySubmission.setFileUrl(dto.getFileUrl());
+
         return activitySubmission;
     }
 
     public ActivitySubmissionResponseDTO toDTO(ActivitySubmission activitySubmission) {
-        ActivitySubmissionResponseDTO dto = new ActivitySubmissionResponseDTO();
-        dto.setId(activitySubmission.getId());
-        dto.setActivityId(activitySubmission.getActivity().getId());
-        dto.setStudentId(activitySubmission.getStudent().getId());
-        dto.setSubmissionDate(activitySubmission.getSubmissionDate().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        ));
-        dto.setAnswerText(activitySubmission.getAnswerText());
-        dto.setFileUrl(activitySubmission.getFileUrl());
-        dto.setGrade(activitySubmission.getGrade());
-        return dto;
+        return new ActivitySubmissionResponseDTO(
+                activitySubmission.getId(),
+                activitySubmission.getActivity().getId(),
+                activitySubmission.getStudent().getId(),
+                activitySubmission.getAnswerText(),
+                activitySubmission.getFileUrl(),
+                activitySubmission.getSubmissionDate()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                activitySubmission.getGrade()
+        );
     }
 
-    public List<ActivitySubmissionResponseDTO> toListDTO(
-            List<ActivitySubmission> activitySubmissionList) {
-        List<ActivitySubmissionResponseDTO> dtoList = new ArrayList<>();
-        for (ActivitySubmission activitySubmission : activitySubmissionList) {
-            dtoList.add(toDTO(activitySubmission));
-        }
-        return dtoList;
-    }
-
-    public ActivitySubmission updateModelFromDTO(
+    public ActivitySubmission updateEntityFromDTO(
             ActivitySubmissionRequestDTO dto, Long id) {
         ActivitySubmission activitySubmission = activityService.getActivitySubmissionById(id);
         if (dto.getStudentId() != null) {

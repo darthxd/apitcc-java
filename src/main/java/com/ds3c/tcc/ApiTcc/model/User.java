@@ -29,6 +29,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RolesEnum role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_unit_id")
+    private SchoolUnit schoolUnit;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

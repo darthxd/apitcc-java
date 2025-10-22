@@ -73,14 +73,14 @@ public class StudentService {
         dto.setUsername(generateStudentUsername(dto));
         dto.setPassword(generateStudentPassword(dto));
         User user = userService.createUser(dto, RolesEnum.ROLE_STUDENT);
-        Student student = studentMapper.toModel(dto, user.getId());
+        Student student = studentMapper.toEntity(dto, user.getId());
         return studentRepository.save(student);
     }
 
     public Student updateStudent(StudentRequestDTO dto,
                                  Long id) {
         return studentRepository.save(
-                studentMapper.updateModelFromDTO(dto, id)
+                studentMapper.updateEntityFromDTO(dto, id)
         );
     }
 

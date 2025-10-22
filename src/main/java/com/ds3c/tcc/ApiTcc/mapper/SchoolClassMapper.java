@@ -13,9 +13,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class SchoolClassMapper {
     private final SchoolClassService schoolClassService;
@@ -27,7 +24,7 @@ public class SchoolClassMapper {
         this.schoolClassService = schoolClassService;
     }
 
-    public SchoolClass toModel(SchoolClassRequestDTO schoolClassRequestDTO) {
+    public SchoolClass toEntity(SchoolClassRequestDTO schoolClassRequestDTO) {
         SchoolClass schoolClass = new SchoolClass();
         schoolClass.setTeacherIds(schoolClassRequestDTO.getTeacherIds());
         try {
@@ -45,35 +42,27 @@ public class SchoolClassMapper {
     }
 
     public SchoolClassResponseDTO toDTO(SchoolClass schoolClass) {
-        SchoolClassResponseDTO schoolClassResponseDTO = new SchoolClassResponseDTO();
-        schoolClassResponseDTO.setId(schoolClass.getId());
-        schoolClassResponseDTO.setName(schoolClass.getName());
-        schoolClassResponseDTO.setGrade(schoolClass.getGrade().name());
-        schoolClassResponseDTO.setCourse(schoolClass.getCourse().name());
-        schoolClassResponseDTO.setShift(schoolClass.getShift().name());
-        schoolClassResponseDTO.setTeacherIds(schoolClass.getTeacherIds());
-        return schoolClassResponseDTO;
+        return new SchoolClassResponseDTO(
+                schoolClass.getId(),
+                schoolClass.getName(),
+                schoolClass.getGrade().name(),
+                schoolClass.getCourse().name(),
+                schoolClass.getShift().name(),
+                schoolClass.getTeacherIds()
+        );
     }
 
     public SchoolClassResumeDTO toResumeDTO(SchoolClass schoolClass) {
-        SchoolClassResumeDTO dto = new SchoolClassResumeDTO();
-        dto.setId(schoolClass.getId());
-        dto.setName(schoolClass.getName());
-        dto.setGrade(schoolClass.getGrade().name());
-        dto.setCourse(schoolClass.getCourse().name());
-        dto.setShift(schoolClass.getShift().name());
-        return dto;
+        return new SchoolClassResumeDTO(
+                schoolClass.getId(),
+                schoolClass.getName(),
+                schoolClass.getGrade().name(),
+                schoolClass.getCourse().name(),
+                schoolClass.getShift().name()
+        );
     }
 
-    public List<SchoolClassResponseDTO> toListDTO(List<SchoolClass> schoolClassList) {
-        List<SchoolClassResponseDTO> schoolClassResponseDTOList = new ArrayList<>();
-        for (SchoolClass schoolClass : schoolClassList) {
-            schoolClassResponseDTOList.add(toDTO(schoolClass));
-        }
-        return schoolClassResponseDTOList;
-    }
-
-    public SchoolClass updateModelFromDTO(SchoolClassRequestDTO schoolClassRequestDTO, Long id) {
+    public SchoolClass updateEntityFromDTO(SchoolClassRequestDTO schoolClassRequestDTO, Long id) {
         SchoolClass schoolClass = schoolClassService.getSchoolClassById(id);
         if (StringUtils.hasText(schoolClassRequestDTO.getGrade())) {
             try {

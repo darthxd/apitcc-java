@@ -22,6 +22,7 @@ public class AdminRequestDTO implements UserRequestDTO {
     private String email;
     private String cpf;
     private String phone;
+    private Long unitId;
 
     @Override
     public String getUsername() {
@@ -34,6 +35,11 @@ public class AdminRequestDTO implements UserRequestDTO {
     }
 
     @Override
+    public Long getUnitId() {
+        return this.unitId;
+    }
+
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
@@ -41,5 +47,10 @@ public class AdminRequestDTO implements UserRequestDTO {
     @Override
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public void setUnitId(Long unitId) {
+        this.unitId = unitId;
     }
 }

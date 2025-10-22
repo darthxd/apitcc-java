@@ -28,7 +28,7 @@ public class SchoolSubjectService {
 
     public SchoolSubject createSchoolSubject(SchoolSubjectRequestDTO dto) {
         return schoolSubjectRepository.save(
-                schoolSubjectMapper.toModel(dto)
+                schoolSubjectMapper.toEntity(dto)
         );
     }
 
@@ -44,7 +44,7 @@ public class SchoolSubjectService {
     public SchoolSubject updateSchoolSubject(SchoolSubjectRequestDTO dto,
                                              Long id) {
         return schoolSubjectRepository.save(
-                schoolSubjectMapper.updateModelFromDTO(dto, id));
+                schoolSubjectMapper.updateEntityFromDTO(dto, id));
     }
 
     public void deleteSchoolSubject(Long id) {

@@ -33,7 +33,7 @@ public class TeacherService {
 
     public Teacher createTeacher(TeacherRequestDTO teacherRequestDTO) {
         User user = userService.createUser(teacherRequestDTO, RolesEnum.ROLE_TEACHER);
-        Teacher teacher = teacherMapper.toModel(teacherRequestDTO, user.getId());
+        Teacher teacher = teacherMapper.toEntity(teacherRequestDTO, user.getId());
         return teacherRepository.save(teacher);
     }
 

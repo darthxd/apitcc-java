@@ -24,9 +24,7 @@ public class SchoolSubjectController {
 
     @GetMapping
     public List<SchoolSubjectResponseDTO> listSchoolSubjects() {
-        return schoolSubjectMapper.toListDTO(
-            schoolSubjectService.listSchoolSubject()
-        );
+        return schoolSubjectService.listSchoolSubject().stream().map(schoolSubjectMapper::toDTO).toList();
     }
 
     @PostMapping

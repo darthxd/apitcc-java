@@ -21,18 +21,32 @@ public class JwtService {
     @Value("${spring.application.name}")
     private String issuer;
 
-    public String generateToken(User user) {
+    public String generateToken(User user, Long unitId) {
         try {
             return JWT.create()
                     .withIssuer(issuer)
                     .withSubject(user.getUsername())
                     .withClaim("role",user.getRole().toString())
+                    .withClaim("unitId",unitId)
                     .withExpiresAt(expirationTime)
                     .sign(Algorithm.HMAC256(secretKey));
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);
         } catch (JWTCreationException e) {
             throw new RuntimeException("Error creating the JWT token. "+e);
+        }
+    }
+
+    public Long getUnitId(String token) {
+        try {
+            return JWT.require(Algorithm.HMAC256(secretKey))
+                    .withIssuer(issuer)
+                    .build()
+                    .verify(token)
+                    .getClaim("unitId")
+                    .asLong();
+        } catch (Exception e) {
+            return null;
         }
     }
 

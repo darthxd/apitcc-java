@@ -2,7 +2,7 @@ package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Activity.ActivityRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivitySubmissionRequestDTO;
-import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.GradeSubmissionRequestDTO;
+import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivityCorrectionRequestDTO;
 import com.ds3c.tcc.ApiTcc.exception.ActivityNotFoundException;
 import com.ds3c.tcc.ApiTcc.exception.ActivitySubmissionNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.ActivityMapper;
@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -60,13 +61,13 @@ public class ActivityService {
 
     public Activity createActivity(ActivityRequestDTO dto) {
         return activityRepository.save(
-                activityMapper.toModel(dto)
+                activityMapper.toEntity(dto)
         );
     }
 
     public Activity updateActivity(ActivityRequestDTO dto, Long id) {
         return activityRepository.save(
-                activityMapper.updateModelFromDTO(dto, id)
+                activityMapper.updateEntityFromDTO(dto, id)
         );
     }
 
@@ -89,17 +90,22 @@ public class ActivityService {
             throw new RuntimeException("The deadline for this activity was reached.");
         }
         return activitySubmissionRepository.save(
-                activitySubmissionMapper.toModel(dto, activityId)
+                activitySubmissionMapper.toEntity(dto, activityId)
         );
     }
-    public ActivitySubmission submitGrade(
-            GradeSubmissionRequestDTO dto, Long submissionId) {
+    public ActivitySubmission submitCorrection(
+            ActivityCorrectionRequestDTO dto, Long submissionId) {
         ActivitySubmission activitySubmission = getActivitySubmissionById(submissionId);
         if (dto.getGrade() > activitySubmission.getActivity().getMaxScore()) {
             throw new RuntimeException(
                     "The grade submited was bigger than the max grade for this activity.");
         }
+
         activitySubmission.setGrade(dto.getGrade());
+        activitySubmission.setComment(dto.getComment());
+        activitySubmission.setTeacherId(dto.getTeacherId());
+        activitySubmission.setCorrectedAt(LocalDateTime.now());
+
         return activitySubmissionRepository.save(activitySubmission);
     }
 }

@@ -11,9 +11,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class TeacherMapper {
     private final UserService userService;
@@ -28,7 +25,7 @@ public class TeacherMapper {
         this.teacherService = teacherService;
     }
 
-    public Teacher toModel(TeacherRequestDTO dto, Long userId) {
+    public Teacher toEntity(TeacherRequestDTO dto, Long userId) {
         Teacher teacher = new Teacher();
         teacher.setName(dto.getName());
         teacher.setCpf(dto.getCpf());
@@ -42,25 +39,19 @@ public class TeacherMapper {
 
     public TeacherResponseDTO toDTO(Teacher teacher) {
         User user = userService.getUserById(teacher.getUserId());
-        TeacherResponseDTO dto = new TeacherResponseDTO();
-        dto.setId(teacher.getId());
-        dto.setUsername(user.getUsername());
-        dto.setPassword(user.getPassword());
-        dto.setCpf(teacher.getCpf());
-        dto.setName(teacher.getName());
-        dto.setPhone(teacher.getPhone());
-        dto.setEmail(teacher.getEmail());
-        dto.setSubjectIds(teacher.getSubjectIds());
-        dto.setSchoolClassIds(teacher.getSchoolClassIds());
-        return dto;
-    }
 
-    public List<TeacherResponseDTO> toListDTO(List<Teacher> teacherList) {
-        List<TeacherResponseDTO> dtoList = new ArrayList<>();
-        for(Teacher teacher : teacherList) {
-            dtoList.add(toDTO(teacher));
-        }
-        return dtoList;
+        return new TeacherResponseDTO(
+                teacher.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                teacher.getName(),
+                teacher.getCpf(),
+                teacher.getEmail(),
+                teacher.getPhone(),
+                teacher.getSubjectIds(),
+                teacher.getSchoolClassIds(),
+                user.getSchoolUnit().getId()
+        );
     }
 
     public Teacher updateModelFromDTO(TeacherRequestDTO dto, Long id) {

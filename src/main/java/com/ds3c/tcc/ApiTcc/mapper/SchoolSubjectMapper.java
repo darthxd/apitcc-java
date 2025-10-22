@@ -9,9 +9,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class SchoolSubjectMapper {
     private final SchoolSubjectService schoolSubjectService;
@@ -23,7 +20,7 @@ public class SchoolSubjectMapper {
         this.schoolSubjectService = schoolSubjectService;
     }
 
-    public SchoolSubject toModel(SchoolSubjectRequestDTO schoolSubjectRequestDTO) {
+    public SchoolSubject toEntity(SchoolSubjectRequestDTO schoolSubjectRequestDTO) {
         SchoolSubject schoolSubject = new SchoolSubject();
         schoolSubject.setName(schoolSubjectRequestDTO.getName());
         schoolSubject.setWorkload(schoolSubjectRequestDTO.getWorkload());
@@ -31,22 +28,14 @@ public class SchoolSubjectMapper {
     }
 
     public SchoolSubjectResponseDTO toDTO(SchoolSubject schoolSubject) {
-        SchoolSubjectResponseDTO schoolSubjectResponseDTO = new SchoolSubjectResponseDTO();
-        schoolSubjectResponseDTO.setId(schoolSubject.getId());
-        schoolSubjectResponseDTO.setName(schoolSubject.getName());
-        schoolSubjectResponseDTO.setWorkload(schoolSubject.getWorkload());
-        return schoolSubjectResponseDTO;
+        return new SchoolSubjectResponseDTO(
+                schoolSubject.getId(),
+                schoolSubject.getName(),
+                schoolSubject.getWorkload()
+        );
     }
 
-    public List<SchoolSubjectResponseDTO> toListDTO(List<SchoolSubject> schoolSubjectList) {
-        List<SchoolSubjectResponseDTO> schoolSubjectResponseDTOList = new ArrayList<>();
-        for (SchoolSubject schoolSubject : schoolSubjectList) {
-            schoolSubjectResponseDTOList.add(toDTO(schoolSubject));
-        }
-        return schoolSubjectResponseDTOList;
-    }
-
-    public SchoolSubject updateModelFromDTO(SchoolSubjectRequestDTO schoolSubjectRequestDTO, Long id) {
+    public SchoolSubject updateEntityFromDTO(SchoolSubjectRequestDTO schoolSubjectRequestDTO, Long id) {
         SchoolSubject schoolSubject = schoolSubjectService.getSchoolSubjectById(id);
         if (StringUtils.hasText(schoolSubjectRequestDTO.getName())) {
             schoolSubject.setName(schoolSubjectRequestDTO.getName());

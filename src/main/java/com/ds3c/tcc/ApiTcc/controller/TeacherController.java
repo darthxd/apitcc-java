@@ -33,9 +33,7 @@ public class TeacherController {
 
     @GetMapping
     public List<TeacherResponseDTO> listTeachers() {
-        return teacherMapper.toListDTO(
-                teacherService.listTeacher()
-        );
+        return teacherService.listTeacher().stream().map(teacherMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")

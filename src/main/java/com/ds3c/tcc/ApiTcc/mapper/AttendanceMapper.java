@@ -17,8 +17,6 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class AttendanceMapper {
@@ -40,7 +38,7 @@ public class AttendanceMapper {
         this.attendanceService = attendanceService;
     }
 
-    public Attendance toModel(AttendanceRequestDTO dto) {
+    public Attendance toEntity(AttendanceRequestDTO dto) {
         Student student = studentService
                 .getStudentById(dto.getStudentId());
         SchoolClass schoolClass = schoolClassService
@@ -58,26 +56,19 @@ public class AttendanceMapper {
     }
 
     public AttendanceResponseDTO toDTO(Attendance attendance) {
-        AttendanceResponseDTO dto = new AttendanceResponseDTO();
-        dto.setId(attendance.getId());
-        dto.setDate(attendance.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        dto.setStudentId(attendance.getStudent().getId());
-        dto.setSchoolClassId(attendance.getSchoolClass().getId());
-        dto.setTeacherId(attendance.getTeacher().getId());
-        dto.setIsInSchool(attendance.getIsInSchool());
-        dto.setPresent(attendance.getPresent());
-        return dto;
+        return new AttendanceResponseDTO(
+                attendance.getId(),
+                attendance.getDate()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                attendance.getStudent().getId(),
+                attendance.getSchoolClass().getId(),
+                attendance.getTeacher().getId(),
+                attendance.getIsInSchool(),
+                attendance.getPresent()
+        );
     }
 
-    public List<AttendanceResponseDTO> toListDTO(List<Attendance> attendanceList) {
-        List<AttendanceResponseDTO> dtoList = new ArrayList<>();
-        for (Attendance attendance : attendanceList) {
-            dtoList.add(toDTO(attendance));
-        }
-        return dtoList;
-    }
-
-    public Attendance updateModelFromDTO(AttendanceRequestDTO dto, Long id) {
+    public Attendance updateEntityFromDTO(AttendanceRequestDTO dto, Long id) {
         Attendance attendance = attendanceService.getAttendanceById(id);
         if (StringUtils.hasText(dto.getDate())) {
             attendance.setDate(LocalDate.parse(dto.getDate()));

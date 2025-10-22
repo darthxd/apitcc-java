@@ -15,8 +15,6 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class ActivityMapper {
@@ -34,10 +32,11 @@ public class ActivityMapper {
         this.activityService = activityService;
     }
 
-    public Activity toModel(ActivityRequestDTO dto) {
+    public Activity toEntity(ActivityRequestDTO dto) {
         Activity activity = new Activity();
         Teacher teacher = teacherService.getTeacherById(dto.getTeacherId());
         SchoolClass schoolClass = schoolClassService.getSchoolClassById(dto.getSchoolClassId());
+
         activity.setTitle(dto.getTitle());
         activity.setDescription(dto.getDescription());
         activity.setDeadline(LocalDate.parse(
@@ -46,33 +45,26 @@ public class ActivityMapper {
         activity.setMaxScore(dto.getMaxScore());
         activity.setTeacher(teacher);
         activity.setSchoolClass(schoolClass);
+
         return activity;
     }
 
     public ActivityResponseDTO toDTO(Activity activity) {
-        ActivityResponseDTO dto = new ActivityResponseDTO();
-        dto.setId(activity.getId());
-        dto.setTitle(activity.getTitle());
-        dto.setDescription(activity.getDescription());
-        dto.setDeadline(activity.getDeadline()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        dto.setCreationDate(activity.getCreationDate()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        dto.setMaxScore(activity.getMaxScore());
-        dto.setTeacherId(activity.getTeacher().getId());
-        dto.setSchoolClassId(activity.getSchoolClass().getId());
-        return dto;
+        return new ActivityResponseDTO(
+                activity.getId(),
+                activity.getTitle(),
+                activity.getDescription(),
+                activity.getDeadline()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                activity.getCreationDate()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                activity.getMaxScore(),
+                activity.getTeacher().getId(),
+                activity.getSchoolClass().getId()
+        );
     }
 
-    public List<ActivityResponseDTO> toListDTO(List<Activity> activityList) {
-        List<ActivityResponseDTO> dtoList = new ArrayList<>();
-        for (Activity activity : activityList) {
-            dtoList.add(toDTO(activity));
-        }
-        return dtoList;
-    }
-
-    public Activity updateModelFromDTO(ActivityRequestDTO dto, Long id) {
+    public Activity updateEntityFromDTO(ActivityRequestDTO dto, Long id) {
         Activity activity = activityService.getActivityById(id);
         if (StringUtils.hasText(dto.getTitle())) {
             activity.setTitle(dto.getTitle());

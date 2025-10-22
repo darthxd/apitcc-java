@@ -61,7 +61,7 @@ public class SchoolClassService {
 
     public SchoolClass createSchoolClass(SchoolClassRequestDTO dto) {
         return schoolClassRepository.save(
-                schoolClassMapper.toModel(dto)
+                schoolClassMapper.toEntity(dto)
         );
     }
 
@@ -77,7 +77,7 @@ public class SchoolClassService {
     public SchoolClass updateSchoolClass(SchoolClassRequestDTO dto,
                                          Long id) {
         return schoolClassRepository.save(
-                schoolClassMapper.updateModelFromDTO(dto, id));
+                schoolClassMapper.updateEntityFromDTO(dto, id));
     }
 
     public void deleteSchoolClass(Long id) {

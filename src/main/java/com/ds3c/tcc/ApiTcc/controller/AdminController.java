@@ -35,7 +35,7 @@ public class AdminController {
 
     @GetMapping
     public List<AdminResponseDTO> listAdmin() {
-        return adminMapper.toListDTO(adminService.listAdmin());
+        return adminService.listAdmin().stream().map(adminMapper::toDTO).toList();
     }
 
     @PostMapping

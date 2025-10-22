@@ -25,15 +25,15 @@ public class AttendanceController {
 
     @GetMapping
     public List<AttendanceResponseDTO> listAttendance() {
-        return attendanceMapper.toListDTO(attendanceService.listAttendance());
+        return attendanceService.listAttendance()
+                .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @PostMapping
     public List<AttendanceResponseDTO> createAttendanceBulk(
             @RequestBody @Valid AttendanceBulkRequestDTO dto) {
-        return attendanceMapper.toListDTO(
-                attendanceService.createAttendanceBulk(dto)
-        );
+        return attendanceService.createAttendanceBulk(dto)
+                .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
@@ -45,16 +45,14 @@ public class AttendanceController {
 
     @GetMapping("/class/{classId}")
     public List<AttendanceResponseDTO> listAttendanceBySchoolClassId(@PathVariable("classId") Long classId) {
-        return attendanceMapper.toListDTO(
-                attendanceService.listAttendanceBySchoolClassId(classId)
-        );
+        return attendanceService.listAttendanceBySchoolClassId(classId)
+                .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @GetMapping("/student/{id}")
     public List<AttendanceResponseDTO> listAttendancesByStudentId(@PathVariable("id") Long studentId) {
-        return attendanceMapper.toListDTO(
-                attendanceService.listAttendanceByStudentId(studentId)
-        );
+        return attendanceService.listAttendanceByStudentId(studentId)
+                .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @GetMapping("/{classId}/{date}")
@@ -62,9 +60,8 @@ public class AttendanceController {
             @PathVariable("classId") Long classId,
             @PathVariable("date") String date
     ) {
-        return attendanceMapper.toListDTO(
-                attendanceService.listAttendanceByDateAndClassId(date, classId)
-        );
+        return attendanceService.listAttendanceByDateAndClassId(date, classId)
+                .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @PutMapping("/{id}")

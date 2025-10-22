@@ -22,4 +22,5 @@ public class TeacherResponseDTO {
     private String phone;
     private Set<Long> subjectIds;
     private Set<Long> schoolClassIds;
+    private Long unitId;
 }

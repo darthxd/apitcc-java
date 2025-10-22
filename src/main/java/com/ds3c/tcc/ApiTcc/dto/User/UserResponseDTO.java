@@ -13,4 +13,5 @@ public class UserResponseDTO {
     private String username;
     private String password;
     private String role;
+    private Long unitId;
 }

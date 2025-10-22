@@ -11,9 +11,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class AdminMapper {
     private final UserService userService;
@@ -28,7 +25,7 @@ public class AdminMapper {
         this.adminService = adminService;
     }
 
-    public Admin toModel(AdminRequestDTO adminRequestDTO, Long userId) {
+    public Admin toEntity(AdminRequestDTO adminRequestDTO, Long userId) {
         Admin admin = new Admin();
         admin.setCpf(adminRequestDTO.getCpf());
         admin.setEmail(adminRequestDTO.getEmail());
@@ -41,25 +38,20 @@ public class AdminMapper {
     public AdminResponseDTO toDTO(Admin admin) {
         AdminResponseDTO adminDTO = new AdminResponseDTO();
         User user = userService.getUserById(admin.getUserId());
-        adminDTO.setId(admin.getId());
-        adminDTO.setUsername(user.getUsername());
-        adminDTO.setPassword(user.getPassword());
-        adminDTO.setCpf(admin.getCpf());
-        adminDTO.setEmail(admin.getEmail());
-        adminDTO.setName(admin.getName());
-        adminDTO.setPhone(admin.getPhone());
-        return adminDTO;
+
+        return new AdminResponseDTO(
+                admin.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                admin.getName(),
+                admin.getEmail(),
+                admin.getCpf(),
+                admin.getPhone(),
+                user.getSchoolUnit().getId()
+        );
     }
 
-    public List<AdminResponseDTO> toListDTO(List<Admin> adminList) {
-        List<AdminResponseDTO> adminDTOList = new ArrayList<>();
-        for(Admin admin : adminList) {
-            adminDTOList.add(toDTO(admin));
-        }
-        return adminDTOList;
-    }
-
-    public Admin updateModelFromDTO(AdminRequestDTO adminRequestDTO, Long id) {
+    public Admin updateEntityFromDTO(AdminRequestDTO adminRequestDTO, Long id) {
         Admin admin = adminService.getAdminById(id);
         if (StringUtils.hasText(adminRequestDTO.getUsername())
                 || StringUtils.hasText(adminRequestDTO.getPassword())) {

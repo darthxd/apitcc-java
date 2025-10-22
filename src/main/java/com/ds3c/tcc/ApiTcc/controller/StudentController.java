@@ -32,9 +32,7 @@ public class StudentController {
 
     @GetMapping
     public List<StudentResponseDTO> listStudent() {
-        return studentMapper.toListDTO(
-                studentService.listStudent()
-        );
+        return studentService.listStudent().stream().map(studentMapper::toDTO).toList();
     }
 
     @PostMapping

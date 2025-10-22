@@ -66,7 +66,7 @@ public class AttendanceService {
 
     public Attendance createAttendance(AttendanceRequestDTO dto) {
         return attendanceRepository.save(
-                attendanceMapper.toModel(dto)
+                attendanceMapper.toEntity(dto)
         );
     }
 
@@ -109,7 +109,7 @@ public class AttendanceService {
 
     public Attendance updateAttendance(AttendanceRequestDTO dto, Long id) {
         return attendanceRepository.save(
-                attendanceMapper.updateModelFromDTO(dto, id)
+                attendanceMapper.updateEntityFromDTO(dto, id)
         );
     }
 

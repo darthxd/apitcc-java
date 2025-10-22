@@ -32,7 +32,7 @@ public class AdminService {
 
     public Admin createAdmin(AdminRequestDTO adminRequestDTO) {
         User user = userService.createUser(adminRequestDTO, RolesEnum.ROLE_ADMIN);
-        Admin admin = adminMapper.toModel(adminRequestDTO, user.getId());
+        Admin admin = adminMapper.toEntity(adminRequestDTO, user.getId());
         return adminRepository.save(admin);
     }
 
@@ -54,7 +54,7 @@ public class AdminService {
     public Admin updateAdmin(AdminRequestDTO dto,
                              Long id) {
         return adminRepository.save(
-                adminMapper.updateModelFromDTO(dto, id)
+                adminMapper.updateEntityFromDTO(dto, id)
         );
     }
 
