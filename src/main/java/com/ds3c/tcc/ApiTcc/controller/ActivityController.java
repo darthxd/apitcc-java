@@ -30,28 +30,28 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}")
-    public ActivityResponseDTO getActivityById(@PathVariable("id") Long id) {
+    public ActivityResponseDTO getById(@PathVariable("id") Long id) {
         return activityMapper.toDTO(
                 activityService.getById(id)
         );
     }
 
     @GetMapping("/schoolclass/{id}")
-    public List<ActivityResponseDTO> listActivityBySchoolClassId(
+    public List<ActivityResponseDTO> listBySchoolClass(
             @PathVariable("id") Long id) {
         return activityService.listBySchoolClass(id)
                 .stream().map(activityMapper::toDTO).toList();
     }
 
     @PostMapping
-    public ActivityResponseDTO createActivity(@RequestBody @Valid ActivityRequestDTO dto) {
+    public ActivityResponseDTO create(@RequestBody @Valid ActivityRequestDTO dto) {
         return activityMapper.toDTO(
                 activityService.create(dto)
         );
     }
 
     @PutMapping("/{id}")
-    public ActivityResponseDTO updateActivity(
+    public ActivityResponseDTO update(
             @RequestBody @Valid ActivityRequestDTO dto,
             @PathVariable Long id) {
         return activityMapper.toDTO(
@@ -60,12 +60,12 @@ public class ActivityController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteActivity(@PathVariable("id") Long id) {
+    public void delete(@PathVariable("id") Long id) {
         activityService.delete(id);
     }
 
     @GetMapping("/submission/{id}")
-    public ActivitySubmissionResponseDTO getActivitySubmissionById(
+    public ActivitySubmissionResponseDTO getSubmissionById(
             @PathVariable("id") Long id) {
         return activitySubmissionMapper.toDTO(
                 activityService.getSubmissionById(id)
@@ -73,7 +73,7 @@ public class ActivityController {
     }
 
     @GetMapping("/submission/student/{id}")
-    public List<ActivitySubmissionResponseDTO> listActivitySubmissionByStudentId(
+    public List<ActivitySubmissionResponseDTO> listSubmissionByStudent(
             @PathVariable("id") Long studentId) {
         return activityService.listSubmissionByStudent(studentId)
                 .stream().map(activitySubmissionMapper::toDTO).toList();
@@ -98,7 +98,7 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}/submission")
-    public List<ActivitySubmissionResponseDTO> listActivitySubmissionByActivityId(
+    public List<ActivitySubmissionResponseDTO> listSubmissionByActivity(
             @PathVariable("id") Long activityId) {
         return activityService.listSubmissionByActivity(activityId)
                 .stream().map(activitySubmissionMapper::toDTO).toList();

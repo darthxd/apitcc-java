@@ -23,18 +23,18 @@ public class GradeController {
     }
 
     @PostMapping
-    public GradeResponseDTO createGrade(@RequestBody @Valid GradeRequestDTO dto) {
+    public GradeResponseDTO create(@RequestBody @Valid GradeRequestDTO dto) {
         Grade grade = gradeService.create(dto);
         return gradeMapper.toDTO(grade);
     }
 
     @GetMapping("/student/{id}")
-    public List<GradeResponseDTO> getStudentGrades(@PathVariable("id") Long studentId) {
+    public List<GradeResponseDTO> getByStudent(@PathVariable("id") Long studentId) {
         return gradeService.getByStudent(studentId).stream().map(gradeMapper::toDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/student/{id}/subject/{subjectId}")
-    public List<GradeResponseDTO> getStudentGradesBySubject(
+    public List<GradeResponseDTO> getByStudentAndSubject(
             @PathVariable("id") Long studentId,
             @PathVariable("subjectId") Long subjectId) {
         return gradeService.getByStudentAndSubject(studentId, subjectId)

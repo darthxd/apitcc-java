@@ -31,33 +31,33 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<StudentResponseDTO> listStudent() {
+    public List<StudentResponseDTO> list() {
         return studentService.list().stream().map(studentMapper::toDTO).toList();
     }
 
     @PostMapping
-    public StudentResponseDTO createStudent(@RequestBody @Valid StudentRequestDTO dto) {
+    public StudentResponseDTO create(@RequestBody @Valid StudentRequestDTO dto) {
         return studentMapper.toDTO(
                 studentService.create(dto)
         );
     }
 
     @GetMapping("/{id}")
-    public StudentResponseDTO getStudentById(@PathVariable("id") Long id) {
+    public StudentResponseDTO getById(@PathVariable("id") Long id) {
         return studentMapper.toDTO(
                 studentService.getById(id)
         );
     }
 
     @GetMapping("/username/{username}")
-    public StudentResponseDTO getStudentByUsername(@PathVariable("username") String username) {
+    public StudentResponseDTO getByUsername(@PathVariable("username") String username) {
         return studentMapper.toDTO(
                 studentService.getByUsername(username)
         );
     }
 
     @PutMapping("/{id}")
-    public StudentResponseDTO updateStudent(@RequestBody @Valid StudentRequestDTO dto,
+    public StudentResponseDTO update(@RequestBody @Valid StudentRequestDTO dto,
                                             @PathVariable("id") Long id) {
         return studentMapper.toDTO(
                 studentService.update(dto, id)
@@ -65,7 +65,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable("id") Long id) {
+    public void delete(@PathVariable("id") Long id) {
         studentService.delete(id);
     }
 

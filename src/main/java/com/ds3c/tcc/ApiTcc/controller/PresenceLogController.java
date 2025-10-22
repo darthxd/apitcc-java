@@ -24,24 +24,24 @@ public class PresenceLogController {
     }
 
     @GetMapping()
-    public List<PresenceLogResponseDTO> listPresenceLog() {
+    public List<PresenceLogResponseDTO> list() {
         return presenceLogService.list().stream().map(presenceLogMapper::toDTO).toList();
     }
 
     @GetMapping("/student/{id}")
-    public List<PresenceLogResponseDTO> listPresenceLogByStudentId(
+    public List<PresenceLogResponseDTO> listByStudent(
             @PathVariable("id") Long studentId) {
         return presenceLogService.listByStudent(studentId).stream().map(presenceLogMapper::toDTO).toList();
     }
 
     @GetMapping("/date/{date}")
-    public List<PresenceLogResponseDTO> listPresenceLogByDate(
+    public List<PresenceLogResponseDTO> listByDate(
             @PathVariable("date") String date) {
         return presenceLogService.listByDate(date).stream().map(presenceLogMapper::toDTO).toList();
     }
 
     @GetMapping("/student/{id}/{date}")
-    public PresenceLogResponseDTO getPresenceLogByStudentIdAndDate(
+    public PresenceLogResponseDTO getByStudentAndDate(
             @PathVariable("id") Long studentId,
             @PathVariable("date") String date) {
         return presenceLogMapper.toDTO(

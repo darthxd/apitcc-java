@@ -34,34 +34,34 @@ public class AdminController {
     }
 
     @GetMapping
-    public List<AdminResponseDTO> listAdmin() {
+    public List<AdminResponseDTO> list() {
         return adminService.list().stream().map(adminMapper::toDTO).toList();
     }
 
     @PostMapping
-    public AdminResponseDTO createAdmin(
+    public AdminResponseDTO create(
             @RequestBody @Valid AdminRequestDTO adminRequestDTO) {
         return adminMapper.toDTO(adminService.create(adminRequestDTO));
     }
 
     @GetMapping("/{id}")
-    public AdminResponseDTO getAdmin(@PathVariable("id") Long id) {
+    public AdminResponseDTO getById(@PathVariable("id") Long id) {
         return adminMapper.toDTO(adminService.getById(id));
     }
 
     @GetMapping("/username/{username}")
-    public AdminResponseDTO getAdminByUsername(@PathVariable("username") String username) {
+    public AdminResponseDTO getByUsername(@PathVariable("username") String username) {
         return adminMapper.toDTO(adminService.getByUsername(username));
     }
 
     @PutMapping("/{id}")
-    public AdminResponseDTO updateAdmin(@RequestBody @Valid AdminRequestDTO dto,
+    public AdminResponseDTO update(@RequestBody @Valid AdminRequestDTO dto,
                                         @PathVariable("id") Long id) {
         return adminMapper.toDTO(adminService.update(dto, id));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAdmin(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         adminService.delete(id);
     }
 

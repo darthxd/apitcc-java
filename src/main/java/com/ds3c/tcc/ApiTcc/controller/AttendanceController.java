@@ -24,39 +24,39 @@ public class AttendanceController {
     }
 
     @GetMapping
-    public List<AttendanceResponseDTO> listAttendance() {
+    public List<AttendanceResponseDTO> list() {
         return attendanceService.list()
                 .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @PostMapping
-    public List<AttendanceResponseDTO> createAttendanceBulk(
+    public List<AttendanceResponseDTO> createBulk(
             @RequestBody @Valid AttendanceBulkRequestDTO dto) {
         return attendanceService.createBulk(dto)
                 .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
-    public AttendanceResponseDTO getAttendanceById(@PathVariable("id") Long id) {
+    public AttendanceResponseDTO getById(@PathVariable("id") Long id) {
         return attendanceMapper.toDTO(
                 attendanceService.getById(id)
         );
     }
 
     @GetMapping("/class/{classId}")
-    public List<AttendanceResponseDTO> listAttendanceBySchoolClassId(@PathVariable("classId") Long classId) {
+    public List<AttendanceResponseDTO> listBySchoolClass(@PathVariable("classId") Long classId) {
         return attendanceService.listBySchoolClass(classId)
                 .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @GetMapping("/student/{id}")
-    public List<AttendanceResponseDTO> listAttendancesByStudentId(@PathVariable("id") Long studentId) {
+    public List<AttendanceResponseDTO> listByStudent(@PathVariable("id") Long studentId) {
         return attendanceService.listByStudent(studentId)
                 .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @GetMapping("/{classId}/{date}")
-    public List<AttendanceResponseDTO> listAttendanceByDateAndClassId(
+    public List<AttendanceResponseDTO> listByDateAndSchoolClass(
             @PathVariable("classId") Long classId,
             @PathVariable("date") String date
     ) {
@@ -65,7 +65,7 @@ public class AttendanceController {
     }
 
     @PutMapping("/{id}")
-    public AttendanceResponseDTO updateAttendance(
+    public AttendanceResponseDTO update(
             @PathVariable("id") Long id,
             @RequestBody @Valid AttendanceRequestDTO dto
     ) {
@@ -75,7 +75,7 @@ public class AttendanceController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAttendance(@PathVariable("id") Long id) {
+    public void delete(@PathVariable("id") Long id) {
         attendanceService.delete(id);
     }
 }
