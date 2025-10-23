@@ -36,8 +36,7 @@ public class AdminMapper {
     }
 
     public AdminResponseDTO toDTO(Admin admin) {
-        AdminResponseDTO adminDTO = new AdminResponseDTO();
-        User user = userService.getById(admin.getUserId());
+        User user = userService.findById(admin.getUserId());
 
         return new AdminResponseDTO(
                 admin.getId(),

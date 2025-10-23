@@ -34,8 +34,8 @@ public class ActivityMapper {
 
     public Activity toEntity(ActivityRequestDTO dto) {
         Activity activity = new Activity();
-        Teacher teacher = teacherService.getById(dto.getTeacherId());
-        SchoolClass schoolClass = schoolClassService.getById(dto.getSchoolClassId());
+        Teacher teacher = teacherService.findById(dto.getTeacherId());
+        SchoolClass schoolClass = schoolClassService.findById(dto.getSchoolClassId());
 
         activity.setTitle(dto.getTitle());
         activity.setDescription(dto.getDescription());
@@ -65,7 +65,7 @@ public class ActivityMapper {
     }
 
     public Activity updateEntityFromDTO(ActivityRequestDTO dto, Long id) {
-        Activity activity = activityService.getById(id);
+        Activity activity = activityService.findById(id);
         if (StringUtils.hasText(dto.getTitle())) {
             activity.setTitle(dto.getTitle());
         }
@@ -81,12 +81,12 @@ public class ActivityMapper {
         }
         if (dto.getTeacherId() != null) {
             activity.setTeacher(
-                    teacherService.getById(dto.getTeacherId())
+                    teacherService.findById(dto.getTeacherId())
             );
         }
         if (dto.getSchoolClassId() != null) {
             activity.setSchoolClass(
-                    schoolClassService.getById(dto.getSchoolClassId())
+                    schoolClassService.findById(dto.getSchoolClassId())
             );
         }
         return activity;

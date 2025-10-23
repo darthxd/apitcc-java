@@ -30,16 +30,16 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}")
-    public ActivityResponseDTO getById(@PathVariable("id") Long id) {
+    public ActivityResponseDTO findById(@PathVariable("id") Long id) {
         return activityMapper.toDTO(
-                activityService.getById(id)
+                activityService.findById(id)
         );
     }
 
     @GetMapping("/schoolclass/{id}")
-    public List<ActivityResponseDTO> listBySchoolClass(
+    public List<ActivityResponseDTO> findAllBySchoolClass(
             @PathVariable("id") Long id) {
-        return activityService.listBySchoolClass(id)
+        return activityService.findAllBySchoolClass(id)
                 .stream().map(activityMapper::toDTO).toList();
     }
 
@@ -61,21 +61,21 @@ public class ActivityController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
-        activityService.delete(id);
+        activityService.delete(activityService.findById(id));
     }
 
     @GetMapping("/submission/{id}")
-    public ActivitySubmissionResponseDTO getSubmissionById(
+    public ActivitySubmissionResponseDTO findSubmissionById(
             @PathVariable("id") Long id) {
         return activitySubmissionMapper.toDTO(
-                activityService.getSubmissionById(id)
+                activityService.findSubmissionById(id)
         );
     }
 
     @GetMapping("/submission/student/{id}")
-    public List<ActivitySubmissionResponseDTO> listSubmissionByStudent(
+    public List<ActivitySubmissionResponseDTO> findAllSubmissionByStudent(
             @PathVariable("id") Long studentId) {
-        return activityService.listSubmissionByStudent(studentId)
+        return activityService.findAllSubmissionByStudent(studentId)
                 .stream().map(activitySubmissionMapper::toDTO).toList();
     }
 
@@ -98,9 +98,9 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}/submission")
-    public List<ActivitySubmissionResponseDTO> listSubmissionByActivity(
+    public List<ActivitySubmissionResponseDTO> findAllSubmissionByActivity(
             @PathVariable("id") Long activityId) {
-        return activityService.listSubmissionByActivity(activityId)
+        return activityService.findAllSubmissionByActivity(activityId)
                 .stream().map(activitySubmissionMapper::toDTO).toList();
     }
 }

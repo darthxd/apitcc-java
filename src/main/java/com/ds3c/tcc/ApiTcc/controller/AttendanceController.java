@@ -24,8 +24,8 @@ public class AttendanceController {
     }
 
     @GetMapping
-    public List<AttendanceResponseDTO> list() {
-        return attendanceService.list()
+    public List<AttendanceResponseDTO> findAll() {
+        return attendanceService.findAll()
                 .stream().map(attendanceMapper::toDTO).toList();
     }
 
@@ -37,30 +37,30 @@ public class AttendanceController {
     }
 
     @GetMapping("/{id}")
-    public AttendanceResponseDTO getById(@PathVariable("id") Long id) {
+    public AttendanceResponseDTO findById(@PathVariable("id") Long id) {
         return attendanceMapper.toDTO(
-                attendanceService.getById(id)
+                attendanceService.findById(id)
         );
     }
 
     @GetMapping("/class/{classId}")
-    public List<AttendanceResponseDTO> listBySchoolClass(@PathVariable("classId") Long classId) {
-        return attendanceService.listBySchoolClass(classId)
+    public List<AttendanceResponseDTO> findAllBySchoolClass(@PathVariable("classId") Long classId) {
+        return attendanceService.findAllBySchoolClass(classId)
                 .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @GetMapping("/student/{id}")
-    public List<AttendanceResponseDTO> listByStudent(@PathVariable("id") Long studentId) {
-        return attendanceService.listByStudent(studentId)
+    public List<AttendanceResponseDTO> findAllByStudent(@PathVariable("id") Long studentId) {
+        return attendanceService.findAllByStudent(studentId)
                 .stream().map(attendanceMapper::toDTO).toList();
     }
 
     @GetMapping("/{classId}/{date}")
-    public List<AttendanceResponseDTO> listByDateAndSchoolClass(
+    public List<AttendanceResponseDTO> findAllByDateAndSchoolClass(
             @PathVariable("classId") Long classId,
             @PathVariable("date") String date
     ) {
-        return attendanceService.listByDateAndSchoolClass(date, classId)
+        return attendanceService.findAllByDateAndSchoolClass(date, classId)
                 .stream().map(attendanceMapper::toDTO).toList();
     }
 
@@ -76,6 +76,6 @@ public class AttendanceController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
-        attendanceService.delete(id);
+        attendanceService.delete(attendanceService.findById(id));
     }
 }

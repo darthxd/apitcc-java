@@ -43,7 +43,7 @@ public class AdminService {
 
     public Admin getByUsername(String username) {
         return adminRepository.findByUserId(
-                userService.getByUsername(username).getId())
+                userService.findByUsername(username).getId())
                 .orElseThrow(() -> new AdminNotFoundException(username));
     }
 
@@ -60,7 +60,7 @@ public class AdminService {
 
     public void delete(Long id) {
         Admin admin = getById(id);
-        userService.delete(admin.getUserId());
+        userService.delete(userService.findById(admin.getUserId()));
         adminRepository.delete(admin);
     }
 }

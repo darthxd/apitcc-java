@@ -34,9 +34,9 @@ public class GradeMapper {
     }
 
     public Grade toEntity(GradeRequestDTO dto) {
-        Student student = studentService.getById(dto.getStudentId());
-        SchoolSubject subject = schoolSubjectService.getById(dto.getSubjectId());
-        Teacher teacher = teacherService.getById(dto.getTeacherId());
+        Student student = studentService.findById(dto.getStudentId());
+        SchoolSubject subject = schoolSubjectService.findById(dto.getSubjectId());
+        Teacher teacher = teacherService.findById(dto.getTeacherId());
         Grade grade = new Grade();
 
         grade.setStudent(student);
@@ -66,20 +66,20 @@ public class GradeMapper {
     }
 
     public Grade updateEntityFromDTO(GradeRequestDTO dto, Long id) {
-        Grade grade = gradeService.getById(id);
+        Grade grade = gradeService.findById(id);
         if (dto.getStudentId() != null) {
             grade.setStudent(
-                    studentService.getById(dto.getStudentId())
+                    studentService.findById(dto.getStudentId())
             );
         }
         if (dto.getSubjectId() != null) {
             grade.setSubject(
-                    schoolSubjectService.getById(dto.getSubjectId())
+                    schoolSubjectService.findById(dto.getSubjectId())
             );
         }
         if (dto.getTeacherId() != null) {
             grade.setTeacher(
-                    teacherService.getById(dto.getTeacherId())
+                    teacherService.findById(dto.getTeacherId())
             );
         }
         if (dto.getBimester() != null) {

@@ -45,12 +45,12 @@ public class AdminController {
     }
 
     @GetMapping("/{id}")
-    public AdminResponseDTO getById(@PathVariable("id") Long id) {
+    public AdminResponseDTO findById(@PathVariable("id") Long id) {
         return adminMapper.toDTO(adminService.getById(id));
     }
 
     @GetMapping("/username/{username}")
-    public AdminResponseDTO getByUsername(@PathVariable("username") String username) {
+    public AdminResponseDTO findByUsername(@PathVariable("username") String username) {
         return adminMapper.toDTO(adminService.getByUsername(username));
     }
 
@@ -67,7 +67,7 @@ public class AdminController {
 
     @PostMapping("/biometry/reset")
     public ResponseEntity<String> resetBiometry() {
-        if (!biometryService.resetSensor()) {
+        if (!biometryService.reset()) {
             return new ResponseEntity<>(
                     "Error while trying to reset the fingerprint sensor.",
                     HttpStatus.INTERNAL_SERVER_ERROR

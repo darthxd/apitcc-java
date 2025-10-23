@@ -25,30 +25,31 @@ public class TeacherController {
     }
 
     @PostMapping
-    public TeacherResponseDTO createTeacher(@RequestBody @Valid TeacherRequestDTO dto) {
+    public TeacherResponseDTO create(@RequestBody @Valid TeacherRequestDTO dto) {
         return teacherMapper.toDTO(
                 teacherService.create(dto)
         );
     }
 
     @GetMapping
-    public List<TeacherResponseDTO> list() {
-        return teacherService.list().stream().map(teacherMapper::toDTO).toList();
+    public List<TeacherResponseDTO> findAll() {
+        return teacherService.findAll().stream().map(teacherMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
-    public TeacherResponseDTO getById(@PathVariable("id") Long id) {
-        return teacherMapper.toDTO(teacherService.getById(id));
+    public TeacherResponseDTO findById(@PathVariable("id") Long id) {
+        return teacherMapper.toDTO(teacherService.findById(id));
     }
 
     @GetMapping("/username/{username}")
-    public TeacherResponseDTO getByUsername(@PathVariable("username") String username) {
-        return teacherMapper.toDTO(teacherService.getByUsername(username));
+    public TeacherResponseDTO findByUsername(@PathVariable("username") String username) {
+        return teacherMapper.toDTO(teacherService.findByUsername(username));
     }
 
     @PutMapping("/{id}")
-    public TeacherResponseDTO update(@RequestBody @Valid TeacherRequestDTO dto,
-                                            @PathVariable("id") Long id) {
+    public TeacherResponseDTO update(
+            @RequestBody @Valid TeacherRequestDTO dto,
+            @PathVariable("id") Long id) {
         return teacherMapper.toDTO(
                 teacherService.update(dto, id)
         );
@@ -56,6 +57,6 @@ public class TeacherController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
-        teacherService.delete(id);
+        teacherService.delete(teacherService.findById(id));
     }
 }

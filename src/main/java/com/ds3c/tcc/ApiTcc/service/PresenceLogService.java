@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class PresenceLogService {
+public class PresenceLogService extends CRUDService<StudentPresenceLog, Long> {
 
     private final StudentService studentService;
     private final PresenceLogRepository presenceLogRepository;
@@ -19,12 +19,13 @@ public class PresenceLogService {
     public PresenceLogService(
             StudentService studentService,
             PresenceLogRepository presenceLogRepository) {
+        super(presenceLogRepository);
         this.studentService = studentService;
         this.presenceLogRepository = presenceLogRepository;
     }
 
     public void togglePresence(Long studentId) {
-        Student student = studentService.getById(studentId);
+        Student student = studentService.findById(studentId);
         LocalDate today = LocalDate.now();
         LocalDateTime now = LocalDateTime.now();
 
@@ -38,7 +39,7 @@ public class PresenceLogService {
             presenceLog.setDate(today);
             presenceLog.setEntryTime(now);
 
-            presenceLogRepository.save(presenceLog);
+            save(presenceLog);
             studentService.setInSchool(student, true);
         } else {
             StudentPresenceLog presenceLog = presenceLogRepository
@@ -49,27 +50,23 @@ public class PresenceLogService {
 
             presenceLog.setExitTime(now);
 
-            presenceLogRepository.save(presenceLog);
+            save(presenceLog);
             studentService.setInSchool(student, false);
         }
     }
 
-    public StudentPresenceLog getByStudentAndDate(
+    public StudentPresenceLog findByStudentAndDate(
             Long studentId, String date) {
         return presenceLogRepository.findByStudentIdAndDate(
                 studentId, LocalDate.parse(date)
         ).orElseThrow(() -> (new PresenceLogNotFoundException(studentId, LocalDate.parse(date))));
     }
 
-    public List<StudentPresenceLog> listByStudent(Long studentId) {
+    public List<StudentPresenceLog> findAllByStudent(Long studentId) {
         return presenceLogRepository.findAllByStudentId(studentId);
     }
 
-    public List<StudentPresenceLog> list() {
-        return presenceLogRepository.findAll();
-    }
-
-    public List<StudentPresenceLog> listByDate(String date) {
+    public List<StudentPresenceLog> findAllByDate(String date) {
         return presenceLogRepository.findAllByDateEquals(
                 LocalDate.parse(date)
         );

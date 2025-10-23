@@ -57,7 +57,7 @@ public class _BiometryService {
          }
          assert response.getBody() != null;
          if (response.getBody().getStudentId() != null) {
-             Student student = studentService.getById(
+             Student student = studentService.findById(
                      response.getBody().getStudentId());
              return Optional.of(student);
          }

@@ -29,15 +29,16 @@ public class GradeController {
     }
 
     @GetMapping("/student/{id}")
-    public List<GradeResponseDTO> getByStudent(@PathVariable("id") Long studentId) {
-        return gradeService.getByStudent(studentId).stream().map(gradeMapper::toDTO).collect(Collectors.toList());
+    public List<GradeResponseDTO> findByStudent(@PathVariable("id") Long studentId) {
+        return gradeService.findByStudent(studentId)
+                .stream().map(gradeMapper::toDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/student/{id}/subject/{subjectId}")
-    public List<GradeResponseDTO> getByStudentAndSubject(
+    public List<GradeResponseDTO> findByStudentAndSubject(
             @PathVariable("id") Long studentId,
             @PathVariable("subjectId") Long subjectId) {
-        return gradeService.getByStudentAndSubject(studentId, subjectId)
+        return gradeService.findByStudentAndSubject(studentId, subjectId)
                 .stream().map(gradeMapper::toDTO).collect(Collectors.toList());
     }
 }

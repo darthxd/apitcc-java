@@ -1,6 +1,7 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Auth.LoginRequestDTO;
+import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,11 +29,11 @@ public class AuthService {
 
         User user = (User) auth.getPrincipal();
 
-        if (user.getSchoolUnit() == null) {
-            throw new BadCredentialsException("User does not have an associated school unit.");
+        if (user.getRole() == RolesEnum.ROLE_ADMIN) {
+            return jwtService.generateToken((User) auth.getPrincipal(), null);
         }
 
-        if (dto.getUnitId() == null ||
+        if (dto.getUnitId() == null || user.getSchoolUnit() == null ||
         !user.getSchoolUnit().getId().equals(dto.getUnitId())) {
             throw new BadCredentialsException("The user is not associated with the school unit you requested.");
         }

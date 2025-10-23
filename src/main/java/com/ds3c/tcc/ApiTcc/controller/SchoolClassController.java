@@ -36,8 +36,8 @@ public class SchoolClassController {
     }
 
     @GetMapping
-    public List<SchoolClassResponseDTO> list() {
-        return schoolClassService.list().stream().map(schoolClassMapper::toDTO).toList();
+    public List<SchoolClassResponseDTO> findAll() {
+        return schoolClassService.findAll().stream().map(schoolClassMapper::toDTO).toList();
     }
 
     @PostMapping
@@ -49,9 +49,9 @@ public class SchoolClassController {
     }
 
     @GetMapping("/{id}")
-    public SchoolClassResponseDTO getById(@PathVariable Long id) {
+    public SchoolClassResponseDTO findById(@PathVariable Long id) {
         return schoolClassMapper.toDTO(
-                schoolClassService.getById(id)
+                schoolClassService.findById(id)
         );
     }
 
@@ -66,11 +66,11 @@ public class SchoolClassController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
-        schoolClassService.delete(id);
+        schoolClassService.delete(schoolClassService.findById(id));
     }
 
     @GetMapping("/{id}/students")
-    public List<StudentResponseDTO> listStudentsBySchoolClass(@PathVariable("id") Long id) {
-        return studentService.listBySchoolClass(id).stream().map(studentMapper::toDTO).toList();
+    public List<StudentResponseDTO> findAllBySchoolClass(@PathVariable("id") Long id) {
+        return studentService.findAllBySchoolClass(id).stream().map(studentMapper::toDTO).toList();
     }
 }

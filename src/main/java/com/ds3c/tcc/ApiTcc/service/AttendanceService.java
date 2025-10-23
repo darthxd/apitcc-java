@@ -3,7 +3,6 @@ package com.ds3c.tcc.ApiTcc.service;
 import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceBulkRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceBulkUpdateDTO;
-import com.ds3c.tcc.ApiTcc.exception.AttendanceNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.AttendanceMapper;
 import com.ds3c.tcc.ApiTcc.model.Attendance;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
@@ -19,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class AttendanceService {
+public class AttendanceService extends CRUDService<Attendance, Long> {
     private final AttendanceRepository attendanceRepository;
     private final AttendanceMapper attendanceMapper;
     private final SchoolClassService schoolClassService;
@@ -34,6 +33,7 @@ public class AttendanceService {
             SchoolClassService schoolClassService,
             TeacherService teacherService,
             StudentService studentService) {
+        super(attendanceRepository);
         this.attendanceRepository = attendanceRepository;
         this.attendanceMapper = attendanceMapper;
         this.schoolClassService = schoolClassService;
@@ -41,54 +41,41 @@ public class AttendanceService {
         this.studentService = studentService;
     }
 
-    public Attendance getById(Long id) {
-        return attendanceRepository.findById(id)
-                .orElseThrow(() -> new AttendanceNotFoundException(id));
-    }
-
-    public List<Attendance> listBySchoolClass(Long schoolClassId) {
+    public List<Attendance> findAllBySchoolClass(Long schoolClassId) {
         return attendanceRepository.findAllBySchoolClassId(schoolClassId);
     }
 
-    public List<Attendance> list() {
-        return attendanceRepository.findAll();
-    }
-
-    public List<Attendance> listByDateAndSchoolClass(String date, Long classId) {
+    public List<Attendance> findAllByDateAndSchoolClass(String date, Long classId) {
         return attendanceRepository.findAllByDateAndSchoolClassId(
                 LocalDate.parse(date), classId
         );
     }
 
-    public List<Attendance> listByStudent(Long studentId) {
+    public List<Attendance> findAllByStudent(Long studentId) {
         return attendanceRepository.findAllByStudentId(studentId);
     }
 
     public Attendance create(AttendanceRequestDTO dto) {
-        return attendanceRepository.save(
-                attendanceMapper.toEntity(dto)
-        );
+        return save(attendanceMapper.toEntity(dto));
     }
 
     public Attendance update(AttendanceRequestDTO dto, Long id) {
-        return attendanceRepository.save(
-                attendanceMapper.updateEntityFromDTO(dto, id)
-        );
+        return save(attendanceMapper.updateEntityFromDTO(dto, id));
     }
 
     public List<Attendance> createBulk(AttendanceBulkRequestDTO dto) {
         LocalDate date = LocalDate.parse(dto.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        SchoolClass schoolClass = schoolClassService.getById(dto.getSchoolClassId());
-        Teacher teacher = teacherService.getById(dto.getTeacherId());
+        SchoolClass schoolClass = schoolClassService.findById(dto.getSchoolClassId());
+        Teacher teacher = teacherService.findById(dto.getTeacherId());
 
         if (attendanceRepository.existsByDateAndSchoolClassIdAndTeacherId(
                 date, dto.getSchoolClassId(), dto.getTeacherId())) {
-            throw new IllegalArgumentException("There is already an attendance list for this class, teacher and date.");
+            throw new IllegalArgumentException("There is already an attendance findAll for this class, teacher and date.");
         }
 
         List<Attendance> attendanceList = dto.getPresences().stream().map(p -> {
-            Student student = studentService.getById(p.getStudentId());
+            Student student = studentService.findById(p.getStudentId());
             Attendance attendance = new Attendance();
             attendance.setDate(date);
             attendance.setStudent(student);
@@ -103,7 +90,7 @@ public class AttendanceService {
 
     public List<Attendance> updateBulk(AttendanceBulkUpdateDTO dto) {
         List<Attendance> attendanceList = dto.getUpdates().stream().map(update -> {
-            Attendance attendance = getById(update.getAttendanceId());
+            Attendance attendance = findById(update.getAttendanceId());
             if (update.getPresent() != null) {
                 attendance.setPresent(update.getPresent());
             }
@@ -111,10 +98,5 @@ public class AttendanceService {
         }).toList();
 
         return attendanceRepository.saveAll(attendanceList);
-    }
-
-    public void delete(Long id) {
-        Attendance attendance = getById(id);
-        attendanceRepository.delete(attendance);
     }
 }

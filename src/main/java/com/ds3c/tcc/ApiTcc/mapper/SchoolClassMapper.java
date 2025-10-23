@@ -35,9 +35,6 @@ public class SchoolClassMapper {
             throw new RuntimeException(
                     "One or more of the Enum values passed are incorrect (Grade, Course and/or Shift).");
         }
-        schoolClass.setName(
-                schoolClassService.generateName(schoolClass)
-        );
         return schoolClass;
     }
 
@@ -63,7 +60,7 @@ public class SchoolClassMapper {
     }
 
     public SchoolClass updateEntityFromDTO(SchoolClassRequestDTO schoolClassRequestDTO, Long id) {
-        SchoolClass schoolClass = schoolClassService.getById(id);
+        SchoolClass schoolClass = schoolClassService.findById(id);
         if (StringUtils.hasText(schoolClassRequestDTO.getGrade())) {
             try {
                 schoolClass.setGrade(GradesEnum.valueOf(schoolClassRequestDTO.getGrade()));
@@ -93,9 +90,6 @@ public class SchoolClassMapper {
                     schoolClassRequestDTO.getTeacherIds()
             );
         }
-        schoolClass.setName(
-                schoolClassService.generateName(schoolClass)
-        );
         return schoolClass;
     }
 }

@@ -36,7 +36,7 @@ public class SchoolSubjectMapper {
     }
 
     public SchoolSubject updateEntityFromDTO(SchoolSubjectRequestDTO schoolSubjectRequestDTO, Long id) {
-        SchoolSubject schoolSubject = schoolSubjectService.getById(id);
+        SchoolSubject schoolSubject = schoolSubjectService.findById(id);
         if (StringUtils.hasText(schoolSubjectRequestDTO.getName())) {
             schoolSubject.setName(schoolSubjectRequestDTO.getName());
         }

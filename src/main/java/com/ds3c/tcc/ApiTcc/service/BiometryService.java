@@ -25,7 +25,7 @@ public class BiometryService {
     }
 
     // Enroll fingerprint
-    public Boolean enrollFingerprint(Long studentId) {
+    public Boolean enroll(Long studentId) {
         try {
             JSONObject payload = new JSONObject();
             payload.put("studentId", studentId);
@@ -47,7 +47,7 @@ public class BiometryService {
     }
 
     // Read fingerprint
-    public Optional<Student> readFingerprint() {
+    public Optional<Student> read() {
         try {
             CompletableFuture<String> future = new CompletableFuture<>();
             pendingResponses.put("api/response/read", future);
@@ -60,7 +60,7 @@ public class BiometryService {
 
             if (json.has("studentId")) {
                 Long id = json.getLong("studentId");
-                Student student = studentService.getById(id);
+                Student student = studentService.findById(id);
                 return Optional.of(student);
             }
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class BiometryService {
     }
 
     // Reset sensor
-    public Boolean resetSensor() {
+    public Boolean reset() {
         try {
             CompletableFuture<String> future = new CompletableFuture<>();
             pendingResponses.put("api/response/reset", future);
@@ -92,7 +92,7 @@ public class BiometryService {
     }
 
     // Delete fingerprint
-    public Boolean deleteFingerprint(Long studentId) {
+    public Boolean delete(Long studentId) {
         try {
             JSONObject payload = new JSONObject();
             payload.put("studentId", studentId);

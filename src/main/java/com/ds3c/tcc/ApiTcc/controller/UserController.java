@@ -26,14 +26,14 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserResponseDTO> list() {
-        return userService.list().stream().map(userMapper::toDTO).toList();
+    public List<UserResponseDTO> findAll() {
+        return userService.findAll().stream().map(userMapper::toDTO).toList();
     }
 
     @GetMapping("/{id}")
-    public UserResponseDTO getById(@PathVariable("id") Long id) {
+    public UserResponseDTO findById(@PathVariable("id") Long id) {
         return userMapper.toDTO(
-                userService.getById(id)
+                userService.findById(id)
         );
     }
 }

@@ -26,7 +26,7 @@ public class UserMapper {
 
     public User toEntity(UserRequestDTO userRequestDTO, RolesEnum role) {
         User user = new User();
-        SchoolUnit schoolUnit = schoolUnitService.getById(userRequestDTO.getUnitId());
+        SchoolUnit schoolUnit = schoolUnitService.findById(userRequestDTO.getUnitId());
 
         user.setUsername(userRequestDTO.getUsername());
         user.setPassword(userRequestDTO.getPassword());
@@ -46,7 +46,7 @@ public class UserMapper {
     }
 
     public User updateEntityFromDTO(UserRequestDTO userRequestDTO, Long id) {
-        User user = userService.getById(id);
+        User user = userService.findById(id);
         if(StringUtils.hasText(userRequestDTO.getUsername())) {
             user.setUsername(userRequestDTO.getUsername());
         }
@@ -55,7 +55,7 @@ public class UserMapper {
         }
         if(userRequestDTO.getUnitId() != null) {
             user.setSchoolUnit(
-                    schoolUnitService.getById(userRequestDTO.getUnitId())
+                    schoolUnitService.findById(userRequestDTO.getUnitId())
             );
         }
         return user;
