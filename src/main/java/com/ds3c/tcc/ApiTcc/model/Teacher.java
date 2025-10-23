@@ -9,14 +9,11 @@ import lombok.Setter;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
+@DiscriminatorValue("teacher")
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Teacher {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Teacher extends User{
     @Column(nullable = false)
     private String name;
     @Column(unique = true)
@@ -25,5 +22,4 @@ public class Teacher {
     private String phone;
     private Set<Long> subjectIds;
     private Set<Long> schoolClassIds;
-    private Long userId;
 }

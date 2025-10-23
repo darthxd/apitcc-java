@@ -1,16 +1,16 @@
-package com.ds3c.tcc.ApiTcc.model;
+package com.ds3c.tcc.ApiTcc.dto.SchoolUnit;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@DiscriminatorValue("admin")
-@Entity
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Admin extends User{
+public class SchoolUnitRequestDTO {
     private String name;
+    private String address;
+    private String phone;
+    private String email;
 }

@@ -22,6 +22,11 @@ public class GradeService extends CRUDService<Grade, Long> {
     }
 
     public Grade create(GradeRequestDTO dto) {
+        if (gradeRepository.existsByStudentIdAndSubjectIdAndBimesterAndYear(
+                dto.getStudentId(), dto.getSubjectId(),dto.getBimester(), dto.getYear())) {
+            throw new IllegalArgumentException(
+                    "There is already a grade for this student and subject in this bimester and year.");
+        }
         return save(gradeMapper.toEntity(dto));
     }
 

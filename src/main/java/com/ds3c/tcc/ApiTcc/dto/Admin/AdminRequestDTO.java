@@ -1,7 +1,5 @@
 package com.ds3c.tcc.ApiTcc.dto.Admin;
 
-import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,45 +10,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminRequestDTO implements UserRequestDTO {
-    private Long id;
-    private String username;
-    private String password;
+public class AdminRequestDTO {
     @NotBlank
     private String name;
-    @Email
-    private String email;
-    private String cpf;
-    private String phone;
+    @NotBlank
+    private String username;
+    @NotBlank
+    private String password;
+    @NotBlank
     private Long unitId;
-
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public Long getUnitId() {
-        return this.unitId;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public void setUnitId(Long unitId) {
-        this.unitId = unitId;
-    }
 }

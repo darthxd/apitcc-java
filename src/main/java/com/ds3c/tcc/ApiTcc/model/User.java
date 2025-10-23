@@ -14,21 +14,25 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity(name = "users")
-@Getter
-@Setter
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true, nullable = false)
     private String username;
+
     @Column(nullable = false)
     private String password;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RolesEnum role;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_unit_id")
     private SchoolUnit schoolUnit;

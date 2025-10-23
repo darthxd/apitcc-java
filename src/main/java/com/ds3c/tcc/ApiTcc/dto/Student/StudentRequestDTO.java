@@ -1,6 +1,5 @@
 package com.ds3c.tcc.ApiTcc.dto.Student;
 
-import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentRequestDTO implements UserRequestDTO {
+public class StudentRequestDTO {
     private String username;
     private String password;
     private String name;
@@ -24,34 +23,4 @@ public class StudentRequestDTO implements UserRequestDTO {
     private String photo;
     private Boolean sendNotification;
     private Long unitId;
-
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public Long getUnitId() {
-        return this.unitId;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public void setUnitId(Long unitId) {
-        this.unitId = unitId;
-    }
 }

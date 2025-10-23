@@ -2,63 +2,82 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.Teacher.TeacherRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Teacher.TeacherResponseDTO;
+import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
+import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
-import com.ds3c.tcc.ApiTcc.model.User;
+import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
-import com.ds3c.tcc.ApiTcc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
 public class TeacherMapper {
-    private final UserService userService;
     private final TeacherService teacherService;
+    private final SchoolUnitService schoolUnitService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     @Lazy
     public TeacherMapper(
-            UserService userService,
-            TeacherService teacherService) {
-        this.userService = userService;
+            TeacherService teacherService,
+            SchoolUnitService schoolUnitService, PasswordEncoder passwordEncoder) {
         this.teacherService = teacherService;
+        this.schoolUnitService = schoolUnitService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public Teacher toEntity(TeacherRequestDTO dto, Long userId) {
+    public Teacher toEntity(TeacherRequestDTO dto) {
         Teacher teacher = new Teacher();
+        SchoolUnit unit = schoolUnitService
+                .findById(dto.getUnitId());
+
+        // user
+        teacher.setUsername(dto.getUsername());
+        teacher.setPassword(passwordEncoder.encode(dto.getPassword()));
+        teacher.setRole(RolesEnum.ROLE_TEACHER);
+        teacher.setSchoolUnit(unit);
+
+        // teacher
         teacher.setName(dto.getName());
         teacher.setCpf(dto.getCpf());
         teacher.setEmail(dto.getEmail());
         teacher.setPhone(dto.getPhone());
         teacher.setSubjectIds(dto.getSubjectIds());
         teacher.setSchoolClassIds(dto.getSchoolClassIds());
-        teacher.setUserId(userId);
+
         return teacher;
     }
 
     public TeacherResponseDTO toDTO(Teacher teacher) {
-        User user = userService.findById(teacher.getUserId());
-
         return new TeacherResponseDTO(
                 teacher.getId(),
-                user.getUsername(),
-                user.getPassword(),
+                teacher.getUsername(),
+                teacher.getPassword(),
                 teacher.getName(),
                 teacher.getCpf(),
                 teacher.getEmail(),
                 teacher.getPhone(),
                 teacher.getSubjectIds(),
                 teacher.getSchoolClassIds(),
-                user.getSchoolUnit().getId()
+                teacher.getSchoolUnit().getId()
         );
     }
 
     public Teacher updateEntityFromDTO(TeacherRequestDTO dto, Long id) {
         Teacher teacher = teacherService.findById(id);
-        if (StringUtils.hasText(dto.getUsername())
-                || StringUtils.hasText(dto.getPassword())) {
-            userService.update(dto, teacher.getUserId());
+        if (StringUtils.hasText(dto.getUsername())){
+            teacher.setUsername(dto.getUsername());
+        }
+        if (StringUtils.hasText(dto.getPassword())) {
+            teacher.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        if (dto.getUnitId() != null) {
+            teacher.setSchoolUnit(
+                    schoolUnitService.findById(dto.getUnitId())
+            );
         }
         if (StringUtils.hasText(dto.getName())) {
             teacher.setName(dto.getName());

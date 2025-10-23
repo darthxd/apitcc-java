@@ -34,8 +34,8 @@ public class AdminController {
     }
 
     @GetMapping
-    public List<AdminResponseDTO> list() {
-        return adminService.list().stream().map(adminMapper::toDTO).toList();
+    public List<AdminResponseDTO> findAll() {
+        return adminService.findAll().stream().map(adminMapper::toDTO).toList();
     }
 
     @PostMapping
@@ -46,12 +46,12 @@ public class AdminController {
 
     @GetMapping("/{id}")
     public AdminResponseDTO findById(@PathVariable("id") Long id) {
-        return adminMapper.toDTO(adminService.getById(id));
+        return adminMapper.toDTO(adminService.findById(id));
     }
 
     @GetMapping("/username/{username}")
     public AdminResponseDTO findByUsername(@PathVariable("username") String username) {
-        return adminMapper.toDTO(adminService.getByUsername(username));
+        return adminMapper.toDTO(adminService.findByUsername(username));
     }
 
     @PutMapping("/{id}")
@@ -62,7 +62,7 @@ public class AdminController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        adminService.delete(id);
+        adminService.delete(adminService.findById(id));
     }
 
     @PostMapping("/biometry/reset")

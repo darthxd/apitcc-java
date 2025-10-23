@@ -9,14 +9,11 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
+@DiscriminatorValue("student")
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Student extends User {
     private String name;
     private String ra;
     private String rm;
@@ -30,6 +27,5 @@ public class Student {
     private Boolean biometry;
     private String photo;
     private Boolean inschool = false;
-    private Long userId;
     private Boolean sendNotification = false;
 }

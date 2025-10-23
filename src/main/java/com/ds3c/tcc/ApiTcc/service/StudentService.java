@@ -2,12 +2,10 @@ package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Student.BiometryRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
-import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
-import com.ds3c.tcc.ApiTcc.exception.StudentNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
 import com.ds3c.tcc.ApiTcc.model.Student;
-import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -20,7 +18,6 @@ import java.util.List;
 public class StudentService extends CRUDService<Student, Long> {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
-    private final UserService userService;
     private final SchoolClassService schoolClassService;
     private final BiometryService biometryService;
     private final PresenceLogService presenceLogService;
@@ -30,14 +27,12 @@ public class StudentService extends CRUDService<Student, Long> {
     public StudentService(
             StudentRepository studentRepository,
             StudentMapper studentMapper,
-            UserService userService,
             SchoolClassService schoolClassService,
             BiometryService biometryService,
             PresenceLogService presenceLogService) {
         super(studentRepository);
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
-        this.userService = userService;
         this.schoolClassService = schoolClassService;
         this.biometryService = biometryService;
         this.presenceLogService = presenceLogService;
@@ -48,18 +43,17 @@ public class StudentService extends CRUDService<Student, Long> {
     }
 
     public Student findByUsername(String username) {
-        return studentRepository.findByUserId(
-                userService.findByUsername(username).getId())
-                .orElseThrow(() -> new StudentNotFoundException(username));
+        return studentRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("The student with username: "+username+" was not found."));
     }
 
     public Student create(StudentRequestDTO dto) {
         schoolClassService.findById(dto.getSchoolClassId());
+
         dto.setUsername(dto.getRm());
         dto.setPassword(generatePassword(dto));
-        User user = userService.create(dto, RolesEnum.ROLE_STUDENT, dto.getUnitId());
-        Student student = studentMapper.toEntity(dto, user.getId());
-        return save(student);
+
+        return save(studentMapper.toEntity(dto));
     }
 
     public Student update(StudentRequestDTO dto, Long id) {

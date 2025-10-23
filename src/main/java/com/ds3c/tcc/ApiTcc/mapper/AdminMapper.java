@@ -2,71 +2,72 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.Admin.AdminRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Admin.AdminResponseDTO;
+import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.Admin;
-import com.ds3c.tcc.ApiTcc.model.User;
+import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.service.AdminService;
-import com.ds3c.tcc.ApiTcc.service.UserService;
+import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
 public class AdminMapper {
-    private final UserService userService;
     private final AdminService adminService;
+    private final SchoolUnitService schoolUnitService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     @Lazy
     public AdminMapper(
-            UserService userService,
-            AdminService adminService) {
-        this.userService = userService;
+            AdminService adminService,
+            PasswordEncoder passwordEncoder,
+            SchoolUnitService schoolUnitService) {
         this.adminService = adminService;
+        this.schoolUnitService = schoolUnitService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public Admin toEntity(AdminRequestDTO adminRequestDTO, Long userId) {
+    public Admin toEntity(AdminRequestDTO dto) {
         Admin admin = new Admin();
-        admin.setCpf(adminRequestDTO.getCpf());
-        admin.setEmail(adminRequestDTO.getEmail());
-        admin.setName(adminRequestDTO.getName());
-        admin.setPhone(adminRequestDTO.getPhone());
-        admin.setUserId(userId);
+        SchoolUnit unit = schoolUnitService.findById(dto.getUnitId());
+
+        admin.setUsername(dto.getUsername());
+        admin.setPassword(passwordEncoder.encode(dto.getPassword()));
+        admin.setRole(RolesEnum.ROLE_ADMIN);
+        admin.setSchoolUnit(unit);
+
+        admin.setName(dto.getName());
         return admin;
     }
 
     public AdminResponseDTO toDTO(Admin admin) {
-        User user = userService.findById(admin.getUserId());
-
         return new AdminResponseDTO(
                 admin.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                admin.getName(),
-                admin.getEmail(),
-                admin.getCpf(),
-                admin.getPhone(),
-                user.getSchoolUnit().getId()
+                admin.getUsername(),
+                admin.getPassword(),
+                admin.getSchoolUnit().getId(),
+                admin.getName()
         );
     }
 
-    public Admin updateEntityFromDTO(AdminRequestDTO adminRequestDTO, Long id) {
-        Admin admin = adminService.getById(id);
-        if (StringUtils.hasText(adminRequestDTO.getUsername())
-                || StringUtils.hasText(adminRequestDTO.getPassword())) {
-            userService.update(adminRequestDTO, admin.getUserId());
+    public Admin updateEntityFromDTO(AdminRequestDTO dto, Long id) {
+        Admin admin = adminService.findById(id);
+        if (StringUtils.hasText(dto.getUsername())){
+            admin.setUsername(dto.getUsername());
         }
-        if (StringUtils.hasText(adminRequestDTO.getName())) {
-            admin.setName(adminRequestDTO.getName());
+        if (StringUtils.hasText(dto.getPassword())) {
+            admin.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
-        if (StringUtils.hasText(adminRequestDTO.getCpf())) {
-            admin.setCpf(adminRequestDTO.getCpf());
+        if (dto.getUnitId() != null) {
+            admin.setSchoolUnit(
+                    schoolUnitService.findById(dto.getUnitId())
+            );
         }
-        if (StringUtils.hasText(adminRequestDTO.getPhone())) {
-            admin.setPhone(adminRequestDTO.getPhone());
-        }
-        if (StringUtils.hasText(adminRequestDTO.getEmail())) {
-            admin.setEmail(adminRequestDTO.getEmail());
+        if (StringUtils.hasText(dto.getName())) {
+            admin.setName(dto.getName());
         }
         return admin;
     }

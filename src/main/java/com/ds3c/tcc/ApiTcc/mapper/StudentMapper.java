@@ -3,14 +3,16 @@ package com.ds3c.tcc.ApiTcc.mapper;
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResumeDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentResponseDTO;
+import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
+import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.model.Student;
-import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
+import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
-import com.ds3c.tcc.ApiTcc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -20,53 +22,63 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class StudentMapper {
     private final SchoolClassService schoolClassService;
-    private final UserService userService;
     private final StudentService studentService;
     private final SchoolClassMapper schoolClassMapper;
+    private final SchoolUnitService schoolUnitService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     @Lazy
     public StudentMapper(
             SchoolClassService schoolClassService,
-            UserService userService,
             StudentService studentService,
-            SchoolClassMapper schoolClassMapper) {
+            SchoolClassMapper schoolClassMapper,
+            SchoolUnitService schoolUnitService, PasswordEncoder passwordEncoder) {
         this.schoolClassService = schoolClassService;
-        this.userService = userService;
         this.studentService = studentService;
         this.schoolClassMapper = schoolClassMapper;
+        this.schoolUnitService = schoolUnitService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public Student toEntity(StudentRequestDTO studentRequestDTO, Long userId) {
+    public Student toEntity(StudentRequestDTO dto) {
         SchoolClass schoolClass = schoolClassService
-                .findById(studentRequestDTO.getSchoolClassId());
+                .findById(dto.getSchoolClassId());
+        SchoolUnit unit = schoolUnitService
+                .findById(dto.getUnitId());
         Student student = new Student();
 
-        student.setName(studentRequestDTO.getName());
-        student.setRa(studentRequestDTO.getRa());
-        student.setRm(studentRequestDTO.getRm());
-        student.setCpf(studentRequestDTO.getCpf());
-        student.setPhone(studentRequestDTO.getPhone());
-        student.setEmail(studentRequestDTO.getEmail());
+        // user
+        student.setUsername(dto.getUsername());
+        student.setPassword(passwordEncoder.encode(dto.getPassword()));
+        student.setRole(RolesEnum.ROLE_STUDENT);
+        student.setSchoolUnit(unit);
+
+        // student
+        student.setName(dto.getName());
+        student.setRa(dto.getRa());
+        student.setRm(dto.getRm());
+        student.setCpf(dto.getCpf());
+        student.setPhone(dto.getPhone());
+        student.setEmail(dto.getEmail());
         student.setSchoolClass(schoolClass);
         student.setBirthdate(LocalDate.parse(
-                studentRequestDTO.getBirthdate(),
+                dto.getBirthdate(),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        student.setPhoto(studentRequestDTO.getPhoto());
-        student.setUserId(userId);
-        student.setSendNotification(studentRequestDTO.getSendNotification());
+        student.setPhoto(dto.getPhoto());
+        student.setSendNotification(dto.getSendNotification());
 
         return student;
     }
 
     public StudentResponseDTO toDTO(Student student) {
-        SchoolClassResumeDTO schoolClass = schoolClassMapper.toResumeDTO(student.getSchoolClass());
-        User user = userService.findById(student.getUserId());
+        SchoolClassResumeDTO schoolClass = schoolClassMapper
+                .toResumeDTO(student.getSchoolClass());
 
         return new StudentResponseDTO(
                 student.getId(),
-                user.getUsername(),
-                user.getPassword(),
+                student.getUsername(),
+                student.getPassword(),
                 student.getName(),
                 student.getRa(),
                 student.getRm(),
@@ -80,15 +92,22 @@ public class StudentMapper {
                 student.getSendNotification(),
                 student.getBiometry(),
                 student.getInschool(),
-                user.getSchoolUnit().getId()
+                student.getSchoolUnit().getId()
         );
     }
 
     public Student updateEntityFromDTO(StudentRequestDTO dto, Long id) {
         Student student = studentService.findById(id);
-        if (StringUtils.hasText(dto.getUsername())
-                || StringUtils.hasText(dto.getPassword())) {
-            userService.update(dto, student.getUserId());
+        if (StringUtils.hasText(dto.getUsername())) {
+            student.setUsername(dto.getUsername());
+        }
+        if (StringUtils.hasText(dto.getPassword())) {
+            student.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        if (dto.getUnitId() != null) {
+            student.setSchoolUnit(
+                    schoolUnitService.findById(dto.getUnitId())
+            );
         }
         if (StringUtils.hasText(dto.getName())) {
             student.setName(dto.getName());

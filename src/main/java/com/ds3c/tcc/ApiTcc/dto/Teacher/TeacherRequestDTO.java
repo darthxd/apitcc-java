@@ -1,6 +1,5 @@
 package com.ds3c.tcc.ApiTcc.dto.Teacher;
 
-import com.ds3c.tcc.ApiTcc.dto.User.UserRequestDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeacherRequestDTO implements UserRequestDTO {
+public class TeacherRequestDTO {
     private String username;
     private String password;
     @NotBlank
@@ -26,34 +25,4 @@ public class TeacherRequestDTO implements UserRequestDTO {
     private Set<Long> subjectIds;
     private Set<Long> schoolClassIds;
     private Long unitId;
-
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public Long getUnitId() {
-        return this.unitId;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public void setUnitId(Long unitId) {
-        this.unitId = unitId;
-    }
 }
