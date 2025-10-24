@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class MessageMapper {
     private final UserService userService;
@@ -38,6 +40,7 @@ public class MessageMapper {
         message.setBody(dto.getBody());
         message.setTarget(target);
         message.setAuthor(author);
+        message.setCreatedAt(dto.getCreatedAt());
 
         switch (target) {
             case GLOBAL -> {}
@@ -63,6 +66,7 @@ public class MessageMapper {
     public MessageResponseDTO toDTO(Message message) {
         MessageResponseDTO dto = new MessageResponseDTO();
 
+        dto.setId(message.getId());
         dto.setTitle(message.getTitle());
         dto.setBody(message.getBody());
         dto.setTarget(message.getTarget().name());
@@ -77,6 +81,8 @@ public class MessageMapper {
                 message.getSchoolClass() != null ?
                         message.getSchoolClass().getId() : null
         );
+        dto.setCreatedAt(message.getCreatedAt()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         return dto;
     }
