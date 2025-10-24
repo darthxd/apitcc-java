@@ -17,7 +17,7 @@ public class SchoolSubjectService extends CRUDService<SchoolSubject, Long> {
     public SchoolSubjectService(
             SchoolSubjectRepository schoolSubjectRepository,
             SchoolSubjectMapper schoolSubjectMapper) {
-        super(schoolSubjectRepository);
+        super(SchoolSubject.class, schoolSubjectRepository);
         this.schoolSubjectMapper = schoolSubjectMapper;
     }
 

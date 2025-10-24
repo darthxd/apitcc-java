@@ -19,7 +19,7 @@ public class PresenceLogService extends CRUDService<StudentPresenceLog, Long> {
     public PresenceLogService(
             StudentService studentService,
             PresenceLogRepository presenceLogRepository) {
-        super(presenceLogRepository);
+        super(StudentPresenceLog.class, presenceLogRepository);
         this.studentService = studentService;
         this.presenceLogRepository = presenceLogRepository;
     }

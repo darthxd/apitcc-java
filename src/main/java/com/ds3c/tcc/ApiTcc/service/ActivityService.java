@@ -30,7 +30,7 @@ public class ActivityService extends CRUDService<Activity, Long> {
             ActivitySubmissionRepository activitySubmissionRepository,
             ActivityMapper activityMapper,
             ActivitySubmissionMapper activitySubmissionMapper) {
-        super(activityRepository);
+        super(Activity.class, activityRepository);
         this.activityRepository = activityRepository;
         this.activitySubmissionRepository = activitySubmissionRepository;
         this.activityMapper = activityMapper;

@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StudentService extends CRUDService<Student, Long> {
@@ -21,6 +23,7 @@ public class StudentService extends CRUDService<Student, Long> {
     private final SchoolClassService schoolClassService;
     private final BiometryService biometryService;
     private final PresenceLogService presenceLogService;
+    private final AttendanceService attendanceService;
 
     @Autowired
     @Lazy
@@ -29,13 +32,14 @@ public class StudentService extends CRUDService<Student, Long> {
             StudentMapper studentMapper,
             SchoolClassService schoolClassService,
             BiometryService biometryService,
-            PresenceLogService presenceLogService) {
-        super(studentRepository);
+            PresenceLogService presenceLogService, AttendanceService attendanceService) {
+        super(Student.class, studentRepository);
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.schoolClassService = schoolClassService;
         this.biometryService = biometryService;
         this.presenceLogService = presenceLogService;
+        this.attendanceService = attendanceService;
     }
 
     private String generatePassword(StudentRequestDTO dto) {
@@ -58,6 +62,21 @@ public class StudentService extends CRUDService<Student, Long> {
 
     public Student update(StudentRequestDTO dto, Long id) {
         return save(studentMapper.updateEntityFromDTO(dto, id));
+    }
+
+    public Map<String, Object> findFullPresenceLog(Long studentId) {
+        Student student = findById(studentId);
+        Map<String, Object> presenceLog = new HashMap<>();
+
+        long classesGiven = attendanceService.countClassesGivenForClass(student.getSchoolClass().getId());
+        long studentPresences = attendanceService.countStudentPresence(student.getId());
+        long studentFrequency = studentPresences * 100 / classesGiven;
+
+        presenceLog.put("classesGiven", classesGiven);
+        presenceLog.put("studentPresences", studentPresences);
+        presenceLog.put("studentFrequency", studentFrequency);
+
+        return presenceLog;
     }
 
     public List<Student> findAllBySchoolClass(Long id) {

@@ -16,7 +16,7 @@ public class GradeService extends CRUDService<Grade, Long> {
     public GradeService(
             GradeRepository gradeRepository,
             GradeMapper gradeMapper) {
-        super(gradeRepository);
+        super(Grade.class, gradeRepository);
         this.gradeRepository = gradeRepository;
         this.gradeMapper = gradeMapper;
     }

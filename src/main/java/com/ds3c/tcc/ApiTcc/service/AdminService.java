@@ -19,7 +19,7 @@ public class AdminService extends CRUDService<Admin, Long> {
     public AdminService(
             AdminMapper adminMapper,
             AdminRepository adminRepository) {
-        super(adminRepository);
+        super(Admin.class, adminRepository);
         this.adminMapper = adminMapper;
         this.adminRepository = adminRepository;
     }

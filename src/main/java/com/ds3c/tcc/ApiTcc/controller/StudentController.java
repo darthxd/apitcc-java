@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/student")
@@ -67,6 +68,11 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
         studentService.delete(studentService.findById(id));
+    }
+
+    @GetMapping("/{id}/presencelog")
+    public Map<String, Object> findFullPresenceLog(@PathVariable("id") Long id) {
+        return studentService.findFullPresenceLog(id);
     }
 
     @PostMapping("/biometry/enroll")

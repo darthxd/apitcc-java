@@ -33,7 +33,7 @@ public class AttendanceService extends CRUDService<Attendance, Long> {
             SchoolClassService schoolClassService,
             TeacherService teacherService,
             StudentService studentService) {
-        super(attendanceRepository);
+        super(Attendance.class, attendanceRepository);
         this.attendanceRepository = attendanceRepository;
         this.attendanceMapper = attendanceMapper;
         this.schoolClassService = schoolClassService;
@@ -98,5 +98,21 @@ public class AttendanceService extends CRUDService<Attendance, Long> {
         }).toList();
 
         return attendanceRepository.saveAll(attendanceList);
+    }
+
+    public long countClassesGivenForClass(Long schoolClassId) {
+        return attendanceRepository.countClassesGivenForClass(schoolClassId);
+    }
+
+    public long countStudentPresence(Long studentId) {
+        return attendanceRepository.countStudentPresence(studentId);
+    }
+
+    public long countClassesGivenForClassAndSubject(Long schoolClassId, Long subjectId) {
+        return attendanceRepository.countClassesGivenForClassAndSubject(schoolClassId, subjectId);
+    }
+
+    public long countStudentPresencesForSubject(Long studentId, Long subjectId) {
+        return attendanceRepository.countStudentPresentForSubject(studentId, subjectId);
     }
 }

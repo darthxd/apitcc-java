@@ -17,12 +17,24 @@ import java.time.LocalDateTime;
 public class Message {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String body;
+
     @Enumerated(EnumType.STRING)
     private MessageTargetEnum target;
-    private Long schoolClassId;
-    private Long authorId;
-    private Long targetId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_class_id")
+    private SchoolClass schoolClass;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private User author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "target_id")
+    private User targetUser;
+
     private LocalDateTime createdAt;
 }

@@ -22,7 +22,7 @@ public class SchoolClassService extends CRUDService<SchoolClass, Long>{
     public SchoolClassService(
             SchoolClassRepository schoolClassRepository,
             SchoolClassMapper schoolClassMapper) {
-        super(schoolClassRepository);
+        super(SchoolClass.class, schoolClassRepository);
         this.schoolClassRepository = schoolClassRepository;
         this.schoolClassMapper = schoolClassMapper;
     }

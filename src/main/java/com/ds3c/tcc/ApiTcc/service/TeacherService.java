@@ -19,7 +19,7 @@ public class TeacherService extends CRUDService<Teacher, Long>{
     public TeacherService(
             TeacherRepository teacherRepository,
             TeacherMapper teacherMapper) {
-        super(teacherRepository);
+        super(Teacher.class, teacherRepository);
         this.teacherRepository = teacherRepository;
         this.teacherMapper = teacherMapper;
     }
