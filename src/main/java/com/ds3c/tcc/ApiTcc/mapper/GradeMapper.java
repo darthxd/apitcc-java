@@ -10,28 +10,18 @@ import com.ds3c.tcc.ApiTcc.service.GradeService;
 import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class GradeMapper {
     private final StudentService studentService;
     private final SchoolSubjectService schoolSubjectService;
     private final TeacherService teacherService;
     private final GradeService gradeService;
-
-    @Lazy
-    public GradeMapper(
-            StudentService studentService,
-            SchoolSubjectService schoolSubjectService,
-            TeacherService teacherService,
-            GradeService gradeService) {
-        this.studentService = studentService;
-        this.schoolSubjectService = schoolSubjectService;
-        this.teacherService = teacherService;
-        this.gradeService = gradeService;
-    }
 
     public Grade toEntity(GradeRequestDTO dto) {
         Student student = studentService.findById(dto.getStudentId());

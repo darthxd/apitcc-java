@@ -1,9 +1,9 @@
 package com.ds3c.tcc.ApiTcc.service;
 
-import com.ds3c.tcc.ApiTcc.exception.PresenceLogNotFoundException;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.StudentPresenceLog;
 import com.ds3c.tcc.ApiTcc.repository.PresenceLogRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -44,8 +44,8 @@ public class PresenceLogService extends CRUDService<StudentPresenceLog, Long> {
         } else {
             StudentPresenceLog presenceLog = presenceLogRepository
                     .findByStudentIdAndDate(studentId, today)
-                    .orElseThrow(() -> new PresenceLogNotFoundException(
-                            studentId, today
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "The presence log for the student id: "+studentId+" and date: "+today+" was not found."
                     ));
 
             presenceLog.setExitTime(now);
@@ -59,7 +59,9 @@ public class PresenceLogService extends CRUDService<StudentPresenceLog, Long> {
             Long studentId, String date) {
         return presenceLogRepository.findByStudentIdAndDate(
                 studentId, LocalDate.parse(date)
-        ).orElseThrow(() -> (new PresenceLogNotFoundException(studentId, LocalDate.parse(date))));
+        ).orElseThrow(() -> (new EntityNotFoundException(
+                "The presence log for the student id: "+studentId+" and date: "+date+" was not found."
+        )));
     }
 
     public List<StudentPresenceLog> findAllByStudent(Long studentId) {

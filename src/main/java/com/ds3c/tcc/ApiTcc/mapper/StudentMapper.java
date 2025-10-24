@@ -10,7 +10,7 @@ import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -20,26 +20,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class StudentMapper {
     private final SchoolClassService schoolClassService;
     private final StudentService studentService;
     private final SchoolClassMapper schoolClassMapper;
     private final SchoolUnitService schoolUnitService;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    @Lazy
-    public StudentMapper(
-            SchoolClassService schoolClassService,
-            StudentService studentService,
-            SchoolClassMapper schoolClassMapper,
-            SchoolUnitService schoolUnitService, PasswordEncoder passwordEncoder) {
-        this.schoolClassService = schoolClassService;
-        this.studentService = studentService;
-        this.schoolClassMapper = schoolClassMapper;
-        this.schoolUnitService = schoolUnitService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public Student toEntity(StudentRequestDTO dto) {
         SchoolClass schoolClass = schoolClassService

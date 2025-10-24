@@ -10,7 +10,7 @@ import com.ds3c.tcc.ApiTcc.service.AttendanceService;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -19,24 +19,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class AttendanceMapper {
     private final StudentService studentService;
     private final SchoolClassService schoolClassService;
     private final TeacherService teacherService;
     private final AttendanceService attendanceService;
-
-    @Autowired
-    @Lazy
-    public AttendanceMapper(
-            StudentService studentService,
-            SchoolClassService schoolClassService,
-            TeacherService teacherService,
-            AttendanceService attendanceService) {
-        this.studentService = studentService;
-        this.schoolClassService = schoolClassService;
-        this.teacherService = teacherService;
-        this.attendanceService = attendanceService;
-    }
 
     public Attendance toEntity(AttendanceRequestDTO dto) {
         Student student = studentService

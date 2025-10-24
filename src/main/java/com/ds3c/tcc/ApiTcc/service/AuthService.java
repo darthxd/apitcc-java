@@ -3,7 +3,6 @@ package com.ds3c.tcc.ApiTcc.service;
 import com.ds3c.tcc.ApiTcc.dto.Auth.LoginRequestDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +14,6 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    @Autowired
     public AuthService(AuthenticationManager authenticationManager,
                        JwtService jwtService) {
         this.authenticationManager = authenticationManager;

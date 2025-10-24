@@ -5,7 +5,6 @@ import com.ds3c.tcc.ApiTcc.mapper.AdminMapper;
 import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.repository.AdminRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ public class AdminService extends CRUDService<Admin, Long> {
     private final AdminMapper adminMapper;
     private final AdminRepository adminRepository;
 
-    @Autowired
     @Lazy
     public AdminService(
             AdminMapper adminMapper,

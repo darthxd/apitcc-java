@@ -7,28 +7,18 @@ import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.service.AdminService;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class AdminMapper {
     private final AdminService adminService;
     private final SchoolUnitService schoolUnitService;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    @Lazy
-    public AdminMapper(
-            AdminService adminService,
-            PasswordEncoder passwordEncoder,
-            SchoolUnitService schoolUnitService) {
-        this.adminService = adminService;
-        this.schoolUnitService = schoolUnitService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public Admin toEntity(AdminRequestDTO dto) {
         Admin admin = new Admin();

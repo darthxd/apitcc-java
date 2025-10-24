@@ -5,7 +5,6 @@ import com.ds3c.tcc.ApiTcc.mapper.TeacherMapper;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.repository.TeacherRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ public class TeacherService extends CRUDService<Teacher, Long>{
     private final TeacherRepository teacherRepository;
     private final TeacherMapper teacherMapper;
 
-    @Autowired
     @Lazy
     public TeacherService(
             TeacherRepository teacherRepository,

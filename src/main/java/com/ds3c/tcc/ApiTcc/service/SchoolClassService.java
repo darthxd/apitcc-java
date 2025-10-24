@@ -6,7 +6,6 @@ import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
 import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.repository.SchoolClassRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,6 @@ public class SchoolClassService extends CRUDService<SchoolClass, Long>{
     private final SchoolClassRepository schoolClassRepository;
     private final SchoolClassMapper schoolClassMapper;
 
-    @Autowired
     @Lazy
     public SchoolClassService(
             SchoolClassRepository schoolClassRepository,

@@ -8,6 +8,7 @@ import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.service.MessageService;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -15,20 +16,11 @@ import org.springframework.util.StringUtils;
 import java.time.format.DateTimeFormatter;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class MessageMapper {
     private final UserService userService;
     private final SchoolClassService schoolClassService;
     private final MessageService messageService;
-
-    @Lazy
-    public MessageMapper(
-            UserService userService,
-            SchoolClassService schoolClassService,
-            MessageService messageService) {
-        this.userService = userService;
-        this.schoolClassService = schoolClassService;
-        this.messageService = messageService;
-    }
 
     public Message toEntity(MessageRequestDTO dto) {
         User author = userService.findById(dto.getAuthorId());

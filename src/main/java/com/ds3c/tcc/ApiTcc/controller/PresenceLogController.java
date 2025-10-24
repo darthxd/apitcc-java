@@ -3,6 +3,7 @@ package com.ds3c.tcc.ApiTcc.controller;
 import com.ds3c.tcc.ApiTcc.dto.PresenceLog.PresenceLogResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.PresenceLogMapper;
 import com.ds3c.tcc.ApiTcc.service.PresenceLogService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,16 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/presencelog")
+@RequiredArgsConstructor
 public class PresenceLogController {
     private final PresenceLogMapper presenceLogMapper;
     private final PresenceLogService presenceLogService;
-
-    public PresenceLogController(
-            PresenceLogMapper presenceLogMapper,
-            PresenceLogService presenceLogService) {
-        this.presenceLogMapper = presenceLogMapper;
-        this.presenceLogService = presenceLogService;
-    }
 
     @GetMapping()
     public List<PresenceLogResponseDTO> findAll() {

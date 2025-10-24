@@ -7,27 +7,18 @@ import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class TeacherMapper {
     private final TeacherService teacherService;
     private final SchoolUnitService schoolUnitService;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    @Lazy
-    public TeacherMapper(
-            TeacherService teacherService,
-            SchoolUnitService schoolUnitService, PasswordEncoder passwordEncoder) {
-        this.teacherService = teacherService;
-        this.schoolUnitService = schoolUnitService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public Teacher toEntity(TeacherRequestDTO dto) {
         Teacher teacher = new Teacher();

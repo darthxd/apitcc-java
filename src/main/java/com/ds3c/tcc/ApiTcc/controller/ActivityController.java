@@ -9,25 +9,19 @@ import com.ds3c.tcc.ApiTcc.mapper.ActivityMapper;
 import com.ds3c.tcc.ApiTcc.mapper.ActivitySubmissionMapper;
 import com.ds3c.tcc.ApiTcc.service.ActivityService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/activity")
+@RequiredArgsConstructor
 public class ActivityController {
+
     private final ActivityService activityService;
     private final ActivityMapper activityMapper;
     private final ActivitySubmissionMapper activitySubmissionMapper;
-
-    public ActivityController(
-            ActivityService activityService,
-            ActivityMapper activityMapper,
-            ActivitySubmissionMapper activitySubmissionMapper) {
-        this.activityService = activityService;
-        this.activityMapper = activityMapper;
-        this.activitySubmissionMapper = activitySubmissionMapper;
-    }
 
     @GetMapping("/{id}")
     public ActivityResponseDTO findById(@PathVariable("id") Long id) {

@@ -6,6 +6,7 @@ import com.ds3c.tcc.ApiTcc.mapper.GradeMapper;
 import com.ds3c.tcc.ApiTcc.model.Grade;
 import com.ds3c.tcc.ApiTcc.service.GradeService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,14 +14,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/grade")
+@RequiredArgsConstructor
 public class GradeController {
     private final GradeService gradeService;
     private final GradeMapper gradeMapper;
-
-    public GradeController(GradeService gradeService, GradeMapper gradeMapper) {
-        this.gradeService = gradeService;
-        this.gradeMapper = gradeMapper;
-    }
 
     @PostMapping
     public GradeResponseDTO create(@RequestBody @Valid GradeRequestDTO dto) {

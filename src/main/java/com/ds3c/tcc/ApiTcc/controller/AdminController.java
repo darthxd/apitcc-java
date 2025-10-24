@@ -8,6 +8,7 @@ import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
 import com.ds3c.tcc.ApiTcc.service.AdminService;
 import com.ds3c.tcc.ApiTcc.service.BiometryService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +17,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
+@RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
     private final AdminMapper adminMapper;
     private final BiometryService biometryService;
     private final StudentRepository studentRepository;
-
-    public AdminController(
-            AdminService adminService,
-            AdminMapper adminMapper,
-            BiometryService biometryService,
-            StudentRepository studentRepository) {
-        this.adminService = adminService;
-        this.adminMapper = adminMapper;
-        this.biometryService = biometryService;
-        this.studentRepository = studentRepository;
-    }
 
     @GetMapping
     public List<AdminResponseDTO> findAll() {

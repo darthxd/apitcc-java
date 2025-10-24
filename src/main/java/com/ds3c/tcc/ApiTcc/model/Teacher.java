@@ -16,10 +16,13 @@ import java.util.Set;
 public class Teacher extends User{
     @Column(nullable = false)
     private String name;
+
     @Column(unique = true)
     private String cpf;
+
     private String email;
     private String phone;
+
     private Set<Long> subjectIds;
     private Set<Long> schoolClassIds;
 }

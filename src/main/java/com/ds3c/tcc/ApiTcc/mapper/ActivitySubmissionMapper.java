@@ -5,6 +5,7 @@ import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivitySubmissionResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.ActivitySubmission;
 import com.ds3c.tcc.ApiTcc.service.ActivityService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -14,17 +15,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class ActivitySubmissionMapper {
     private final ActivityService activityService;
     private final StudentService studentService;
-
-    @Lazy
-    public ActivitySubmissionMapper(
-            ActivityService activityService,
-            StudentService studentService) {
-        this.activityService = activityService;
-        this.studentService = studentService;
-    }
 
     public ActivitySubmission toEntity(ActivitySubmissionRequestDTO dto, Long activityId) {
         ActivitySubmission activitySubmission = new ActivitySubmission();

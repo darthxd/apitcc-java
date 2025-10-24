@@ -9,7 +9,6 @@ import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.repository.AttendanceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,6 @@ public class AttendanceService extends CRUDService<Attendance, Long> {
     private final TeacherService teacherService;
     private final StudentService studentService;
 
-    @Autowired
     @Lazy
     public AttendanceService(
             AttendanceRepository attendanceRepository,

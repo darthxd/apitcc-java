@@ -7,22 +7,16 @@ import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class UserMapper {
     private final UserService userService;
     private final SchoolUnitService schoolUnitService;
-
-    @Autowired
-    @Lazy
-    public UserMapper(UserService userService, SchoolUnitService schoolUnitService) {
-        this.userService = userService;
-        this.schoolUnitService = schoolUnitService;
-    }
 
     public User toEntity(UserRequestDTO userRequestDTO, RolesEnum role) {
         User user = new User();

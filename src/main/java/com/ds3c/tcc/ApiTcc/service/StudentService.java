@@ -6,7 +6,6 @@ import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,6 @@ public class StudentService extends CRUDService<Student, Long> {
     private final PresenceLogService presenceLogService;
     private final AttendanceService attendanceService;
 
-    @Autowired
     @Lazy
     public StudentService(
             StudentRepository studentRepository,

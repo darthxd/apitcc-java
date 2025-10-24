@@ -6,22 +6,17 @@ import com.ds3c.tcc.ApiTcc.dto.Attendance.AttendanceResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.AttendanceMapper;
 import com.ds3c.tcc.ApiTcc.service.AttendanceService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/attendance")
+@RequiredArgsConstructor
 public class AttendanceController {
     private final AttendanceMapper attendanceMapper;
     private final AttendanceService attendanceService;
-
-    public AttendanceController(
-            AttendanceMapper attendanceMapper,
-            AttendanceService attendanceService) {
-        this.attendanceMapper = attendanceMapper;
-        this.attendanceService = attendanceService;
-    }
 
     @GetMapping
     public List<AttendanceResponseDTO> findAll() {

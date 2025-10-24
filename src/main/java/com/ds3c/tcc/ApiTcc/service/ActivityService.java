@@ -3,13 +3,13 @@ package com.ds3c.tcc.ApiTcc.service;
 import com.ds3c.tcc.ApiTcc.dto.Activity.ActivityRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivitySubmissionRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivityCorrectionRequestDTO;
-import com.ds3c.tcc.ApiTcc.exception.ActivitySubmissionNotFoundException;
 import com.ds3c.tcc.ApiTcc.mapper.ActivityMapper;
 import com.ds3c.tcc.ApiTcc.mapper.ActivitySubmissionMapper;
 import com.ds3c.tcc.ApiTcc.model.Activity;
 import com.ds3c.tcc.ApiTcc.model.ActivitySubmission;
 import com.ds3c.tcc.ApiTcc.repository.ActivityRepository;
 import com.ds3c.tcc.ApiTcc.repository.ActivitySubmissionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +39,7 @@ public class ActivityService extends CRUDService<Activity, Long> {
 
     public ActivitySubmission findSubmissionById(Long id) {
         return activitySubmissionRepository.findById(id)
-                .orElseThrow(() -> new ActivitySubmissionNotFoundException(id));
+                .orElseThrow(() -> new EntityNotFoundException("The activity submission with id: "+id+" was not found."));
     }
 
     public List<Activity> findAllBySchoolClass(Long schoolClassId) {

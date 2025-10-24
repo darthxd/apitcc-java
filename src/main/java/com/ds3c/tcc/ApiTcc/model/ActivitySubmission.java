@@ -12,13 +12,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ActivitySubmission {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     private Activity activity;
+
     @ManyToOne
     private Student student;
+
     private String answerText;
     private String fileUrl;
     private LocalDate submissionDate;

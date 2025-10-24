@@ -4,19 +4,16 @@ import com.ds3c.tcc.ApiTcc.dto.SchoolUnit.SchoolUnitRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolUnit.SchoolUnitResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class SchoolUnitMapper {
 
     private final SchoolUnitService schoolUnitService;
-
-    @Lazy
-    public SchoolUnitMapper(SchoolUnitService schoolUnitService) {
-        this.schoolUnitService = schoolUnitService;
-    }
 
     public SchoolUnitResponseDTO toDTO(SchoolUnit schoolUnit) {
         return new SchoolUnitResponseDTO(

@@ -8,6 +8,7 @@ import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.service.ActivityService;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -17,20 +18,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class ActivityMapper {
     private final TeacherService teacherService;
     private final SchoolClassService schoolClassService;
     private final ActivityService activityService;
-
-    @Lazy
-    public ActivityMapper(
-            TeacherService teacherService,
-            SchoolClassService schoolClassService,
-            ActivityService activityService) {
-        this.teacherService = teacherService;
-        this.schoolClassService = schoolClassService;
-        this.activityService = activityService;
-    }
 
     public Activity toEntity(ActivityRequestDTO dto) {
         Activity activity = new Activity();

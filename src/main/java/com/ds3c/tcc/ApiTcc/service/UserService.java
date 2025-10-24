@@ -1,13 +1,12 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
-import com.ds3c.tcc.ApiTcc.exception.UserNotFoundException;
 import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class UserService extends CRUDService<User, Long> implements UserDetailsService {
     private final UserRepository userRepository;
 
-    @Autowired
     @Lazy
     public UserService(UserRepository userRepository) {
         super(User.class, userRepository);
@@ -29,7 +27,7 @@ public class UserService extends CRUDService<User, Long> implements UserDetailsS
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+                .orElseThrow(() -> new EntityNotFoundException("The user with username: "+username+" was not found."));
     }
 
     public boolean existsByRole(RolesEnum role) {

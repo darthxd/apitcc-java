@@ -5,22 +5,17 @@ import com.ds3c.tcc.ApiTcc.dto.SchoolSubject.SchoolSubjectResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.SchoolSubjectMapper;
 import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/schoolsubject")
+@RequiredArgsConstructor
 public class SchoolSubjectController {
     private final SchoolSubjectMapper schoolSubjectMapper;
     private final SchoolSubjectService schoolSubjectService;
-
-    public SchoolSubjectController(
-            SchoolSubjectMapper schoolSubjectMapper,
-            SchoolSubjectService schoolSubjectService) {
-        this.schoolSubjectMapper = schoolSubjectMapper;
-        this.schoolSubjectService = schoolSubjectService;
-    }
 
     @GetMapping
     public List<SchoolSubjectResponseDTO> findAll() {

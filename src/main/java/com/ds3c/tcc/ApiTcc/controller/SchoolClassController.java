@@ -8,7 +8,7 @@ import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,24 +16,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/schoolclass")
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class SchoolClassController {
 
     private final SchoolClassMapper schoolClassMapper;
     private final SchoolClassService schoolClassService;
     private final StudentService studentService;
     private final StudentMapper studentMapper;
-
-    @Autowired
-    @Lazy
-    public SchoolClassController(
-            SchoolClassMapper schoolClassMapper,
-            SchoolClassService schoolClassService,
-            StudentService studentService, StudentMapper studentMapper) {
-        this.schoolClassMapper = schoolClassMapper;
-        this.schoolClassService = schoolClassService;
-        this.studentService = studentService;
-        this.studentMapper = studentMapper;
-    }
 
     @GetMapping
     public List<SchoolClassResponseDTO> findAll() {

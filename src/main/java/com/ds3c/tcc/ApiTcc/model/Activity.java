@@ -14,16 +14,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Activity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String description;
     private LocalDate deadline;
     private LocalDate creationDate;
     private Double maxScore;
+
     @ManyToOne
     private Teacher teacher;
+
     @ManyToOne
     private SchoolClass schoolClass;
 }

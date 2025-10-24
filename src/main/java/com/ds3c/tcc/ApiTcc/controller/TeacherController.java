@@ -5,24 +5,17 @@ import com.ds3c.tcc.ApiTcc.dto.Teacher.TeacherResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.TeacherMapper;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/teacher")
+@RequiredArgsConstructor
 public class TeacherController {
     private final TeacherService teacherService;
     private final TeacherMapper teacherMapper;
-
-    @Autowired
-    public TeacherController(
-            TeacherService teacherService,
-            TeacherMapper teacherMapper) {
-        this.teacherService = teacherService;
-        this.teacherMapper = teacherMapper;
-    }
 
     @PostMapping
     public TeacherResponseDTO create(@RequestBody @Valid TeacherRequestDTO dto) {

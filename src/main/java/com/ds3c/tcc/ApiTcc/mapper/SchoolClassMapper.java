@@ -8,21 +8,15 @@ import com.ds3c.tcc.ApiTcc.enums.GradesEnum;
 import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class SchoolClassMapper {
     private final SchoolClassService schoolClassService;
-
-    @Autowired
-    @Lazy
-    public SchoolClassMapper(
-            SchoolClassService schoolClassService) {
-        this.schoolClassService = schoolClassService;
-    }
 
     public SchoolClass toEntity(SchoolClassRequestDTO schoolClassRequestDTO) {
         SchoolClass schoolClass = new SchoolClass();

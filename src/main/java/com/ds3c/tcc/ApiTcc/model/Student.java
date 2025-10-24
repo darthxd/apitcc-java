@@ -20,12 +20,15 @@ public class Student extends User {
     private String cpf;
     private String phone;
     private String email;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "class_id", nullable = false)
     private SchoolClass schoolClass;
+
     private LocalDate birthdate;
-    private Boolean biometry;
     private String photo;
+
+    private Boolean biometry;
     private Boolean inschool = false;
     private Boolean sendNotification = false;
 }
