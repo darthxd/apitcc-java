@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findAllByTarget(MessageTargetEnum target);
-    List<Message> findAllBySchoolClass_Id(Long schoolClassId);
-    List<Message> findAllByTargetUser_Id(Long targetId);
+    List<Message> findAllBySchoolClassId(Long schoolClassId);
+    List<Message> findAllByTargetUserId(Long targetId);
 
     @Query("SELECT m FROM Message m WHERE m.target = 'GLOBAL' " +
             "OR (m.target = 'CLASS' AND m.schoolClass.id = :classId) " +
