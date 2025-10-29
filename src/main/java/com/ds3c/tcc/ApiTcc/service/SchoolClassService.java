@@ -1,11 +1,13 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassRequestDTO;
+import com.ds3c.tcc.ApiTcc.enums.CoursesEnum;
 import com.ds3c.tcc.ApiTcc.enums.GradesEnum;
 import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
 import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.repository.SchoolClassRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -66,5 +68,17 @@ public class SchoolClassService extends CRUDService<SchoolClass, Long>{
         SchoolClass schoolClass = schoolClassMapper.updateEntityFromDTO(dto, id);
         schoolClass.setName(generateName(schoolClass));
         return save(schoolClass);
+    }
+
+    public SchoolClass findAvailable(String grade, String course, String shift) {
+        try {
+            return schoolClassRepository.findAvailableClass(
+                    GradesEnum.valueOf(grade),
+                    CoursesEnum.valueOf(course),
+                    ShiftsEnum.valueOf(shift)
+            ).orElseThrow(() -> new EntityNotFoundException("No available class was found."));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("The grade, course and shift must be valid.");
+        }
     }
 }

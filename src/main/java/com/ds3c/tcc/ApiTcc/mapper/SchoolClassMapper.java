@@ -18,17 +18,17 @@ import org.springframework.util.StringUtils;
 public class SchoolClassMapper {
     private final SchoolClassService schoolClassService;
 
-    public SchoolClass toEntity(SchoolClassRequestDTO schoolClassRequestDTO) {
+    public SchoolClass toEntity(SchoolClassRequestDTO dto) {
         SchoolClass schoolClass = new SchoolClass();
-        schoolClass.setTeacherIds(schoolClassRequestDTO.getTeacherIds());
         try {
-            schoolClass.setGrade(GradesEnum.valueOf(schoolClassRequestDTO.getGrade()));
-            schoolClass.setCourse(CoursesEnum.valueOf(schoolClassRequestDTO.getCourse()));
-            schoolClass.setShift(ShiftsEnum.valueOf(schoolClassRequestDTO.getShift()));
+            schoolClass.setGrade(GradesEnum.valueOf(dto.getGrade()));
+            schoolClass.setCourse(CoursesEnum.valueOf(dto.getCourse()));
+            schoolClass.setShift(ShiftsEnum.valueOf(dto.getShift()));
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(
                     "One or more of the Enum values passed are incorrect (Grade, Course and/or Shift).");
         }
+        schoolClass.setStudentsLimit(dto.getStudentsLimit());
         return schoolClass;
     }
 
@@ -39,7 +39,8 @@ public class SchoolClassMapper {
                 schoolClass.getGrade().name(),
                 schoolClass.getCourse().name(),
                 schoolClass.getShift().name(),
-                schoolClass.getTeacherIds()
+                schoolClass.getStudentsLimit().toString(),
+                schoolClass.getStudentsCount().toString()
         );
     }
 
@@ -53,36 +54,34 @@ public class SchoolClassMapper {
         );
     }
 
-    public SchoolClass updateEntityFromDTO(SchoolClassRequestDTO schoolClassRequestDTO, Long id) {
+    public SchoolClass updateEntityFromDTO(SchoolClassRequestDTO dto, Long id) {
         SchoolClass schoolClass = schoolClassService.findById(id);
-        if (StringUtils.hasText(schoolClassRequestDTO.getGrade())) {
+        if (StringUtils.hasText(dto.getGrade())) {
             try {
-                schoolClass.setGrade(GradesEnum.valueOf(schoolClassRequestDTO.getGrade()));
+                schoolClass.setGrade(GradesEnum.valueOf(dto.getGrade()));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException(
-                        "The grade with name "+schoolClassRequestDTO.getGrade()+" does not exist.");
+                        "The grade with name "+dto.getGrade()+" does not exist.");
             }
         }
-        if (StringUtils.hasText(schoolClassRequestDTO.getCourse())) {
+        if (StringUtils.hasText(dto.getCourse())) {
             try {
-                schoolClass.setCourse(CoursesEnum.valueOf(schoolClassRequestDTO.getCourse()));
+                schoolClass.setCourse(CoursesEnum.valueOf(dto.getCourse()));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException(
-                        "The course with name "+schoolClassRequestDTO.getGrade()+" does not exist.");
+                        "The course with name "+dto.getGrade()+" does not exist.");
             }
         }
-        if (StringUtils.hasText(schoolClassRequestDTO.getShift())) {
+        if (StringUtils.hasText(dto.getShift())) {
             try {
-                schoolClass.setShift(ShiftsEnum.valueOf(schoolClassRequestDTO.getShift()));
+                schoolClass.setShift(ShiftsEnum.valueOf(dto.getShift()));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException(
-                        "The shift "+schoolClassRequestDTO.getGrade()+" does not exist.");
+                        "The shift "+dto.getGrade()+" does not exist.");
             }
         }
-        if (schoolClassRequestDTO.getTeacherIds() != null) {
-            schoolClass.setTeacherIds(
-                    schoolClassRequestDTO.getTeacherIds()
-            );
+        if (dto.getStudentsLimit() != null) {
+            schoolClass.setStudentsLimit(dto.getStudentsLimit());
         }
         return schoolClass;
     }

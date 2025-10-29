@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,5 +15,6 @@ public class SchoolClassResponseDTO {
     private String grade;
     private String course;
     private String shift;
-    private Set<Long> teacherIds;
+    private String capacity;
+    private String studentsCount;
 }

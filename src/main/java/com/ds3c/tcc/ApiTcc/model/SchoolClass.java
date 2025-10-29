@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -35,5 +33,6 @@ public class SchoolClass {
     @Column(nullable = false)
     private ShiftsEnum shift;
 
-    private Set<Long> teacherIds;
+    private Integer studentsLimit;
+    private Integer studentsCount;
 }

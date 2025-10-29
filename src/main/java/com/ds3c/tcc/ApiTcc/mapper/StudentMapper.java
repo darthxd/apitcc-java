@@ -52,7 +52,7 @@ public class StudentMapper {
         student.setBirthdate(LocalDate.parse(
                 dto.getBirthdate(),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        student.setPhoto(dto.getPhoto());
+        student.setPhotoUrl(dto.getPhoto());
         student.setSendNotification(dto.getSendNotification());
 
         return student;
@@ -68,14 +68,14 @@ public class StudentMapper {
                 student.getPassword(),
                 student.getName(),
                 student.getRa(),
-                student.getRm(),
+                student.getRm().toString(),
                 student.getCpf(),
                 student.getPhone(),
                 student.getEmail(),
                 schoolClass,
                 student.getBirthdate()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                student.getPhoto(),
+                student.getPhotoUrl(),
                 student.getSendNotification(),
                 student.getBiometry(),
                 student.getInschool(),
@@ -102,7 +102,7 @@ public class StudentMapper {
         if (StringUtils.hasText(dto.getRa())) {
             student.setRa(dto.getRa());
         }
-        if (StringUtils.hasText(dto.getRm())) {
+        if (dto.getRm() != null && dto.getRm() > 0) {
             student.setRm(dto.getRm());
         }
         if (StringUtils.hasText(dto.getCpf())) {
@@ -125,7 +125,7 @@ public class StudentMapper {
             }
         }
         if (StringUtils.hasText(dto.getPhoto())) {
-            student.setPhoto(dto.getPhoto());
+            student.setPhotoUrl(dto.getPhoto());
         }
         if (dto.getSendNotification() != null) {
             student.setSendNotification(dto.getSendNotification());

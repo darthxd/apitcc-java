@@ -2,6 +2,7 @@ package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Student.BiometryRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
+import com.ds3c.tcc.ApiTcc.enums.StatusEnum;
 import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
@@ -30,7 +31,8 @@ public class StudentService extends CRUDService<Student, Long> {
             StudentMapper studentMapper,
             SchoolClassService schoolClassService,
             BiometryService biometryService,
-            PresenceLogService presenceLogService, AttendanceService attendanceService) {
+            PresenceLogService presenceLogService,
+            AttendanceService attendanceService) {
         super(Student.class, studentRepository);
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
@@ -44,15 +46,24 @@ public class StudentService extends CRUDService<Student, Long> {
         return dto.getName().split(" ")[0].toLowerCase()+dto.getRm();
     }
 
+    public Integer findMaxRm() {
+        return studentRepository.findMaxRm().orElse(0);
+    }
+
     public Student findByUsername(String username) {
         return studentRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("The student with username: "+username+" was not found."));
     }
 
+    public Student findByEnrollId(Long enrollId) {
+        return studentRepository.findByEnrollId(enrollId)
+                .orElseThrow(() -> new EntityNotFoundException("The student with enroll ID: "+enrollId+" was not found."));
+    }
+
     public Student create(StudentRequestDTO dto) {
         schoolClassService.findById(dto.getSchoolClassId());
 
-        dto.setUsername(dto.getRm());
+        dto.setUsername(dto.getRm().toString());
         dto.setPassword(generatePassword(dto));
 
         return save(studentMapper.toEntity(dto));
@@ -80,6 +91,28 @@ public class StudentService extends CRUDService<Student, Long> {
     public List<Student> findAllBySchoolClass(Long id) {
         return studentRepository.findAllBySchoolClassId(id);
     }
+
+    public Student setStatus(Long id, String status) {
+        Student student = findById(id);
+
+        try {
+            student.setStatus(StatusEnum.valueOf(status));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("The status: "+status+" is not valid.");
+        }
+
+        return save(student);
+    }
+
+    public List<Student> findAllByStatus(String status) {
+        try {
+            return studentRepository.findAllByStatus(StatusEnum.valueOf(status));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("The status: "+status+" is not valid.");
+        }
+    }
+
+    // Biometry
 
     public ResponseEntity<String> enrollBiometry(BiometryRequestDTO dto) {
         Student student = findById(dto.getStudentId());

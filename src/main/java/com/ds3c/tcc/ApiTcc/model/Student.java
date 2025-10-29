@@ -1,5 +1,6 @@
 package com.ds3c.tcc.ApiTcc.model;
 
+import com.ds3c.tcc.ApiTcc.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,8 +16,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Student extends User {
     private String name;
+    private Integer rm;
     private String ra;
-    private String rm;
     private String cpf;
     private String phone;
     private String email;
@@ -26,9 +27,17 @@ public class Student extends User {
     private SchoolClass schoolClass;
 
     private LocalDate birthdate;
-    private String photo;
+    private String address;
+    private String photoUrl;
 
     private Boolean biometry;
     private Boolean inschool = false;
     private Boolean sendNotification = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "enroll_id")
+    private StudentEnroll enroll;
+
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status = StatusEnum.INACTIVE;
 }
