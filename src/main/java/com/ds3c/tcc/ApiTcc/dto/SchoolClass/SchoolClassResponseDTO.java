@@ -12,9 +12,9 @@ import lombok.Setter;
 public class SchoolClassResponseDTO {
     private Long id;
     private String name;
-    private String grade;
+    private String year;
     private String course;
     private String shift;
-    private String capacity;
-    private String studentsCount;
+    private Integer studentsLimit;
+    private Integer studentsCount;
 }

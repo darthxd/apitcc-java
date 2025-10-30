@@ -40,7 +40,7 @@ public class DataInitializer implements CommandLineRunner {
         if (!hasSchoolUnit) {
             SchoolUnit schoolUnit = new SchoolUnit();
 
-            schoolUnit.setName("ETEC Polivalente Ameriaca");
+            schoolUnit.setName("ETEC Polivalente Americana");
             schoolUnit.setAddress("Rua Exemplo, 1000 - Centro");
             schoolUnit.setPhone("11999999999");
             schoolUnit.setEmail("polivalente@etec.com");

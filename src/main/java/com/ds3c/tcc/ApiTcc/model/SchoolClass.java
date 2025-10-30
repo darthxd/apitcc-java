@@ -1,7 +1,7 @@
 package com.ds3c.tcc.ApiTcc.model;
 
 import com.ds3c.tcc.ApiTcc.enums.CoursesEnum;
-import com.ds3c.tcc.ApiTcc.enums.GradesEnum;
+import com.ds3c.tcc.ApiTcc.enums.YearsEnum;
 import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ public class SchoolClass {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private GradesEnum grade;
+    private YearsEnum year;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

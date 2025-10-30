@@ -1,7 +1,7 @@
 package com.ds3c.tcc.ApiTcc.model;
 
 import com.ds3c.tcc.ApiTcc.enums.CoursesEnum;
-import com.ds3c.tcc.ApiTcc.enums.GradesEnum;
+import com.ds3c.tcc.ApiTcc.enums.YearsEnum;
 import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
 import com.ds3c.tcc.ApiTcc.enums.StatusEnum;
 import jakarta.persistence.*;
@@ -31,7 +31,7 @@ public class StudentEnroll {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private GradesEnum gradeYear;
+    private YearsEnum gradeYear;
 
     @Enumerated(EnumType.STRING)
     private CoursesEnum course;

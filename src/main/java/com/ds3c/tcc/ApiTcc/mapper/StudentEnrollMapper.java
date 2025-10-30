@@ -8,7 +8,6 @@ import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.StudentEnroll;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
-import com.ds3c.tcc.ApiTcc.service.StudentEnrollService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -21,17 +20,14 @@ public class StudentEnrollMapper {
 
     private final StudentService studentService;
     private final SchoolClassService schoolClassService;
-    private final StudentEnrollService studentEnrollService;
     private final SchoolUnitService schoolUnitService;
 
     public StudentEnrollMapper(
             StudentService studentService,
             SchoolClassService schoolClassService,
-            StudentEnrollService studentEnrollService,
             SchoolUnitService schoolUnitService) {
         this.studentService = studentService;
         this.schoolClassService = schoolClassService;
-        this.studentEnrollService = studentEnrollService;
         this.schoolUnitService = schoolUnitService;
     }
 
@@ -46,7 +42,7 @@ public class StudentEnrollMapper {
         studentEnroll.setPhone(dto.getPhone());
         studentEnroll.setEmail(dto.getEmail());
         try {
-            studentEnroll.setGradeYear(GradesEnum.valueOf(dto.getGradeYear().toUpperCase()));
+            studentEnroll.setGradeYear(YearsEnum.valueOf(dto.getGradeYear().toUpperCase()));
             studentEnroll.setCourse(CoursesEnum.valueOf(dto.getCourse().toUpperCase()));
             studentEnroll.setShift(ShiftsEnum.valueOf(dto.getShift().toUpperCase()));
             studentEnroll.setSchoolClass(schoolClassService.findAvailable(
@@ -57,7 +53,6 @@ public class StudentEnrollMapper {
         }
         studentEnroll.setBirthdate(LocalDate.parse(dto.getBirthdate()));
         studentEnroll.setAddress(dto.getAddress());
-        studentEnroll.setPhotoUrl(dto.getPhotoUrl());
         studentEnroll.setSchoolUnit(unit);
         studentEnroll.setStatus(StatusEnum.INACTIVE);
         studentEnroll.setCreatedAt(dto.getCreatedAt());
@@ -74,7 +69,7 @@ public class StudentEnrollMapper {
                 studentEnroll.getCpf(),
                 studentEnroll.getPhone(),
                 studentEnroll.getEmail(),
-                studentEnroll.getSchoolClass().getGrade().name(),
+                studentEnroll.getSchoolClass().getYear().name(),
                 studentEnroll.getSchoolClass().getCourse().name(),
                 studentEnroll.getSchoolClass().getShift().name(),
                 studentEnroll.getSchoolClass().getId(),
@@ -83,13 +78,13 @@ public class StudentEnrollMapper {
                 studentEnroll.getAddress(),
                 studentEnroll.getPhotoUrl(),
                 studentEnroll.getSchoolUnit().getId(),
-                studentEnroll.getSchoolUnit().getName(),
+                studentEnroll.getStatus().name(),
                 studentEnroll.getCreatedAt().toString()
         );
     }
 
     public StudentEnroll updateEntityFromDTO(StudentEnrollRequestDTO dto, Long id) {
-        StudentEnroll studentEnroll = studentEnrollService.findById(id);
+        StudentEnroll studentEnroll = studentService.findEnrollById(id);
 
         if (StringUtils.hasText(dto.getName())) {
             studentEnroll.setName(dto.getName());
@@ -108,7 +103,7 @@ public class StudentEnrollMapper {
         }
         if (dto.getGradeYear() != null) {
             try {
-                studentEnroll.setGradeYear(GradesEnum.valueOf(dto.getGradeYear().toUpperCase()));
+                studentEnroll.setGradeYear(YearsEnum.valueOf(dto.getGradeYear().toUpperCase()));
                 studentEnroll.setSchoolClass(schoolClassService.findAvailable(
                         dto.getGradeYear(), dto.getCourse(), dto.getShift()
                 ));
@@ -144,9 +139,6 @@ public class StudentEnrollMapper {
         }
         if (StringUtils.hasText(dto.getAddress())) {
             studentEnroll.setAddress(dto.getAddress());
-        }
-        if (StringUtils.hasText(dto.getPhotoUrl())) {
-            studentEnroll.setPhotoUrl(dto.getPhotoUrl());
         }
         return studentEnroll;
     }

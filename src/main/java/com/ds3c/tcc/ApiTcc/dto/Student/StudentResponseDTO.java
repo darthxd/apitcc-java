@@ -1,6 +1,6 @@
 package com.ds3c.tcc.ApiTcc.dto.Student;
 
-import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResumeDTO;
+import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +20,12 @@ public class StudentResponseDTO {
     private String cpf;
     private String phone;
     private String email;
-    private SchoolClassResumeDTO schoolClass;
+    private SchoolClassResponseDTO schoolClass;
     private String birthdate;
     private String photo;
     private Boolean sendNotification;
     private Boolean biometry;
     private Boolean inschool;
     private Long unitId;
+    private String status;
 }

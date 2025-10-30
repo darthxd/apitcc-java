@@ -2,7 +2,7 @@ package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassRequestDTO;
 import com.ds3c.tcc.ApiTcc.enums.CoursesEnum;
-import com.ds3c.tcc.ApiTcc.enums.GradesEnum;
+import com.ds3c.tcc.ApiTcc.enums.YearsEnum;
 import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
 import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
@@ -30,13 +30,13 @@ public class SchoolClassService extends CRUDService<SchoolClass, Long>{
     private String generateName(SchoolClass schoolClass) {
         final String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String shiftName = "";
-        String gradeName = "";
+        String yearName = "";
         String classIdentifier;
 
         List<SchoolClass> schoolClasses = schoolClassRepository
-                .findByCourseAndGradeAndShift(
+                .findByCourseAndYearAndShift(
                 schoolClass.getCourse(),
-                schoolClass.getGrade(),
+                schoolClass.getYear(),
                 schoolClass.getShift()
         );
 
@@ -48,14 +48,14 @@ public class SchoolClassService extends CRUDService<SchoolClass, Long>{
             case ShiftsEnum.NIGHT -> shiftName = "N";
         }
 
-        switch (schoolClass.getGrade()) {
-            case GradesEnum.FIRST_YEAR -> gradeName = "1";
-            case GradesEnum.SECOND_YEAR -> gradeName = "2";
-            case GradesEnum.THIRD_YEAR -> gradeName = "3";
+        switch (schoolClass.getYear()) {
+            case YearsEnum.FIRST_YEAR -> yearName = "1";
+            case YearsEnum.SECOND_YEAR -> yearName = "2";
+            case YearsEnum.THIRD_YEAR -> yearName = "3";
         }
 
         return schoolClass.getCourse().name()
-                + shiftName + gradeName + classIdentifier;
+                + shiftName + yearName + classIdentifier;
     }
 
     public SchoolClass create(SchoolClassRequestDTO dto) {
@@ -70,10 +70,13 @@ public class SchoolClassService extends CRUDService<SchoolClass, Long>{
         return save(schoolClass);
     }
 
-    public SchoolClass findAvailable(String grade, String course, String shift) {
+    public SchoolClass findAvailable(String year, String course, String shift) {
         try {
+            System.out.println("year: "+year);
+            System.out.println("course: "+course);
+            System.out.println("shift: "+shift);
             return schoolClassRepository.findAvailableClass(
-                    GradesEnum.valueOf(grade),
+                    YearsEnum.valueOf(year),
                     CoursesEnum.valueOf(course),
                     ShiftsEnum.valueOf(shift)
             ).orElseThrow(() -> new EntityNotFoundException("No available class was found."));

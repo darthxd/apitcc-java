@@ -2,15 +2,21 @@ package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.dto.Student.BiometryRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
+import com.ds3c.tcc.ApiTcc.dto.StudentEnroll.StudentEnrollRequestDTO;
 import com.ds3c.tcc.ApiTcc.enums.StatusEnum;
+import com.ds3c.tcc.ApiTcc.mapper.StudentEnrollMapper;
 import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
+import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.Student;
+import com.ds3c.tcc.ApiTcc.model.StudentEnroll;
+import com.ds3c.tcc.ApiTcc.repository.StudentEnrollRepository;
 import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +30,9 @@ public class StudentService extends CRUDService<Student, Long> {
     private final BiometryService biometryService;
     private final PresenceLogService presenceLogService;
     private final AttendanceService attendanceService;
+    private final LocalStorageService localStorageService;
+    private final StudentEnrollMapper studentEnrollMapper;
+    private final StudentEnrollRepository studentEnrollRepository;
 
     @Lazy
     public StudentService(
@@ -32,7 +41,10 @@ public class StudentService extends CRUDService<Student, Long> {
             SchoolClassService schoolClassService,
             BiometryService biometryService,
             PresenceLogService presenceLogService,
-            AttendanceService attendanceService) {
+            AttendanceService attendanceService,
+            LocalStorageService localStorageService,
+            StudentEnrollMapper studentEnrollMapper,
+            StudentEnrollRepository studentEnrollRepository) {
         super(Student.class, studentRepository);
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
@@ -40,10 +52,26 @@ public class StudentService extends CRUDService<Student, Long> {
         this.biometryService = biometryService;
         this.presenceLogService = presenceLogService;
         this.attendanceService = attendanceService;
+        this.localStorageService = localStorageService;
+        this.studentEnrollMapper = studentEnrollMapper;
+        this.studentEnrollRepository = studentEnrollRepository;
     }
 
     private String generatePassword(StudentRequestDTO dto) {
         return dto.getName().split(" ")[0].toLowerCase()+dto.getRm();
+    }
+
+    public Student create(StudentRequestDTO dto) {
+        schoolClassService.findById(dto.getSchoolClassId());
+
+        dto.setUsername(dto.getRm().toString());
+        dto.setPassword(generatePassword(dto));
+
+        return save(studentMapper.toEntity(dto));
+    }
+
+    public Student update(StudentRequestDTO dto, Long id) {
+        return save(studentMapper.updateEntityFromDTO(dto, id));
     }
 
     public Integer findMaxRm() {
@@ -58,19 +86,6 @@ public class StudentService extends CRUDService<Student, Long> {
     public Student findByEnrollId(Long enrollId) {
         return studentRepository.findByEnrollId(enrollId)
                 .orElseThrow(() -> new EntityNotFoundException("The student with enroll ID: "+enrollId+" was not found."));
-    }
-
-    public Student create(StudentRequestDTO dto) {
-        schoolClassService.findById(dto.getSchoolClassId());
-
-        dto.setUsername(dto.getRm().toString());
-        dto.setPassword(generatePassword(dto));
-
-        return save(studentMapper.toEntity(dto));
-    }
-
-    public Student update(StudentRequestDTO dto, Long id) {
-        return save(studentMapper.updateEntityFromDTO(dto, id));
     }
 
     public Map<String, Object> findFullPresenceLog(Long studentId) {
@@ -92,24 +107,116 @@ public class StudentService extends CRUDService<Student, Long> {
         return studentRepository.findAllBySchoolClassId(id);
     }
 
-    public Student setStatus(Long id, String status) {
-        Student student = findById(id);
-
-        try {
-            student.setStatus(StatusEnum.valueOf(status));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("The status: "+status+" is not valid.");
-        }
-
-        return save(student);
-    }
-
     public List<Student> findAllByStatus(String status) {
         try {
             return studentRepository.findAllByStatus(StatusEnum.valueOf(status));
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("The status: "+status+" is not valid.");
         }
+    }
+
+    // Enroll
+
+    public List<StudentEnroll> findAllEnroll() {
+        return studentEnrollRepository.findAll();
+    }
+
+    public StudentEnroll findEnrollById(Long id) {
+        return studentEnrollRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("The student enroll with ID: "+id+" was not found."));
+    }
+
+    public Map<String, Object> enroll(StudentEnrollRequestDTO dto, MultipartFile photo) {
+        Map<String, Object> response = new HashMap<>();
+        StudentEnroll enroll = studentEnrollMapper.toEntity(dto);
+        Student student = studentEnrollMapper.toStudent(enroll);
+
+        String photoUrl = localStorageService.saveFile(photo, "/student/"+student.getRm().toString()+"/photo");
+
+        enroll.setPhotoUrl(photoUrl);
+        student.setPhotoUrl(photoUrl);
+
+        studentEnrollRepository.save(enroll);
+        save(student);
+
+        response.put("enroll", studentEnrollMapper.toDTO(enroll));
+        response.put("student", studentMapper.toDTO(student));
+
+        return response;
+    }
+
+    public Map<String, Object> updateEnroll(StudentEnrollRequestDTO dto, Long enrollId) {
+        Map<String, Object> response = new HashMap<>();
+        StudentEnroll enroll = studentEnrollMapper.updateEntityFromDTO(dto, enrollId);
+        Student student = studentEnrollMapper.toStudent(enroll);
+
+        studentEnrollRepository.save(enroll);
+        save(student);
+
+        response.put("enroll", studentEnrollMapper.toDTO(enroll));
+        response.put("student", studentMapper.toDTO(student));
+
+        return response;
+    }
+
+    public Map<String, Object> setActive(Long id) {
+        Map<String, Object> response = new HashMap<>();
+        Student student = findById(id);
+        StudentEnroll enroll = student.getEnroll();
+        SchoolClass schoolClass = schoolClassService.findById(student.getSchoolClass().getId());
+
+        student.setStatus(StatusEnum.ACTIVE);
+        enroll.setStatus(StatusEnum.ACTIVE);
+        schoolClass.setStudentsCount(schoolClass.getStudentsCount()+1);
+
+        studentEnrollRepository.save(enroll);
+        schoolClassService.save(schoolClass);
+        save(student);
+
+        response.put("enroll", studentEnrollMapper.toDTO(enroll));
+        response.put("student", studentMapper.toDTO(student));
+
+        return response;
+    }
+
+    public Map<String, Object> setInactive(Long id) {
+        Map<String, Object> response = new HashMap<>();
+        Student student = findById(id);
+        StudentEnroll enroll = student.getEnroll();
+        SchoolClass schoolClass = schoolClassService.findById(student.getSchoolClass().getId());
+
+        student.setStatus(StatusEnum.INACTIVE);
+        enroll.setStatus(StatusEnum.INACTIVE);
+        schoolClass.setStudentsCount(schoolClass.getStudentsCount() > 0 ? schoolClass.getStudentsCount()-1 : 0);
+
+        studentEnrollRepository.save(enroll);
+        schoolClassService.save(schoolClass);
+        save(student);
+
+        response.put("enroll", studentEnrollMapper.toDTO(enroll));
+        response.put("student", studentMapper.toDTO(student));
+
+        return response;
+    }
+
+    public Map<String, Object> setDeleted(Long id) {
+        Map<String, Object> response = new HashMap<>();
+        Student student = findById(id);
+        StudentEnroll enroll = student.getEnroll();
+        SchoolClass schoolClass = schoolClassService.findById(student.getSchoolClass().getId());
+
+        student.setStatus(StatusEnum.DELETED);
+        enroll.setStatus(StatusEnum.DELETED);
+        schoolClass.setStudentsCount(schoolClass.getStudentsCount() > 0 ? schoolClass.getStudentsCount()-1 : 0);
+
+        studentEnrollRepository.save(enroll);
+        schoolClassService.save(schoolClass);
+        save(student);
+
+        response.put("enroll", studentEnrollMapper.toDTO(enroll));
+        response.put("student", studentMapper.toDTO(student));
+
+        return response;
     }
 
     // Biometry

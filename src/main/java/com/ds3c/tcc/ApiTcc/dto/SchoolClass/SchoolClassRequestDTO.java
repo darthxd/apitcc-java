@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SchoolClassRequestDTO {
-    private String grade;
+    private String year;
     private String course;
     private String shift;
     private Integer studentsLimit;

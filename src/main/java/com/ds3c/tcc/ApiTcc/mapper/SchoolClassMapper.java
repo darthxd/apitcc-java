@@ -2,9 +2,8 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResponseDTO;
-import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResumeDTO;
 import com.ds3c.tcc.ApiTcc.enums.CoursesEnum;
-import com.ds3c.tcc.ApiTcc.enums.GradesEnum;
+import com.ds3c.tcc.ApiTcc.enums.YearsEnum;
 import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
@@ -21,7 +20,7 @@ public class SchoolClassMapper {
     public SchoolClass toEntity(SchoolClassRequestDTO dto) {
         SchoolClass schoolClass = new SchoolClass();
         try {
-            schoolClass.setGrade(GradesEnum.valueOf(dto.getGrade()));
+            schoolClass.setYear(YearsEnum.valueOf(dto.getYear()));
             schoolClass.setCourse(CoursesEnum.valueOf(dto.getCourse()));
             schoolClass.setShift(ShiftsEnum.valueOf(dto.getShift()));
         } catch (IllegalArgumentException e) {
@@ -29,6 +28,7 @@ public class SchoolClassMapper {
                     "One or more of the Enum values passed are incorrect (Grade, Course and/or Shift).");
         }
         schoolClass.setStudentsLimit(dto.getStudentsLimit());
+        schoolClass.setStudentsCount(0);
         return schoolClass;
     }
 
@@ -36,32 +36,22 @@ public class SchoolClassMapper {
         return new SchoolClassResponseDTO(
                 schoolClass.getId(),
                 schoolClass.getName(),
-                schoolClass.getGrade().name(),
+                schoolClass.getYear().name(),
                 schoolClass.getCourse().name(),
                 schoolClass.getShift().name(),
-                schoolClass.getStudentsLimit().toString(),
-                schoolClass.getStudentsCount().toString()
-        );
-    }
-
-    public SchoolClassResumeDTO toResumeDTO(SchoolClass schoolClass) {
-        return new SchoolClassResumeDTO(
-                schoolClass.getId(),
-                schoolClass.getName(),
-                schoolClass.getGrade().name(),
-                schoolClass.getCourse().name(),
-                schoolClass.getShift().name()
+                schoolClass.getStudentsLimit(),
+                schoolClass.getStudentsCount() == null ? 0 : schoolClass.getStudentsCount()
         );
     }
 
     public SchoolClass updateEntityFromDTO(SchoolClassRequestDTO dto, Long id) {
         SchoolClass schoolClass = schoolClassService.findById(id);
-        if (StringUtils.hasText(dto.getGrade())) {
+        if (StringUtils.hasText(dto.getYear())) {
             try {
-                schoolClass.setGrade(GradesEnum.valueOf(dto.getGrade()));
+                schoolClass.setYear(YearsEnum.valueOf(dto.getYear()));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException(
-                        "The grade with name "+dto.getGrade()+" does not exist.");
+                        "The grade with name "+dto.getYear()+" does not exist.");
             }
         }
         if (StringUtils.hasText(dto.getCourse())) {
@@ -69,7 +59,7 @@ public class SchoolClassMapper {
                 schoolClass.setCourse(CoursesEnum.valueOf(dto.getCourse()));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException(
-                        "The course with name "+dto.getGrade()+" does not exist.");
+                        "The course with name "+dto.getYear()+" does not exist.");
             }
         }
         if (StringUtils.hasText(dto.getShift())) {
@@ -77,7 +67,7 @@ public class SchoolClassMapper {
                 schoolClass.setShift(ShiftsEnum.valueOf(dto.getShift()));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException(
-                        "The shift "+dto.getGrade()+" does not exist.");
+                        "The shift "+dto.getYear()+" does not exist.");
             }
         }
         if (dto.getStudentsLimit() != null) {

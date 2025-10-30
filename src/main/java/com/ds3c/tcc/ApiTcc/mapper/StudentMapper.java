@@ -1,6 +1,6 @@
 package com.ds3c.tcc.ApiTcc.mapper;
 
-import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResumeDTO;
+import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResponseDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Student.StudentResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
@@ -59,8 +59,8 @@ public class StudentMapper {
     }
 
     public StudentResponseDTO toDTO(Student student) {
-        SchoolClassResumeDTO schoolClass = schoolClassMapper
-                .toResumeDTO(student.getSchoolClass());
+        SchoolClassResponseDTO schoolClass = schoolClassMapper
+                .toDTO(student.getSchoolClass());
 
         return new StudentResponseDTO(
                 student.getId(),
@@ -79,7 +79,8 @@ public class StudentMapper {
                 student.getSendNotification(),
                 student.getBiometry(),
                 student.getInschool(),
-                student.getSchoolUnit().getId()
+                student.getSchoolUnit().getId(),
+                student.getStatus().name()
         );
     }
 
