@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -126,12 +125,13 @@ public class StudentService extends CRUDService<Student, Long> {
                 .orElseThrow(() -> new EntityNotFoundException("The student enroll with ID: "+id+" was not found."));
     }
 
-    public Map<String, Object> enroll(StudentEnrollRequestDTO dto, MultipartFile photo) {
+    public Map<String, Object> enroll(StudentEnrollRequestDTO dto) {
         Map<String, Object> response = new HashMap<>();
         StudentEnroll enroll = studentEnrollMapper.toEntity(dto);
         Student student = studentEnrollMapper.toStudent(enroll);
 
-        String photoUrl = localStorageService.saveFile(photo, "/student/"+student.getRm().toString()+"/photo");
+        String photoUrl = localStorageService.saveFile(
+                dto.getPhoto(), "/student/"+student.getRm().toString()+"/photo");
 
         enroll.setPhotoUrl(photoUrl);
         student.setPhotoUrl(photoUrl);
@@ -149,6 +149,13 @@ public class StudentService extends CRUDService<Student, Long> {
         Map<String, Object> response = new HashMap<>();
         StudentEnroll enroll = studentEnrollMapper.updateEntityFromDTO(dto, enrollId);
         Student student = studentEnrollMapper.toStudent(enroll);
+
+        if (dto.getPhoto() != null) {
+            String photoUrl = localStorageService.saveFile(
+                    dto.getPhoto(), "/student/"+student.getRm().toString()+"/photo");
+            enroll.setPhotoUrl(photoUrl);
+            student.setPhotoUrl(photoUrl);
+        }
 
         studentEnrollRepository.save(enroll);
         save(student);
@@ -199,8 +206,7 @@ public class StudentService extends CRUDService<Student, Long> {
         return response;
     }
 
-    public Map<String, Object> setDeleted(Long id) {
-        Map<String, Object> response = new HashMap<>();
+    public void setDeleted(Long id) {
         Student student = findById(id);
         StudentEnroll enroll = student.getEnroll();
         SchoolClass schoolClass = schoolClassService.findById(student.getSchoolClass().getId());
@@ -212,11 +218,6 @@ public class StudentService extends CRUDService<Student, Long> {
         studentEnrollRepository.save(enroll);
         schoolClassService.save(schoolClass);
         save(student);
-
-        response.put("enroll", studentEnrollMapper.toDTO(enroll));
-        response.put("student", studentMapper.toDTO(student));
-
-        return response;
     }
 
     // Biometry

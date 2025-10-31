@@ -10,8 +10,10 @@ import com.ds3c.tcc.ApiTcc.mapper.ActivitySubmissionMapper;
 import com.ds3c.tcc.ApiTcc.service.ActivityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -73,10 +75,10 @@ public class ActivityController {
                 .stream().map(activitySubmissionMapper::toDTO).toList();
     }
 
-    @PostMapping("/submission/{id}")
+    @PostMapping(value = "/submission/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ActivitySubmissionResponseDTO submitActivity(
-            @RequestBody @Valid ActivitySubmissionRequestDTO dto,
-            @PathVariable("id") Long activityId) {
+            @ModelAttribute @Valid ActivitySubmissionRequestDTO dto,
+            @PathVariable("id") Long activityId) throws IOException {
         return activitySubmissionMapper.toDTO(
                 activityService.submitActivity(dto, activityId)
         );

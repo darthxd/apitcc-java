@@ -33,7 +33,6 @@ public class ActivitySubmissionMapper {
                 LocalDate.now(ZoneId.of("America/Sao_Paulo"))
         );
         activitySubmission.setAnswerText(dto.getAnswerText());
-        activitySubmission.setFileUrl(dto.getFileUrl());
 
         return activitySubmission;
     }
@@ -61,9 +60,6 @@ public class ActivitySubmissionMapper {
         }
         if (StringUtils.hasText(dto.getAnswerText())) {
             activitySubmission.setAnswerText(dto.getAnswerText());
-        }
-        if (StringUtils.hasText(dto.getFileUrl())) {
-            activitySubmission.setFileUrl(dto.getFileUrl());
         }
         return activitySubmission;
     }

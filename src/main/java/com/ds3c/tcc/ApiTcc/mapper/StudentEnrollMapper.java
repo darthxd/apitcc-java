@@ -9,6 +9,7 @@ import com.ds3c.tcc.ApiTcc.model.StudentEnroll;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -21,14 +22,16 @@ public class StudentEnrollMapper {
     private final StudentService studentService;
     private final SchoolClassService schoolClassService;
     private final SchoolUnitService schoolUnitService;
+    private final PasswordEncoder passwordEncoder;
 
     public StudentEnrollMapper(
             StudentService studentService,
             SchoolClassService schoolClassService,
-            SchoolUnitService schoolUnitService) {
+            SchoolUnitService schoolUnitService, PasswordEncoder passwordEncoder) {
         this.studentService = studentService;
         this.schoolClassService = schoolClassService;
         this.schoolUnitService = schoolUnitService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public StudentEnroll toEntity(StudentEnrollRequestDTO dto) {
@@ -143,11 +146,15 @@ public class StudentEnrollMapper {
         return studentEnroll;
     }
 
+    private String generatePassword(StudentEnroll studentEnroll) {
+        return studentEnroll.getName().split(" ")[0].toLowerCase()+studentEnroll.getRm();
+    }
+
     public Student toStudent(StudentEnroll studentEnroll) {
         Student student = new Student();
 
         student.setUsername(studentEnroll.getRm().toString());
-        student.setPassword(studentEnroll.getName().split(" ")[0].toLowerCase()+studentEnroll.getRm());
+        student.setPassword(passwordEncoder.encode(generatePassword(studentEnroll)));
         student.setRole(RolesEnum.ROLE_STUDENT);
         student.setSchoolUnit(studentEnroll.getSchoolUnit());
         student.setStatus(studentEnroll.getStatus());

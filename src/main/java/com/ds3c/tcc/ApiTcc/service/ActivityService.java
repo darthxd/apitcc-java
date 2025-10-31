@@ -23,18 +23,20 @@ public class ActivityService extends CRUDService<Activity, Long> {
     private final ActivitySubmissionRepository activitySubmissionRepository;
     private final ActivityMapper activityMapper;
     private final ActivitySubmissionMapper activitySubmissionMapper;
+    private final LocalStorageService localStorageService;
 
     @Lazy
     public ActivityService(
             ActivityRepository activityRepository,
             ActivitySubmissionRepository activitySubmissionRepository,
             ActivityMapper activityMapper,
-            ActivitySubmissionMapper activitySubmissionMapper) {
+            ActivitySubmissionMapper activitySubmissionMapper, LocalStorageService localStorageService) {
         super(Activity.class, activityRepository);
         this.activityRepository = activityRepository;
         this.activitySubmissionRepository = activitySubmissionRepository;
         this.activityMapper = activityMapper;
         this.activitySubmissionMapper = activitySubmissionMapper;
+        this.localStorageService = localStorageService;
     }
 
     public ActivitySubmission findSubmissionById(Long id) {
@@ -63,8 +65,10 @@ public class ActivityService extends CRUDService<Activity, Long> {
     }
 
     public ActivitySubmission submitActivity(
-            ActivitySubmissionRequestDTO dto, Long activityId) {
+            ActivitySubmissionRequestDTO dto,
+            Long activityId) {
         Activity activity = findById(activityId);
+
         try {
             activitySubmissionRepository.findByActivityIdAndStudentId(
                     activityId, dto.getStudentId()
@@ -72,12 +76,19 @@ public class ActivityService extends CRUDService<Activity, Long> {
         } catch (Exception e) {
             throw new RuntimeException("The activity for this student was already submited.");
         }
+
         if (LocalDate.now().isAfter(activity.getDeadline())) {
             throw new RuntimeException("The deadline for this activity was reached.");
         }
-        return activitySubmissionRepository.save(
-                activitySubmissionMapper.toEntity(dto, activityId)
-        );
+
+        ActivitySubmission submission = activitySubmissionMapper.toEntity(dto, activityId);
+
+        if (dto.getFile() != null && !dto.getFile().isEmpty()) {
+            submission.setFileUrl(localStorageService.saveFile(
+                    dto.getFile(), "/activity/"+activityId+"/submission/student/"+dto.getStudentId()));
+        }
+
+        return activitySubmissionRepository.save(submission);
     }
     public ActivitySubmission submitCorrection(
             ActivityCorrectionRequestDTO dto, Long submissionId) {

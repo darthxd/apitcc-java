@@ -108,7 +108,7 @@ public class StudentController {
     @PostMapping(value = "/enroll", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Map<String, Object> enroll(
             @ModelAttribute StudentEnrollRequestDTO dto) throws IOException {
-        return studentService.enroll(dto, dto.getPhoto());
+        return studentService.enroll(dto);
     }
 
     @PostMapping("/{id}/setactive")
