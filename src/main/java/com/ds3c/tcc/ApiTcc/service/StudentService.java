@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class StudentService extends CRUDService<Student, Long> {
     private final LocalStorageService localStorageService;
     private final StudentEnrollMapper studentEnrollMapper;
     private final StudentEnrollRepository studentEnrollRepository;
+    private final SupabaseStorageService supabaseStorageService;
 
     @Lazy
     public StudentService(
@@ -43,7 +45,7 @@ public class StudentService extends CRUDService<Student, Long> {
             AttendanceService attendanceService,
             LocalStorageService localStorageService,
             StudentEnrollMapper studentEnrollMapper,
-            StudentEnrollRepository studentEnrollRepository) {
+            StudentEnrollRepository studentEnrollRepository, SupabaseStorageService supabaseStorageService) {
         super(Student.class, studentRepository);
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
@@ -54,6 +56,7 @@ public class StudentService extends CRUDService<Student, Long> {
         this.localStorageService = localStorageService;
         this.studentEnrollMapper = studentEnrollMapper;
         this.studentEnrollRepository = studentEnrollRepository;
+        this.supabaseStorageService = supabaseStorageService;
     }
 
     private String generatePassword(StudentRequestDTO dto) {
@@ -125,13 +128,15 @@ public class StudentService extends CRUDService<Student, Long> {
                 .orElseThrow(() -> new EntityNotFoundException("The student enroll with ID: "+id+" was not found."));
     }
 
-    public Map<String, Object> enroll(StudentEnrollRequestDTO dto) {
+    public Map<String, Object> enroll(StudentEnrollRequestDTO dto) throws IOException {
         Map<String, Object> response = new HashMap<>();
         StudentEnroll enroll = studentEnrollMapper.toEntity(dto);
         Student student = studentEnrollMapper.toStudent(enroll);
 
-        String photoUrl = localStorageService.saveFile(
-                dto.getPhoto(), "/student/"+student.getRm().toString()+"/photo");
+        //String photoUrl = localStorageService.saveFile(
+        //        dto.getPhoto(), "/student/"+student.getRm().toString()+"/photo");
+
+        String photoUrl = supabaseStorageService.uploadFile(dto.getPhoto(), "/student/"+student.getRm()+"/profile-picture");
 
         enroll.setPhotoUrl(photoUrl);
         student.setPhotoUrl(photoUrl);
@@ -168,8 +173,8 @@ public class StudentService extends CRUDService<Student, Long> {
 
     public Map<String, Object> setActive(Long id) {
         Map<String, Object> response = new HashMap<>();
-        Student student = findById(id);
-        StudentEnroll enroll = student.getEnroll();
+        StudentEnroll enroll = findEnrollById(id);
+        Student student = findByEnrollId(id);
         SchoolClass schoolClass = schoolClassService.findById(student.getSchoolClass().getId());
 
         student.setStatus(StatusEnum.ACTIVE);
@@ -188,8 +193,8 @@ public class StudentService extends CRUDService<Student, Long> {
 
     public Map<String, Object> setInactive(Long id) {
         Map<String, Object> response = new HashMap<>();
-        Student student = findById(id);
-        StudentEnroll enroll = student.getEnroll();
+        StudentEnroll enroll = findEnrollById(id);
+        Student student = findByEnrollId(id);
         SchoolClass schoolClass = schoolClassService.findById(student.getSchoolClass().getId());
 
         student.setStatus(StatusEnum.INACTIVE);
@@ -207,8 +212,8 @@ public class StudentService extends CRUDService<Student, Long> {
     }
 
     public void setDeleted(Long id) {
-        Student student = findById(id);
-        StudentEnroll enroll = student.getEnroll();
+        StudentEnroll enroll = findEnrollById(id);
+        Student student = findByEnrollId(id);
         SchoolClass schoolClass = schoolClassService.findById(student.getSchoolClass().getId());
 
         student.setStatus(StatusEnum.DELETED);

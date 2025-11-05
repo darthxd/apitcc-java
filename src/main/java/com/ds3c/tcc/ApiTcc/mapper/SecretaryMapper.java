@@ -26,8 +26,9 @@ public class SecretaryMapper {
 
         secretary.setUsername(dto.getUsername());
         secretary.setPassword(passwordEncoder.encode(dto.getPassword()));
-        secretary.setSchoolUnit(unit);
         secretary.setRole(RolesEnum.ROLE_SECRETARY);
+        secretary.setSchoolUnit(unit);
+
         secretary.setEmail(dto.getEmail());
         secretary.setPhone(dto.getPhone());
 
@@ -40,6 +41,7 @@ public class SecretaryMapper {
                 secretary.getUsername(),
                 secretary.getPassword(),
                 secretary.getSchoolUnit().getId(),
+                secretary.getSchoolUnit().getName(),
                 secretary.getEmail(),
                 secretary.getPhone()
         );

@@ -13,47 +13,56 @@ import java.io.IOException;
 
 @Service
 public class SupabaseStorageService {
+
     @Value("${supabase.url}") private String supabaseUrl;
-    @Value("${supabase.service-role-key}") private String serviceRoleKey;
     @Value("${supabase.bucket-name}") private String bucketName;
     @Value("${supabase.bucket-public}") private Boolean bucketPublic;
 
     private final RestClient restClient;
 
-    public SupabaseStorageService(RestClient.Builder builder) {
+    public SupabaseStorageService(
+            RestClient.Builder builder,
+            @Value("${supabase.url}") String supabaseUrl,
+            @Value("${supabase.service-role-key}") String serviceRoleKey) {
+
         this.restClient = builder
-                .baseUrl(supabaseUrl+"/storage/v1/object/"+bucketName)
-                .defaultHeader("Authorization", "Bearer "+serviceRoleKey)
+                .baseUrl(supabaseUrl + "/storage/v1/object")
+                .defaultHeader("Authorization", "Bearer " + serviceRoleKey)
                 .defaultHeader("apikey", serviceRoleKey)
                 .build();
     }
 
     public String uploadFile(MultipartFile file, String path) throws IOException {
-        MediaType contentType = MediaType.parseMediaType(file.getContentType() == null
-        ? "application/octet-stream" : file.getContentType());
+        MediaType contentType = MediaType.parseMediaType(
+                file.getContentType() == null ? "application/octet-stream" : file.getContentType()
+        );
+
+        String endpoint = String.format("/%s/%s", bucketName, path);
 
         try {
             restClient.put()
-                    .uri(path)
+                    .uri(endpoint)
                     .contentType(contentType)
                     .contentLength(file.getSize())
                     .body(file.getBytes())
                     .retrieve()
                     .toBodilessEntity();
         } catch (RestClientResponseException e) {
-            throw new IOException("Error uploading the file. "+e);
+            throw new IOException("Error uploading the file: " + e.getResponseBodyAsString(), e);
         }
 
         if (bucketPublic)
-            return supabaseUrl+"/storage/v1/object/"+bucketName+path;
+            return String.format("%s/storage/v1/object/public/%s/%s", supabaseUrl, bucketName, path);
 
-        return generateSignedUrl(path);
+        return supabaseUrl+"/storage/v1"+generateSignedUrl(path);
     }
 
     private String generateSignedUrl(String path) {
+        String endpoint = String.format("/sign/%s/%s", bucketName, path);
+
         try {
             String response = restClient.post()
-                    .uri(path)
+                    .uri(endpoint)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body("{\"expiresIn\":3600}")
                     .retrieve()
@@ -65,12 +74,12 @@ public class SupabaseStorageService {
             if (node.has("signedURL")) {
                 return node.get("signedURL").asText();
             } else {
-                throw new RuntimeException("Error generating the signed URL. "+response);
+                throw new RuntimeException("Invalid response from Supabase: " + response);
             }
         } catch (RestClientResponseException e) {
-            throw new RuntimeException("Error generating the signed URL. "+e.getMessage());
+            throw new RuntimeException("Error generating signed URL: " + e.getResponseBodyAsString(), e);
         } catch (Exception e) {
-            throw new RuntimeException("Unexpected error generating the signed URL. "+e.getMessage());
+            throw new RuntimeException("Unexpected error generating signed URL: " + e.getMessage(), e);
         }
     }
 }

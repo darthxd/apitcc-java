@@ -2,6 +2,7 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.Coordinator.CoordinatorRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.Coordinator.CoordinatorResponseDTO;
+import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.Coordinator;
 import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.service.CoordinatorService;
@@ -25,7 +26,9 @@ public class CoordinatorMapper {
 
         coordinator.setUsername(dto.getUsername());
         coordinator.setPassword(passwordEncoder.encode(dto.getPassword()));
+        coordinator.setRole(RolesEnum.ROLE_COORDINATOR);
         coordinator.setSchoolUnit(unit);
+
         coordinator.setName(dto.getName());
         coordinator.setCpf(dto.getCpf());
         coordinator.setEmail(dto.getEmail());

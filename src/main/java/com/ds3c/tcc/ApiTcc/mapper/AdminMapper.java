@@ -38,7 +38,7 @@ public class AdminMapper {
                 admin.getId(),
                 admin.getUsername(),
                 admin.getPassword(),
-                admin.getSchoolUnit().getId(),
+                admin.getSchoolUnit() != null ? admin.getSchoolUnit().getId() : null,
                 admin.getName()
         );
     }

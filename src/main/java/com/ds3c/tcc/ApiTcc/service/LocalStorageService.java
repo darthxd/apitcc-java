@@ -35,7 +35,7 @@ public class LocalStorageService {
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
             // Retorna o caminho para acessar futuramente
-            return "/uploads/" + folder + "/" + filename;
+            return "/uploads" + folder + "/" + filename;
         } catch (IOException e) {
             throw new RuntimeException("Falha ao salvar arquivo localmente: " + e.getMessage(), e);
         }

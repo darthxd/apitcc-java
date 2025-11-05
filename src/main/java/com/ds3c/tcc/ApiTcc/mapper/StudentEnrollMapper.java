@@ -23,15 +23,19 @@ public class StudentEnrollMapper {
     private final SchoolClassService schoolClassService;
     private final SchoolUnitService schoolUnitService;
     private final PasswordEncoder passwordEncoder;
+    private final SchoolClassMapper schoolClassMapper;
 
     public StudentEnrollMapper(
             StudentService studentService,
             SchoolClassService schoolClassService,
-            SchoolUnitService schoolUnitService, PasswordEncoder passwordEncoder) {
+            SchoolUnitService schoolUnitService,
+            PasswordEncoder passwordEncoder,
+            SchoolClassMapper schoolClassMapper) {
         this.studentService = studentService;
         this.schoolClassService = schoolClassService;
         this.schoolUnitService = schoolUnitService;
         this.passwordEncoder = passwordEncoder;
+        this.schoolClassMapper = schoolClassMapper;
     }
 
     public StudentEnroll toEntity(StudentEnrollRequestDTO dto) {
@@ -72,10 +76,7 @@ public class StudentEnrollMapper {
                 studentEnroll.getCpf(),
                 studentEnroll.getPhone(),
                 studentEnroll.getEmail(),
-                studentEnroll.getSchoolClass().getYear().name(),
-                studentEnroll.getSchoolClass().getCourse().name(),
-                studentEnroll.getSchoolClass().getShift().name(),
-                studentEnroll.getSchoolClass().getId(),
+                schoolClassMapper.toDTO(studentEnroll.getSchoolClass()),
                 studentEnroll.getBirthdate().format(
                         DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 studentEnroll.getAddress(),

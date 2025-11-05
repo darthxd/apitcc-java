@@ -13,6 +13,7 @@ public class SecretaryResponseDTO {
     private String username;
     private String password;
     private Long unitId;
+    private String name;
     private String email;
     private String phone;
 }

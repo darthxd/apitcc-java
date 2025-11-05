@@ -1,6 +1,7 @@
 package com.ds3c.tcc.ApiTcc.dto.StudentEnroll;
 
 
+import com.ds3c.tcc.ApiTcc.dto.SchoolClass.SchoolClassResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +18,7 @@ public class StudentEnrollResponseDTO {
     private String cpf;
     private String phone;
     private String email;
-    private String gradeYear;
-    private String course;
-    private String shift;
-    private Long schoolClassId;
+    private SchoolClassResponseDTO schoolClass;
     private String birthdate;
     private String address;
     private String photoUrl;
