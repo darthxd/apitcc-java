@@ -41,9 +41,15 @@ public class GradeController {
     }
 
     @GetMapping("/class/{classId}/performance/{bimester}")
-    public Map<String, Double> getAveragePerformanceBySubject(
+    public Map<String, Double> getAveragePerformanceByClassAndBimester(
             @PathVariable("classId") Long classId,
             @PathVariable("bimester") Integer bimester) {
-        return gradeService.getAveragePerformanceBySubject(classId, bimester);
+        return gradeService.getAveragePerformanceByClassAndBimester(classId, bimester);
+    }
+
+    @GetMapping("/class/{classId}/performance")
+    public Map<String, Double> getAveragePerformanceByClass(
+            @PathVariable("classId") Long classId) {
+        return gradeService.getAveragePerformanceByClass(classId);
     }
 }

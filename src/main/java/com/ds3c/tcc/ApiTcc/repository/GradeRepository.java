@@ -17,4 +17,10 @@ public interface GradeRepository extends JpaRepository<Grade, Long> {
            AND g.bimester = :bimester
            """)
     List<Grade> findBySchoolClassAndBimester(@Param("classId") Long classId, @Param("bimester") Integer bimester);
+
+    @Query("""
+           SELECT g FROM Grade g
+           WHERE g.student.schoolClass.id = :classId
+           """)
+    List<Grade> findBySchoolClass(@Param("classId") Long classId);
 }

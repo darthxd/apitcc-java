@@ -47,9 +47,20 @@ public class GradeService extends CRUDService<Grade, Long> {
         return gradeRepository.findAllByStudentIdAndSubjectId(studentId, subjectId);
     }
 
-    public Map<String, Double> getAveragePerformanceBySubject(Long classId, Integer bimester) {
+    public Map<String, Double> getAveragePerformanceByClassAndBimester(Long classId, Integer bimester) {
         SchoolClass schoolClass = schoolClassService.findById(classId);
         List<Grade> grades = gradeRepository.findBySchoolClassAndBimester(classId, bimester);
+        return grades.stream()
+                .collect(Collectors.groupingBy(
+                        grade -> grade.getSubject().getName(),
+                        Collectors.averagingDouble(Grade::getGrade)
+                ));
+    }
+
+    public Map<String, Double> getAveragePerformanceByClass(Long classId) {
+        SchoolClass schoolClass = schoolClassService.findById(classId);
+
+        List<Grade> grades = gradeRepository.findBySchoolClass(classId);
         return grades.stream()
                 .collect(Collectors.groupingBy(
                         grade -> grade.getSubject().getName(),
