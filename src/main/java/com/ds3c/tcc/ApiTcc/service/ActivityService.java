@@ -85,7 +85,7 @@ public class ActivityService extends CRUDService<Activity, Long> {
 
         if (dto.getFile() != null && !dto.getFile().isEmpty()) {
             submission.setFileUrl(localStorageService.saveFile(
-                    dto.getFile(), "/activity/"+activityId+"/submission/student/"+dto.getStudentId()));
+                    dto.getFile(), "/activity/"+activityId+"/submission/student/"+dto.getStudentId())+"/"+dto.getFile().getOriginalFilename());
         }
 
         return activitySubmissionRepository.save(submission);
