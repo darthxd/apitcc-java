@@ -3,22 +3,27 @@ package com.ds3c.tcc.ApiTcc.service;
 import com.ds3c.tcc.ApiTcc.dto.Grade.GradeRequestDTO;
 import com.ds3c.tcc.ApiTcc.mapper.GradeMapper;
 import com.ds3c.tcc.ApiTcc.model.Grade;
+import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.repository.GradeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class GradeService extends CRUDService<Grade, Long> {
     private final GradeRepository gradeRepository;
     private final GradeMapper gradeMapper;
+    private final SchoolClassService schoolClassService;
 
     public GradeService(
             GradeRepository gradeRepository,
-            GradeMapper gradeMapper) {
+            GradeMapper gradeMapper, SchoolClassService schoolClassService) {
         super(Grade.class, gradeRepository);
         this.gradeRepository = gradeRepository;
         this.gradeMapper = gradeMapper;
+        this.schoolClassService = schoolClassService;
     }
 
     public Grade create(GradeRequestDTO dto) {
@@ -40,5 +45,15 @@ public class GradeService extends CRUDService<Grade, Long> {
 
     public List<Grade> findByStudentAndSubject(Long studentId, Long subjectId) {
         return gradeRepository.findAllByStudentIdAndSubjectId(studentId, subjectId);
+    }
+
+    public Map<String, Double> getAveragePerformanceBySubject(Long classId, Integer bimester) {
+        SchoolClass schoolClass = schoolClassService.findById(classId);
+        List<Grade> grades = gradeRepository.findBySchoolClassAndBimester(classId, bimester);
+        return grades.stream()
+                .collect(Collectors.groupingBy(
+                        grade -> grade.getSubject().getName(),
+                        Collectors.averagingDouble(Grade::getGrade)
+                ));
     }
 }

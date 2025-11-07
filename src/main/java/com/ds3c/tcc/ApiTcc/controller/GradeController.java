@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,5 +38,12 @@ public class GradeController {
             @PathVariable("subjectId") Long subjectId) {
         return gradeService.findByStudentAndSubject(studentId, subjectId)
                 .stream().map(gradeMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @GetMapping("/class/{classId}/performance/{bimester}")
+    public Map<String, Double> getAveragePerformanceBySubject(
+            @PathVariable("classId") Long classId,
+            @PathVariable("bimester") Integer bimester) {
+        return gradeService.getAveragePerformanceBySubject(classId, bimester);
     }
 }
