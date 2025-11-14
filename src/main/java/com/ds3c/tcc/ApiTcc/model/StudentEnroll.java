@@ -45,6 +45,7 @@ public class StudentEnroll {
 
     private LocalDate birthdate;
     private String address;
+    @Column(length = 512)
     private String photoUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

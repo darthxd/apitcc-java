@@ -28,6 +28,7 @@ public class Student extends User {
 
     private LocalDate birthdate;
     private String address;
+    @Column(length = 512)
     private String photoUrl;
 
     private Boolean biometry;
