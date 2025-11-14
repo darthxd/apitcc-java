@@ -22,6 +22,7 @@ public class StudentResponseDTO {
     private String email;
     private SchoolClassResponseDTO schoolClass;
     private String birthdate;
+    private String address;
     private String photo;
     private Boolean sendNotification;
     private Boolean biometry;

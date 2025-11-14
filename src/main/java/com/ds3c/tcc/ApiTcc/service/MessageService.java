@@ -39,8 +39,8 @@ public class MessageService extends CRUDService<Message, Long> {
     public List<Message> findVisibleMessages(Long userId) {
         User user = userService.findById(userId);
         if (user instanceof Student s) {
-            return messageRepository.findVisibleMessagesForUser(userId, s.getSchoolClass().getId());
+            return messageRepository.findVisibleMessagesForUser(user.getId(), s.getSchoolClass().getId());
         }
-        return messageRepository.findVisibleMessagesForUser(userId, null);
+        return messageRepository.findVisibleMessagesForUser(user.getId(), null);
     }
 }

@@ -75,6 +75,7 @@ public class StudentMapper {
                 schoolClass,
                 student.getBirthdate()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                student.getAddress(),
                 student.getPhotoUrl(),
                 student.getSendNotification(),
                 student.getBiometry(),

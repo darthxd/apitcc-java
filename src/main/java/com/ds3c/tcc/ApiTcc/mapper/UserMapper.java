@@ -32,10 +32,12 @@ public class UserMapper {
 
     public UserResponseDTO toDTO(User user) {
         return new UserResponseDTO(
+                user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getRole().name(),
-                user.getSchoolUnit().getId()
+                user.getSchoolUnit().getId(),
+                userService.findDisplayNameById(user.getId())
         );
     }
 

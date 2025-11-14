@@ -1,10 +1,7 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
-import com.ds3c.tcc.ApiTcc.model.Admin;
-import com.ds3c.tcc.ApiTcc.model.Student;
-import com.ds3c.tcc.ApiTcc.model.Teacher;
-import com.ds3c.tcc.ApiTcc.model.User;
+import com.ds3c.tcc.ApiTcc.model.*;
 import com.ds3c.tcc.ApiTcc.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.annotation.Lazy;
@@ -30,6 +27,11 @@ public class UserService extends CRUDService<User, Long> implements UserDetailsS
                 .orElseThrow(() -> new EntityNotFoundException("The user with username: "+username+" was not found."));
     }
 
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("The user with username: "+username+" was not found."));
+    }
+
     public boolean existsByRole(RolesEnum role) {
         return userRepository.existsByRole(role);
     }
@@ -40,6 +42,7 @@ public class UserService extends CRUDService<User, Long> implements UserDetailsS
         if (user instanceof Admin a) return a.getName();
         if (user instanceof Student s) return s.getName();
         if (user instanceof Teacher t) return t.getName();
+        if (user instanceof Coordinator c) return c.getName();
 
         return user.getUsername();
     }

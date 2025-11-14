@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.ds3c.tcc</groupId>
 	<artifactId>ApiTcc</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-ALPHA</version>
 	<name>ApiTcc</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>

@@ -9,12 +9,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findAllByTarget(MessageTargetEnum target);
-    List<Message> findAllBySchoolClassId(Long schoolClassId);
-    List<Message> findAllByTargetUserId(Long targetId);
 
     @Query("SELECT m FROM Message m WHERE m.target = 'GLOBAL' " +
-            "OR (m.target = 'CLASS' AND m.schoolClass.id = :classId) " +
+            "OR (m.target = 'CLASS' AND (m.schoolClass.id = :classId OR m.author.id = :userId)) " +
             "OR (m.target = 'PRIVATE' AND (m.targetUser.id = :userId OR m.author.id = :userId))")
     List<Message> findVisibleMessagesForUser(@Param("userId") Long userId, @Param("classId") Long classId);
 }

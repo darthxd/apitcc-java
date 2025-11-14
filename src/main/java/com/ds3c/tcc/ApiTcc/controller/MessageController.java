@@ -47,9 +47,9 @@ public class MessageController {
         );
     }
 
-    @GetMapping("/visible/{id}")
+    @GetMapping("/visible/{userId}")
     public ResponseEntity<List<MessageResponseDTO>> findVisibleMessages(
-            @PathVariable("id") Long userId) {
+            @PathVariable("userId") Long userId) {
         return ResponseEntity.ok(
                 messageService.findVisibleMessages(userId)
                         .stream().map(messageMapper::toDTO).toList()

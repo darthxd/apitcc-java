@@ -85,6 +85,11 @@ public class StudentService extends CRUDService<Student, Long> {
                 .orElseThrow(() -> new EntityNotFoundException("The student with username: "+username+" was not found."));
     }
 
+    public Student findByRm(Integer rm) {
+        return studentRepository.findByRm(rm)
+                .orElseThrow(() -> new EntityNotFoundException("The student with RM: "+rm+" was not found."));
+    }
+
     public Student findByEnrollId(Long enrollId) {
         return studentRepository.findByEnrollId(enrollId)
                 .orElseThrow(() -> new EntityNotFoundException("The student with enroll ID: "+enrollId+" was not found."));
