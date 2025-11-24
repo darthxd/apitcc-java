@@ -59,8 +59,8 @@ public class BiometryService {
             JSONObject json = new JSONObject(response);
 
             if (json.has("studentId")) {
-                Integer rm = json.getInt("studentId");
-                Student student = studentService.findByRm(rm);
+                Long id = json.getLong("studentId");
+                Student student = studentService.findById(id);
                 return Optional.of(student);
             }
         } catch (Exception e) {
