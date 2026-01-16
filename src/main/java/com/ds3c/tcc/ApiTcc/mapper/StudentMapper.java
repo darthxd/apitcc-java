@@ -9,9 +9,7 @@ import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
-import com.ds3c.tcc.ApiTcc.service.StudentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -20,10 +18,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class StudentMapper {
     private final SchoolClassService schoolClassService;
-    private final StudentService studentService;
     private final SchoolClassMapper schoolClassMapper;
     private final SchoolUnitService schoolUnitService;
     private final PasswordEncoder passwordEncoder;
@@ -85,8 +82,7 @@ public class StudentMapper {
         );
     }
 
-    public Student updateEntityFromDTO(StudentRequestDTO dto, Long id) {
-        Student student = studentService.findById(id);
+    public Student updateEntityFromDTO(StudentRequestDTO dto, Student student) {
         if (StringUtils.hasText(dto.getUsername())) {
             student.setUsername(dto.getUsername());
         }

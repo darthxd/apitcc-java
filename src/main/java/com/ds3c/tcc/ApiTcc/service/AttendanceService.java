@@ -9,12 +9,13 @@ import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.repository.AttendanceRepository;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AttendanceService extends CRUDService<Attendance, Long> {
@@ -24,7 +25,6 @@ public class AttendanceService extends CRUDService<Attendance, Long> {
     private final TeacherService teacherService;
     private final StudentService studentService;
 
-    @Lazy
     public AttendanceService(
             AttendanceRepository attendanceRepository,
             AttendanceMapper attendanceMapper,
@@ -53,12 +53,27 @@ public class AttendanceService extends CRUDService<Attendance, Long> {
         return attendanceRepository.findAllByStudentId(studentId);
     }
 
+    public Map<String, Object> findFullPresenceLog(Student student) {
+        Map<String, Object> presenceLog = new HashMap<>();
+
+        long classesGiven = countClassesGivenForClass(student.getSchoolClass().getId());
+        long studentPresences = countStudentPresence(student.getId());
+        long studentFrequency = studentPresences * 100 / classesGiven;
+
+        presenceLog.put("classesGiven", classesGiven);
+        presenceLog.put("studentPresences", studentPresences);
+        presenceLog.put("studentFrequency", studentFrequency);
+
+        return presenceLog;
+    }
+
     public Attendance create(AttendanceRequestDTO dto) {
         return save(attendanceMapper.toEntity(dto));
     }
 
     public Attendance update(AttendanceRequestDTO dto, Long id) {
-        return save(attendanceMapper.updateEntityFromDTO(dto, id));
+        Attendance attendance = findById(id);
+        return save(attendanceMapper.updateEntityFromDTO(dto, attendance));
     }
 
     public List<Attendance> createBulk(AttendanceBulkRequestDTO dto) {

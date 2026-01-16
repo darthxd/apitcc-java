@@ -6,7 +6,6 @@ import com.ds3c.tcc.ApiTcc.model.Message;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.repository.MessageRepository;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +17,6 @@ public class MessageService extends CRUDService<Message, Long> {
     private final MessageRepository messageRepository;
     private final UserService userService;
 
-    @Lazy
     public MessageService(
             MessageMapper messageMapper,
             MessageRepository messageRepository, UserService userService) {
@@ -33,7 +31,8 @@ public class MessageService extends CRUDService<Message, Long> {
     }
 
     public Message update(MessageRequestDTO dto, Long id) {
-        return save(messageMapper.updateEntityFromDTO(dto, id));
+        Message message = findById(id);
+        return save(messageMapper.updateEntityFromDTO(dto, message));
     }
 
     public List<Message> findVisibleMessages(Long userId) {

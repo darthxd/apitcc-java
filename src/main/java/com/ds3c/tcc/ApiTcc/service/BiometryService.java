@@ -12,15 +12,12 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class BiometryService {
     private final MqttService mqttService;
-    private final StudentService studentService;
 
     private final ConcurrentHashMap<String, CompletableFuture<String>> pendingResponses = new ConcurrentHashMap<>();
 
     public BiometryService(
-            MqttService mqttService,
-            StudentService studentService) {
+            MqttService mqttService) {
         this.mqttService = mqttService;
-        this.studentService = studentService;
         mqttService.setResponseHandler(this::handleMqttResponse);
     }
 
@@ -47,7 +44,7 @@ public class BiometryService {
     }
 
     // Read fingerprint
-    public Optional<Student> read() {
+    public Optional<Long> read() {
         try {
             CompletableFuture<String> future = new CompletableFuture<>();
             pendingResponses.put("api/response/read", future);
@@ -60,8 +57,7 @@ public class BiometryService {
 
             if (json.has("studentId")) {
                 Long id = json.getLong("studentId");
-                Student student = studentService.findById(id);
-                return Optional.of(student);
+                return Optional.of(id);
             }
         } catch (Exception e) {
             e.printStackTrace();

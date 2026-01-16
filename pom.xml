@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ds3c.tcc</groupId>
-	<artifactId>ApiTcc</artifactId>
-	<version>1.1.1-prod</version>
+	<artifactId>SGA-webapp</artifactId>
+	<version>1.7.2</version>
 	<name>ApiTcc</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Web App for the TCC project</description>
 	<url/>
 	<licenses>
 		<license/>

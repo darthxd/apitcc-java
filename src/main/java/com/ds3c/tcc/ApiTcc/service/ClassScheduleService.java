@@ -26,7 +26,8 @@ public class ClassScheduleService extends CRUDService<ClassSchedule, Long> {
     }
 
     public ClassSchedule update(ClassScheduleRequestDTO dto, Long id) {
-        return save(classScheduleMapper.updateEntityFromDTO(dto, id));
+        ClassSchedule schedule = findById(id);
+        return save(classScheduleMapper.updateEntityFromDTO(dto, schedule));
     }
 
     public List<ClassSchedule> findAllBySchoolClass(Long classId) {

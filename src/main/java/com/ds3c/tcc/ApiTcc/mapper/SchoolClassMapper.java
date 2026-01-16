@@ -6,17 +6,13 @@ import com.ds3c.tcc.ApiTcc.enums.CoursesEnum;
 import com.ds3c.tcc.ApiTcc.enums.YearsEnum;
 import com.ds3c.tcc.ApiTcc.enums.ShiftsEnum;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
-import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class SchoolClassMapper {
-    private final SchoolClassService schoolClassService;
-
     public SchoolClass toEntity(SchoolClassRequestDTO dto) {
         SchoolClass schoolClass = new SchoolClass();
         try {
@@ -44,8 +40,7 @@ public class SchoolClassMapper {
         );
     }
 
-    public SchoolClass updateEntityFromDTO(SchoolClassRequestDTO dto, Long id) {
-        SchoolClass schoolClass = schoolClassService.findById(id);
+    public SchoolClass updateEntityFromDTO(SchoolClassRequestDTO dto, SchoolClass schoolClass) {
         if (StringUtils.hasText(dto.getYear())) {
             try {
                 schoolClass.setYear(YearsEnum.valueOf(dto.getYear()));

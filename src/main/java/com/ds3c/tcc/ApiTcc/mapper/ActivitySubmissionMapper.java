@@ -2,11 +2,10 @@ package com.ds3c.tcc.ApiTcc.mapper;
 
 import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivitySubmissionRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.ActivitySubmission.ActivitySubmissionResponseDTO;
+import com.ds3c.tcc.ApiTcc.model.Activity;
 import com.ds3c.tcc.ApiTcc.model.ActivitySubmission;
-import com.ds3c.tcc.ApiTcc.service.ActivityService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -15,17 +14,14 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class ActivitySubmissionMapper {
-    private final ActivityService activityService;
     private final StudentService studentService;
 
-    public ActivitySubmission toEntity(ActivitySubmissionRequestDTO dto, Long activityId) {
+    public ActivitySubmission toEntity(ActivitySubmissionRequestDTO dto, Activity activity) {
         ActivitySubmission activitySubmission = new ActivitySubmission();
 
-        activitySubmission.setActivity(
-                activityService.findById(activityId)
-        );
+        activitySubmission.setActivity(activity);
         activitySubmission.setStudent(
                 studentService.findById(dto.getStudentId())
         );
@@ -51,8 +47,7 @@ public class ActivitySubmissionMapper {
     }
 
     public ActivitySubmission updateEntityFromDTO(
-            ActivitySubmissionRequestDTO dto, Long id) {
-        ActivitySubmission activitySubmission = activityService.findSubmissionById(id);
+            ActivitySubmissionRequestDTO dto, ActivitySubmission activitySubmission) {
         if (dto.getStudentId() != null) {
             activitySubmission.setStudent(
                     studentService.findById(dto.getStudentId())

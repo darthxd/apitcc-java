@@ -5,20 +5,17 @@ import com.ds3c.tcc.ApiTcc.dto.Coordinator.CoordinatorResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.Coordinator;
 import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
-import com.ds3c.tcc.ApiTcc.service.CoordinatorService;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class CoordinatorMapper {
     private final PasswordEncoder passwordEncoder;
     private final SchoolUnitService schoolUnitService;
-    private final CoordinatorService coordinatorService;
 
     public Coordinator toEntity(CoordinatorRequestDTO dto) {
         Coordinator coordinator = new Coordinator();
@@ -50,9 +47,7 @@ public class CoordinatorMapper {
         );
     }
 
-    public  Coordinator updateEntityFromDTO(CoordinatorRequestDTO dto, Long id) {
-        Coordinator coordinator = coordinatorService.findById(id);
-
+    public  Coordinator updateEntityFromDTO(CoordinatorRequestDTO dto, Coordinator coordinator) {
         if (StringUtils.hasText(dto.getUsername())) {
             coordinator.setUsername(dto.getUsername());
         }

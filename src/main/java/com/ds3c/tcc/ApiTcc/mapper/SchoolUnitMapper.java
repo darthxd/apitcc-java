@@ -3,18 +3,13 @@ package com.ds3c.tcc.ApiTcc.mapper;
 import com.ds3c.tcc.ApiTcc.dto.SchoolUnit.SchoolUnitRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolUnit.SchoolUnitResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
-import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class SchoolUnitMapper {
-
-    private final SchoolUnitService schoolUnitService;
-
     public SchoolUnitResponseDTO toDTO(SchoolUnit schoolUnit) {
         return new SchoolUnitResponseDTO(
                 schoolUnit.getId(),
@@ -36,8 +31,7 @@ public class SchoolUnitMapper {
         return schoolUnit;
     }
 
-    public SchoolUnit updateEntityFromDTO(SchoolUnitRequestDTO dto, Long id) {
-        SchoolUnit schoolUnit = schoolUnitService.findById(id);
+    public SchoolUnit updateEntityFromDTO(SchoolUnitRequestDTO dto, SchoolUnit schoolUnit) {
         if (StringUtils.hasText(dto.getName())) {
             schoolUnit.setName(dto.getName());
         }

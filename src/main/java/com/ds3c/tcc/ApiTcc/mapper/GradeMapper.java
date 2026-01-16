@@ -6,22 +6,19 @@ import com.ds3c.tcc.ApiTcc.model.Grade;
 import com.ds3c.tcc.ApiTcc.model.SchoolSubject;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
-import com.ds3c.tcc.ApiTcc.service.GradeService;
 import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class GradeMapper {
     private final StudentService studentService;
     private final SchoolSubjectService schoolSubjectService;
     private final TeacherService teacherService;
-    private final GradeService gradeService;
 
     public Grade toEntity(GradeRequestDTO dto) {
         Student student = studentService.findById(dto.getStudentId());
@@ -55,8 +52,7 @@ public class GradeMapper {
         );
     }
 
-    public Grade updateEntityFromDTO(GradeRequestDTO dto, Long id) {
-        Grade grade = gradeService.findById(id);
+    public Grade updateEntityFromDTO(GradeRequestDTO dto, Grade grade) {
         if (dto.getStudentId() != null) {
             grade.setStudent(
                     studentService.findById(dto.getStudentId())

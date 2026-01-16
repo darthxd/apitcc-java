@@ -4,6 +4,7 @@ import com.ds3c.tcc.ApiTcc.dto.SchoolUnit.SchoolUnitRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.SchoolUnit.SchoolUnitResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.SchoolUnitMapper;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
+import com.ds3c.tcc.ApiTcc.service.SecretaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 public class SchoolUnitController {
     private final SchoolUnitService schoolUnitService;
     private final SchoolUnitMapper schoolUnitMapper;
+    private final SecretaryService secretaryService;
 
     @GetMapping
     public List<SchoolUnitResponseDTO> findAll() {
@@ -25,6 +27,6 @@ public class SchoolUnitController {
 
     @PostMapping
     public SchoolUnitResponseDTO create(@RequestBody @Valid SchoolUnitRequestDTO dto) {
-        return schoolUnitMapper.toDTO(schoolUnitService.create(dto));
+        return schoolUnitMapper.toDTO(schoolUnitService.create(dto, secretaryService::createBySchoolUnit));
     }
 }

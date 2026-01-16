@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 public class SchoolSubjectService extends CRUDService<SchoolSubject, Long> {
     private final SchoolSubjectMapper schoolSubjectMapper;
 
-    @Lazy
     public SchoolSubjectService(
             SchoolSubjectRepository schoolSubjectRepository,
             SchoolSubjectMapper schoolSubjectMapper) {
@@ -24,6 +23,7 @@ public class SchoolSubjectService extends CRUDService<SchoolSubject, Long> {
     }
 
     public SchoolSubject update(SchoolSubjectRequestDTO dto, Long id) {
-        return save(schoolSubjectMapper.updateEntityFromDTO(dto, id));
+        SchoolSubject subject = findById(id);
+        return save(schoolSubjectMapper.updateEntityFromDTO(dto, subject));
     }
 }

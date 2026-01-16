@@ -5,18 +5,15 @@ import com.ds3c.tcc.ApiTcc.dto.Admin.AdminResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
-import com.ds3c.tcc.ApiTcc.service.AdminService;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class AdminMapper {
-    private final AdminService adminService;
     private final SchoolUnitService schoolUnitService;
     private final PasswordEncoder passwordEncoder;
 
@@ -43,8 +40,7 @@ public class AdminMapper {
         );
     }
 
-    public Admin updateEntityFromDTO(AdminRequestDTO dto, Long id) {
-        Admin admin = adminService.findById(id);
+    public Admin updateEntityFromDTO(AdminRequestDTO dto, Admin admin) {
         if (StringUtils.hasText(dto.getUsername())){
             admin.setUsername(dto.getUsername());
         }

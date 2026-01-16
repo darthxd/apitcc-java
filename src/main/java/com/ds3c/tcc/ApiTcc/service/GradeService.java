@@ -36,7 +36,8 @@ public class GradeService extends CRUDService<Grade, Long> {
     }
 
     public Grade update(GradeRequestDTO dto, Long id) {
-        return save(gradeMapper.updateEntityFromDTO(dto, id));
+        Grade grade = findById(id);
+        return save(gradeMapper.updateEntityFromDTO(dto, grade));
     }
 
     public List<Grade> findByStudent(Long studentId) {

@@ -5,24 +5,18 @@ import com.ds3c.tcc.ApiTcc.dto.Secretary.SecretaryResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.model.Secretary;
-import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
-import com.ds3c.tcc.ApiTcc.service.SecretaryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class SecretaryMapper {
-    private final SchoolUnitService schoolUnitService;
-    private final SecretaryService secretaryService;
     private final PasswordEncoder passwordEncoder;
 
-    public Secretary toEntity(SecretaryRequestDTO dto) {
+    public Secretary toEntity(SecretaryRequestDTO dto, SchoolUnit unit) {
         Secretary secretary = new Secretary();
-        SchoolUnit unit = schoolUnitService.findById(dto.getUnitId());
 
         secretary.setUsername(dto.getUsername());
         secretary.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -47,8 +41,7 @@ public class SecretaryMapper {
         );
     }
 
-    public Secretary updateEntityFromDTO(SecretaryRequestDTO dto, Long id) {
-        Secretary secretary = secretaryService.findById(id);
+    public Secretary updateEntityFromDTO(SecretaryRequestDTO dto, Secretary secretary, SchoolUnit unit) {
 
         if (StringUtils.hasText(dto.getUsername())) {
             secretary.setUsername(dto.getUsername());
@@ -57,9 +50,7 @@ public class SecretaryMapper {
             secretary.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         if (dto.getUnitId() != null) {
-            secretary.setSchoolUnit(
-                    schoolUnitService.findById(dto.getUnitId())
-            );
+            secretary.setSchoolUnit(unit);
         }
         if (StringUtils.hasText(dto.getEmail())) {
             secretary.setEmail(dto.getEmail());

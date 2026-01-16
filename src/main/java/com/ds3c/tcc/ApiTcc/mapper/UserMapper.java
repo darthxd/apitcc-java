@@ -8,12 +8,11 @@ import com.ds3c.tcc.ApiTcc.model.User;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class UserMapper {
     private final UserService userService;
     private final SchoolUnitService schoolUnitService;
@@ -41,8 +40,7 @@ public class UserMapper {
         );
     }
 
-    public User updateEntityFromDTO(UserRequestDTO userRequestDTO, Long id) {
-        User user = userService.findById(id);
+    public User updateEntityFromDTO(UserRequestDTO userRequestDTO, User user) {
         if(StringUtils.hasText(userRequestDTO.getUsername())) {
             user.setUsername(userRequestDTO.getUsername());
         }

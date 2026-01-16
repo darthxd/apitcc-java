@@ -8,7 +8,6 @@ import com.ds3c.tcc.ApiTcc.mapper.SchoolClassMapper;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.repository.SchoolClassRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +17,6 @@ public class SchoolClassService extends CRUDService<SchoolClass, Long>{
     private final SchoolClassRepository schoolClassRepository;
     private final SchoolClassMapper schoolClassMapper;
 
-    @Lazy
     public SchoolClassService(
             SchoolClassRepository schoolClassRepository,
             SchoolClassMapper schoolClassMapper) {
@@ -65,7 +63,8 @@ public class SchoolClassService extends CRUDService<SchoolClass, Long>{
     }
 
     public SchoolClass update(SchoolClassRequestDTO dto, Long id) {
-        SchoolClass schoolClass = schoolClassMapper.updateEntityFromDTO(dto, id);
+        SchoolClass schoolClass = findById(id);
+        schoolClass = schoolClassMapper.updateEntityFromDTO(dto, schoolClass);
         schoolClass.setName(generateName(schoolClass));
         return save(schoolClass);
     }

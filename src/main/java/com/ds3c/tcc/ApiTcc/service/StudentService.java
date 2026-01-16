@@ -12,7 +12,6 @@ import com.ds3c.tcc.ApiTcc.model.StudentEnroll;
 import com.ds3c.tcc.ApiTcc.repository.StudentEnrollRepository;
 import com.ds3c.tcc.ApiTcc.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,30 +28,27 @@ public class StudentService extends CRUDService<Student, Long> {
     private final SchoolClassService schoolClassService;
     private final BiometryService biometryService;
     private final PresenceLogService presenceLogService;
-    private final AttendanceService attendanceService;
     private final LocalStorageService localStorageService;
     private final StudentEnrollMapper studentEnrollMapper;
     private final StudentEnrollRepository studentEnrollRepository;
     private final SupabaseStorageService supabaseStorageService;
 
-    @Lazy
     public StudentService(
             StudentRepository studentRepository,
             StudentMapper studentMapper,
             SchoolClassService schoolClassService,
             BiometryService biometryService,
             PresenceLogService presenceLogService,
-            AttendanceService attendanceService,
             LocalStorageService localStorageService,
             StudentEnrollMapper studentEnrollMapper,
-            StudentEnrollRepository studentEnrollRepository, SupabaseStorageService supabaseStorageService) {
+            StudentEnrollRepository studentEnrollRepository,
+            SupabaseStorageService supabaseStorageService) {
         super(Student.class, studentRepository);
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.schoolClassService = schoolClassService;
         this.biometryService = biometryService;
         this.presenceLogService = presenceLogService;
-        this.attendanceService = attendanceService;
         this.localStorageService = localStorageService;
         this.studentEnrollMapper = studentEnrollMapper;
         this.studentEnrollRepository = studentEnrollRepository;
@@ -73,7 +69,8 @@ public class StudentService extends CRUDService<Student, Long> {
     }
 
     public Student update(StudentRequestDTO dto, Long id) {
-        return save(studentMapper.updateEntityFromDTO(dto, id));
+        Student student = findById(id);
+        return save(studentMapper.updateEntityFromDTO(dto, student));
     }
 
     public Integer findMaxRm() {
@@ -93,21 +90,6 @@ public class StudentService extends CRUDService<Student, Long> {
     public Student findByEnrollId(Long enrollId) {
         return studentRepository.findByEnrollId(enrollId)
                 .orElseThrow(() -> new EntityNotFoundException("The student with enroll ID: "+enrollId+" was not found."));
-    }
-
-    public Map<String, Object> findFullPresenceLog(Long studentId) {
-        Student student = findById(studentId);
-        Map<String, Object> presenceLog = new HashMap<>();
-
-        long classesGiven = attendanceService.countClassesGivenForClass(student.getSchoolClass().getId());
-        long studentPresences = attendanceService.countStudentPresence(student.getId());
-        long studentFrequency = studentPresences * 100 / classesGiven;
-
-        presenceLog.put("classesGiven", classesGiven);
-        presenceLog.put("studentPresences", studentPresences);
-        presenceLog.put("studentFrequency", studentFrequency);
-
-        return presenceLog;
     }
 
     public List<Student> findAllBySchoolClass(Long id) {
@@ -135,7 +117,7 @@ public class StudentService extends CRUDService<Student, Long> {
 
     public Map<String, Object> enroll(StudentEnrollRequestDTO dto) throws IOException {
         Map<String, Object> response = new HashMap<>();
-        StudentEnroll enroll = studentEnrollMapper.toEntity(dto);
+        StudentEnroll enroll = studentEnrollMapper.toEntity(dto, findMaxRm()+1);
         Student student = studentEnrollMapper.toStudent(enroll);
 
         //String photoUrl = localStorageService.saveFile(
@@ -157,7 +139,8 @@ public class StudentService extends CRUDService<Student, Long> {
 
     public Map<String, Object> updateEnroll(StudentEnrollRequestDTO dto, Long enrollId) {
         Map<String, Object> response = new HashMap<>();
-        StudentEnroll enroll = studentEnrollMapper.updateEntityFromDTO(dto, enrollId);
+        StudentEnroll enroll = findEnrollById(enrollId);
+        enroll = studentEnrollMapper.updateEntityFromDTO(dto, enroll);
         Student student = studentEnrollMapper.toStudent(enroll);
 
         if (dto.getPhoto() != null) {
@@ -249,9 +232,10 @@ public class StudentService extends CRUDService<Student, Long> {
     }
 
     public Student readPresence() {
-        Student student = biometryService.read()
-                .orElseThrow(() -> (new RuntimeException("No corresponding biometry was found.")));
-        presenceLogService.togglePresence(student.getId());
+        Student student = findById(biometryService.read()
+                .orElseThrow(() -> (new RuntimeException("No corresponding biometry was found."))));
+        student.setInschool(presenceLogService.togglePresence(student));
+        save(student);
         return student;
     }
 

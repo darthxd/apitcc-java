@@ -6,12 +6,10 @@ import com.ds3c.tcc.ApiTcc.model.Attendance;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
-import com.ds3c.tcc.ApiTcc.service.AttendanceService;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -19,12 +17,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class AttendanceMapper {
     private final StudentService studentService;
     private final SchoolClassService schoolClassService;
     private final TeacherService teacherService;
-    private final AttendanceService attendanceService;
 
     public Attendance toEntity(AttendanceRequestDTO dto) {
         Student student = studentService
@@ -56,8 +53,7 @@ public class AttendanceMapper {
         );
     }
 
-    public Attendance updateEntityFromDTO(AttendanceRequestDTO dto, Long id) {
-        Attendance attendance = attendanceService.findById(id);
+    public Attendance updateEntityFromDTO(AttendanceRequestDTO dto, Attendance attendance) {
         if (StringUtils.hasText(dto.getDate())) {
             attendance.setDate(LocalDate.parse(dto.getDate()));
         }

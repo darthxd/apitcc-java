@@ -5,11 +5,9 @@ import com.ds3c.tcc.ApiTcc.dto.Activity.ActivityResponseDTO;
 import com.ds3c.tcc.ApiTcc.model.Activity;
 import com.ds3c.tcc.ApiTcc.model.SchoolClass;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
-import com.ds3c.tcc.ApiTcc.service.ActivityService;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -18,11 +16,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class ActivityMapper {
     private final TeacherService teacherService;
     private final SchoolClassService schoolClassService;
-    private final ActivityService activityService;
 
     public Activity toEntity(ActivityRequestDTO dto) {
         Activity activity = new Activity();
@@ -56,8 +53,7 @@ public class ActivityMapper {
         );
     }
 
-    public Activity updateEntityFromDTO(ActivityRequestDTO dto, Long id) {
-        Activity activity = activityService.findById(id);
+    public Activity updateEntityFromDTO(ActivityRequestDTO dto, Activity activity) {
         if (StringUtils.hasText(dto.getTitle())) {
             activity.setTitle(dto.getTitle());
         }

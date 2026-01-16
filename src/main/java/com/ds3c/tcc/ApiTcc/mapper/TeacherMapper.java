@@ -6,17 +6,14 @@ import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.SchoolUnit;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
-import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class TeacherMapper {
-    private final TeacherService teacherService;
     private final SchoolUnitService schoolUnitService;
     private final PasswordEncoder passwordEncoder;
 
@@ -57,8 +54,7 @@ public class TeacherMapper {
         );
     }
 
-    public Teacher updateEntityFromDTO(TeacherRequestDTO dto, Long id) {
-        Teacher teacher = teacherService.findById(id);
+    public Teacher updateEntityFromDTO(TeacherRequestDTO dto, Teacher teacher) {
         if (StringUtils.hasText(dto.getUsername())){
             teacher.setUsername(dto.getUsername());
         }

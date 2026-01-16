@@ -5,6 +5,7 @@ import com.ds3c.tcc.ApiTcc.enums.RolesEnum;
 import com.ds3c.tcc.ApiTcc.model.Admin;
 import com.ds3c.tcc.ApiTcc.service.AdminService;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
+import com.ds3c.tcc.ApiTcc.service.SecretaryService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -19,6 +20,7 @@ public class DataInitializer implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final AdminService adminService;
     private final SchoolUnitService schoolUnitService;
+    private final SecretaryService secretaryService;
 
     @Override
     public void run(String... args) {
@@ -32,7 +34,7 @@ public class DataInitializer implements CommandLineRunner {
             schoolUnit.setPhone("11999999999");
             schoolUnit.setEmail("polivalente@etec.com");
 
-            schoolUnitService.create(schoolUnit);
+            schoolUnitService.create(schoolUnit, secretaryService::createBySchoolUnit);
 
             System.out.println("The School Unit "+schoolUnit.getName()+" has been created.");
         }

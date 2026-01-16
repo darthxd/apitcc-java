@@ -5,22 +5,19 @@ import com.ds3c.tcc.ApiTcc.dto.Message.MessageResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.MessageTargetEnum;
 import com.ds3c.tcc.ApiTcc.model.Message;
 import com.ds3c.tcc.ApiTcc.model.User;
-import com.ds3c.tcc.ApiTcc.service.MessageService;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class MessageMapper {
     private final UserService userService;
     private final SchoolClassService schoolClassService;
-    private final MessageService messageService;
 
     public Message toEntity(MessageRequestDTO dto) {
         User author = userService.findById(dto.getAuthorId());
@@ -79,9 +76,7 @@ public class MessageMapper {
         return dto;
     }
 
-    public Message updateEntityFromDTO(MessageRequestDTO dto, Long id) {
-        Message message = messageService.findById(id);
-
+    public Message updateEntityFromDTO(MessageRequestDTO dto, Message message) {
         if (StringUtils.hasText(dto.getTitle())) {
             message.setTitle(dto.getTitle());
         }

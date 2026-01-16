@@ -1,6 +1,7 @@
 package com.ds3c.tcc.ApiTcc.service;
 
 import com.ds3c.tcc.ApiTcc.model.Student;
+import com.ds3c.tcc.ApiTcc.model.StudentEnroll;
 import com.ds3c.tcc.ApiTcc.model.StudentPresenceLog;
 import com.ds3c.tcc.ApiTcc.repository.PresenceLogRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,26 +14,22 @@ import java.util.List;
 @Service
 public class PresenceLogService extends CRUDService<StudentPresenceLog, Long> {
 
-    private final StudentService studentService;
     private final PresenceLogRepository presenceLogRepository;
 
     public PresenceLogService(
-            StudentService studentService,
             PresenceLogRepository presenceLogRepository) {
         super(StudentPresenceLog.class, presenceLogRepository);
-        this.studentService = studentService;
         this.presenceLogRepository = presenceLogRepository;
     }
 
-    public void togglePresence(Long studentId) {
-        Student student = studentService.findById(studentId);
+    public boolean togglePresence(Student student) {
         LocalDate today = LocalDate.now();
         LocalDateTime now = LocalDateTime.now();
 
         if (!student.getInschool()) {
 
             StudentPresenceLog presenceLog = presenceLogRepository
-                    .findByStudentIdAndDate(studentId, today)
+                    .findByStudentIdAndDate(student.getId(), today)
                     .orElse(new StudentPresenceLog());
 
             presenceLog.setStudent(student);
@@ -40,18 +37,18 @@ public class PresenceLogService extends CRUDService<StudentPresenceLog, Long> {
             presenceLog.setEntryTime(now);
 
             save(presenceLog);
-            studentService.setInSchool(student, true);
+            return true;
         } else {
             StudentPresenceLog presenceLog = presenceLogRepository
-                    .findByStudentIdAndDate(studentId, today)
+                    .findByStudentIdAndDate(student.getId(), today)
                     .orElseThrow(() -> new EntityNotFoundException(
-                            "The presence log for the student id: "+studentId+" and date: "+today+" was not found."
+                            "The presence log for the student id: "+student.getId()+" and date: "+today+" was not found."
                     ));
 
             presenceLog.setExitTime(now);
 
             save(presenceLog);
-            studentService.setInSchool(student, false);
+            return false;
         }
     }
 

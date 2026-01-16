@@ -5,7 +5,6 @@ import com.ds3c.tcc.ApiTcc.mapper.TeacherMapper;
 import com.ds3c.tcc.ApiTcc.model.Teacher;
 import com.ds3c.tcc.ApiTcc.repository.TeacherRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +12,6 @@ public class TeacherService extends CRUDService<Teacher, Long>{
     private final TeacherRepository teacherRepository;
     private final TeacherMapper teacherMapper;
 
-    @Lazy
     public TeacherService(
             TeacherRepository teacherRepository,
             TeacherMapper teacherMapper) {
@@ -32,6 +30,7 @@ public class TeacherService extends CRUDService<Teacher, Long>{
     }
 
     public Teacher update(TeacherRequestDTO dto, Long id) {
-        return save(teacherMapper.updateEntityFromDTO(dto, id));
+        Teacher teacher = findById(id);
+        return save(teacherMapper.updateEntityFromDTO(dto, teacher));
     }
 }

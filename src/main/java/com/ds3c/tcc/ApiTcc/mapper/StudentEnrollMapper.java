@@ -8,7 +8,6 @@ import com.ds3c.tcc.ApiTcc.model.Student;
 import com.ds3c.tcc.ApiTcc.model.StudentEnroll;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.SchoolUnitService;
-import com.ds3c.tcc.ApiTcc.service.StudentService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -19,31 +18,28 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class StudentEnrollMapper {
 
-    private final StudentService studentService;
     private final SchoolClassService schoolClassService;
     private final SchoolUnitService schoolUnitService;
     private final PasswordEncoder passwordEncoder;
     private final SchoolClassMapper schoolClassMapper;
 
     public StudentEnrollMapper(
-            StudentService studentService,
             SchoolClassService schoolClassService,
             SchoolUnitService schoolUnitService,
             PasswordEncoder passwordEncoder,
             SchoolClassMapper schoolClassMapper) {
-        this.studentService = studentService;
         this.schoolClassService = schoolClassService;
         this.schoolUnitService = schoolUnitService;
         this.passwordEncoder = passwordEncoder;
         this.schoolClassMapper = schoolClassMapper;
     }
 
-    public StudentEnroll toEntity(StudentEnrollRequestDTO dto) {
+    public StudentEnroll toEntity(StudentEnrollRequestDTO dto, Integer rm) {
         StudentEnroll studentEnroll = new StudentEnroll();
         SchoolUnit unit = schoolUnitService.findById(dto.getUnitId());
 
         studentEnroll.setName(dto.getName());
-        studentEnroll.setRm(studentService.findMaxRm() + 1);
+        studentEnroll.setRm(rm);
         studentEnroll.setRa(dto.getRa());
         studentEnroll.setCpf(dto.getCpf());
         studentEnroll.setPhone(dto.getPhone());
@@ -87,9 +83,7 @@ public class StudentEnrollMapper {
         );
     }
 
-    public StudentEnroll updateEntityFromDTO(StudentEnrollRequestDTO dto, Long id) {
-        StudentEnroll studentEnroll = studentService.findEnrollById(id);
-
+    public StudentEnroll updateEntityFromDTO(StudentEnrollRequestDTO dto, StudentEnroll studentEnroll) {
         if (StringUtils.hasText(dto.getName())) {
             studentEnroll.setName(dto.getName());
         }

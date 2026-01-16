@@ -13,7 +13,6 @@ public class AdminService extends CRUDService<Admin, Long> {
     private final AdminMapper adminMapper;
     private final AdminRepository adminRepository;
 
-    @Lazy
     public AdminService(
             AdminMapper adminMapper,
             AdminRepository adminRepository) {
@@ -34,8 +33,9 @@ public class AdminService extends CRUDService<Admin, Long> {
 
     public Admin update(AdminRequestDTO dto,
                         Long id) {
+        Admin admin = findById(id);
         return adminRepository.save(
-                adminMapper.updateEntityFromDTO(dto, id)
+                adminMapper.updateEntityFromDTO(dto, admin)
         );
     }
 }

@@ -4,24 +4,21 @@ import com.ds3c.tcc.ApiTcc.dto.ClassSchedule.ClassScheduleRequestDTO;
 import com.ds3c.tcc.ApiTcc.dto.ClassSchedule.ClassScheduleResponseDTO;
 import com.ds3c.tcc.ApiTcc.enums.DayOfWeekEnum;
 import com.ds3c.tcc.ApiTcc.model.ClassSchedule;
-import com.ds3c.tcc.ApiTcc.service.ClassScheduleService;
 import com.ds3c.tcc.ApiTcc.service.SchoolClassService;
 import com.ds3c.tcc.ApiTcc.service.SchoolSubjectService;
 import com.ds3c.tcc.ApiTcc.service.TeacherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalTime;
 
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class ClassScheduleMapper {
     private final SchoolClassService schoolClassService;
     private final TeacherService teacherService;
     private final SchoolSubjectService schoolSubjectService;
-    private final ClassScheduleService classScheduleService;
 
     public ClassSchedule toEntity(ClassScheduleRequestDTO dto) {
         ClassSchedule schedule = new ClassSchedule();
@@ -48,8 +45,7 @@ public class ClassScheduleMapper {
         );
     }
 
-    public ClassSchedule updateEntityFromDTO(ClassScheduleRequestDTO dto, Long id) {
-        ClassSchedule schedule = classScheduleService.findById(id);
+    public ClassSchedule updateEntityFromDTO(ClassScheduleRequestDTO dto, ClassSchedule schedule) {
         if (dto.getSchoolClassId() != null) {
             schedule.setSchoolClass(
                     schoolClassService.findById(dto.getSchoolClassId())

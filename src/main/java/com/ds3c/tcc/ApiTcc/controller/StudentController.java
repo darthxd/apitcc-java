@@ -8,10 +8,10 @@ import com.ds3c.tcc.ApiTcc.dto.StudentEnroll.StudentEnrollResponseDTO;
 import com.ds3c.tcc.ApiTcc.mapper.StudentEnrollMapper;
 import com.ds3c.tcc.ApiTcc.mapper.StudentMapper;
 import com.ds3c.tcc.ApiTcc.model.Student;
+import com.ds3c.tcc.ApiTcc.service.AttendanceService;
 import com.ds3c.tcc.ApiTcc.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +22,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/student")
-@RequiredArgsConstructor(onConstructor_ = @Lazy)
+@RequiredArgsConstructor
 public class StudentController {
 
     private final StudentMapper studentMapper;
     private final StudentService studentService;
     private final StudentEnrollMapper studentEnrollMapper;
+    private final AttendanceService attendanceService;
 
     @GetMapping
     public List<StudentResponseDTO> findAll() {
@@ -70,7 +71,8 @@ public class StudentController {
 
     @GetMapping("/{id}/presencelog")
     public Map<String, Object> findFullPresenceLog(@PathVariable("id") Long id) {
-        return studentService.findFullPresenceLog(id);
+        Student student = studentService.findById(id);
+        return attendanceService.findFullPresenceLog(student);
     }
 
     // Biometry

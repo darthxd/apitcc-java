@@ -25,7 +25,6 @@ public class ActivityService extends CRUDService<Activity, Long> {
     private final ActivitySubmissionMapper activitySubmissionMapper;
     private final LocalStorageService localStorageService;
 
-    @Lazy
     public ActivityService(
             ActivityRepository activityRepository,
             ActivitySubmissionRepository activitySubmissionRepository,
@@ -61,7 +60,8 @@ public class ActivityService extends CRUDService<Activity, Long> {
     }
 
     public Activity update(ActivityRequestDTO dto, Long id) {
-        return save(activityMapper.updateEntityFromDTO(dto, id));
+        Activity activity = findById(id);
+        return save(activityMapper.updateEntityFromDTO(dto, activity));
     }
 
     public ActivitySubmission submitActivity(
@@ -81,7 +81,7 @@ public class ActivityService extends CRUDService<Activity, Long> {
             throw new RuntimeException("The deadline for this activity was reached.");
         }
 
-        ActivitySubmission submission = activitySubmissionMapper.toEntity(dto, activityId);
+        ActivitySubmission submission = activitySubmissionMapper.toEntity(dto, activity);
 
         if (dto.getFile() != null && !dto.getFile().isEmpty()) {
             submission.setFileUrl(localStorageService.saveFile(

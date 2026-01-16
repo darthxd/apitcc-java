@@ -13,7 +13,6 @@ public class CoordinatorService extends CRUDService<Coordinator, Long>{
     private final CoordinatorMapper coordinatorMapper;
     private final CoordinatorRepository coordinatorRepository;
 
-    @Lazy
     public CoordinatorService(
             CoordinatorRepository coordinatorRepository,
             CoordinatorMapper coordinatorMapper) {
@@ -32,6 +31,7 @@ public class CoordinatorService extends CRUDService<Coordinator, Long>{
     }
 
     public Coordinator update(CoordinatorRequestDTO dto, Long id) {
-        return save(coordinatorMapper.updateEntityFromDTO(dto, id));
+        Coordinator coordinator = findById(id);
+        return save(coordinatorMapper.updateEntityFromDTO(dto, coordinator));
     }
 }
